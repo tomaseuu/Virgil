@@ -21,7 +21,7 @@ You can check this is running at http://localhost:5000.
 Frontend Setup (React)
 1. Open a new terminal and navigate to the frontend directory:
    cd frontend
-2. Install dependencies:
+2. Install dependencies (if first time running):
    npm install
 3. Run the development server:
    npm start
