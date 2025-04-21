@@ -33,9 +33,10 @@ function UploadFilePage() {
   const [IBD, setIBD] = useState('');
   const [anxiety, setAnxiety] = useState('');
   const [diet, setDiet] = useState('');
+  const [pregnant, setPregnant] = useState('');
   const [medicalHistory, setMedicalHistory] = useState([]);
   const [surgicalHistory, setSurgicalHistory] = useState([]);
-  //const [microbiomeData, setMicrobiomeData] = useState('');
+  const [allergies, setAllergies] = useState([]);
 
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -69,8 +70,10 @@ function UploadFilePage() {
     formData.append('IBD', IBD);
     formData.append('anxiety', anxiety);
     formData.append('diet', diet);
+    formData.append('pregnant', pregnant);
     formData.append('medicalHistory', medicalHistory);
     formData.append('surgicalHistory', surgicalHistory);
+    formData.append('allergies', allergies);
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
@@ -408,6 +411,55 @@ function UploadFilePage() {
                 <option value="low_fodmap">Low FODMAP (avoid fermentable carbs for gut sensitivity)</option>
                 <option value="other">Other</option>
               </Select>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel textColor="white">Pregnant</FormLabel>
+              <Select
+                {...selectStyles}
+                value={pregnant}
+                onChange={(e) => setPregnant(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
+              >
+                <option value="yes">Yes</option>
+                <option value="breastfeeding">Breastfeeding</option>
+                <option value="planning">Planning</option>
+                <option value="no">No</option>
+                <option value="na">Not Applicable</option>
+              </Select>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel textColor="white">Allergies</FormLabel>
+              <Box
+                bg="rgba(255, 255, 255, 0.1)"
+                p={4}
+                borderRadius="md"
+                border="1px solid #ccc"
+              >
+                <CheckboxGroup
+                  value={allergies}
+                  onChange={(values) => setAllergies(values)}
+                >
+                  <Stack color="white" textAlign="left" spacing={4} direction="column">
+                    <Checkbox colorScheme="purple" value="amino_salic">Aminosalicylate or Salicylate pain relievers such as aspirin</Checkbox>
+                    <Checkbox colorScheme="purple" value="sulfa">Sulfonamide or Salicylate, Sulfa</Checkbox>
+                    <Checkbox colorScheme="purple" value="none">None of the above</Checkbox>
+                  </Stack>
+                </CheckboxGroup>
+              </Box>
             </FormControl>
 
             <FormControl>
