@@ -479,7 +479,6 @@ function UploadFilePage() {
                     <Checkbox colorScheme="purple" value="nsaids">Regular use of NSAIDs (e.g., ibuprofen, naproxen)</Checkbox>
                     <Checkbox colorScheme="purple" value="early_onset">Early onset of symptoms (childhood/teen years)</Checkbox>
                     <Checkbox colorScheme="purple" value="anti_tnf_nonresponse">Non-response to anti-TNF therapy</Checkbox>
-                    <Checkbox colorScheme="purple" value="autoimmune">Diagnosis of other autoimmune conditions (e.g., rheumatoid arthritis, psoriasis)</Checkbox>
                     <Checkbox colorScheme="purple" value="none">None of the above</Checkbox>
                   </Stack>
                 </CheckboxGroup>
