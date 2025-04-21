@@ -11,9 +11,11 @@ TARGET_SNPS = {
     'rs2066844': 'NOD2; Azathioprine',
     'rs2066847': 'NOD2; Steroids',
     'rs2066847': 'NOD2; 5-ASA (aminosalicylates)',
+
     'rs1285933': 'CLECA5A and CLECA7A',
     'rs16910631': 'CLECA5A and CLECA7A',
     'rs2078178': 'CLECA5A and CLECA7A',
+
     'rs1004819': 'IL23R',
     'rs7517847': 'IL23R; Ustekinumab(Stelara)', 
     'rs10489629': 'IL23R; Risankizumab(Skyrizi): Strong assosciation wit crohns disease',
@@ -23,6 +25,7 @@ TARGET_SNPS = {
     'rs11209032': 'IL23R',
     'rs1343151': 'IL23R',
     'rs10889677': 'IL23R',
+
     'rs2241880': 'Thiopurines (Azathiprien and Mercaptopurine)',
     'rs13412102': 'Common polymorphisms: rs2241880; leading to a T300A conversion',
     'rs6431660': 'Common polymorphisms: rs2241880; leading to a T300A conversion',
@@ -33,6 +36,7 @@ TARGET_SNPS = {
     'rs2241879': 'Common polymorphisms: rs2241880; leading to a T300A conversion',
     'rs3792106': 'Common polymorphisms: rs2241880; leading to a T300A conversion',
     'rs4663396': 'Common polymorphisms: rs2241880; leading to a T300A conversion',
+
     'rs12423058': 'ATGL1',
     'rs1058768': 'ATGL1',
     'rs17613241': 'ATGL1',
@@ -76,6 +80,7 @@ TARGET_SNPS = {
     'rs6425977': 'ATGL1',
     'rs3829486': 'ATGL1',
     'rs2191423': 'ATGL1',
+
     'rs10870077': 'CARD9; Antifungal treatments',
     'rs4077515': 'CARD10; Antifungal treatments',
     'rs10781499': 'CARD11; Antifungal treatments',
@@ -83,6 +88,7 @@ TARGET_SNPS = {
     'rs200735402': 'CARD13; Antifungal treatments',
     'rs22291130': 'CARD14; Antifungal treatments',
     'rs4986790': 'CARD15; Antifungal treatments',
+
     'rs1816702': 'TLR2; anti-TNF therapy response',
     'rs4696480': 'TLR2; anti-TNF therapy response',
     'rs2569190': 'CD14; anti-TNF therapy response',
@@ -102,11 +108,13 @@ TARGET_SNPS = {
     'rs10499563': 'IL6; anti-TNF therapy response',
     'rs2275913': 'IL17A; anti-TNF therapy response',
     'rs2430561': 'IFNG; anti-TNF therapy response',
+
     'rs3790622': 'Interleukin 10 (IL-10)',
     'rs1800896': 'Interleukin 10 (IL-10)',
     'rs1800872': 'Interleukin 10 (IL-10)',
     'rs2228054': 'Interleukin 10 (IL-10)',
     'rs2228055': 'Interleukin 10 (IL-10)',
+    
     'rs7848647': 'TNFSF15/TL1A (Tumor Necrosis Factor Superfamily Member 15)',
     'rs4979462': 'TNFSF15/TL1A (Tumor Necrosis Factor Superfamily Member 15)',
 }
