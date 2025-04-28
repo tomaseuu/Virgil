@@ -14,7 +14,15 @@ import {
   Select,
   Stack,
   Checkbox,
-  CheckboxGroup
+  CheckboxGroup,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import axios from 'axios';
@@ -38,9 +46,13 @@ function UploadFilePage() {
   const [surgicalHistory, setSurgicalHistory] = useState([]);
   const [allergies, setAllergies] = useState([]);
 
+  const [agree, setAgree] = useState([]);
+
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -54,6 +66,20 @@ function UploadFilePage() {
   };
 
   const handleUpload = async () => {
+    let agree1error = true;
+    let agree2error = true;
+    let i = 0;
+    for (i = 0; i < 2; i++){
+      if (agree[i] === 'agree1'){
+        agree1error = false;
+      } else if (agree[i] === 'agree2') {
+        agree2error = false;
+      }
+    }
+    if (agree1error || agree2error){
+      return alert('Must submit User Agreement');
+    }
+
     if (!file) return alert('No file selected!');
 
     const formData = new FormData();
@@ -556,7 +582,6 @@ function UploadFilePage() {
                 <IconButton
                   icon={<CloseIcon />}
                   size="sm"
-                  aria-label="Remove file"
                   onClick={handleRemoveFile}
                   variant="ghost"
                   color="gray.300"
@@ -573,6 +598,7 @@ function UploadFilePage() {
               </HStack>
             )}
 
+            <>
             <Button
               pt={4}
               _hover={{
@@ -588,13 +614,43 @@ function UploadFilePage() {
               fontFamily="'Glacial Indifference Reg'"
               fontWeight="bold"
               letterSpacing="1px"
-              onClick={handleUpload}
+              onClick={onOpen}
               px={8}
               py={4}
               boxShadow="2xl"
             >
               Submit Form
             </Button>
+
+            <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>User Agreement</ModalHeader>
+                <ModalCloseButton borderRadius="full"/>
+                <ModalBody>
+                  <Text paddingBottom={4}>
+                    Before you may use Virgil to retrieve information about medication for IBD, you must read and agree to the following statements. By checking these boxes, you confirm that you agree to the statements.
+                  </Text>
+                  <CheckboxGroup
+                    value={agree}
+                    onChange={(values) => setAgree(values)}
+                  >
+                  <Stack textAlign="left" spacing={4} direction="column">
+                    <Checkbox colorScheme="purple" value="agree1">I understand that my Virgil report is for educational and research purposes only.</Checkbox>
+                    <Checkbox colorScheme="purple" value="agree2">I understand that I am strongly encouraged to discuss my Virgil report with a doctor, genetic counselor or other health-care provider prior to making any medical decisions.</Checkbox>
+                  </Stack>
+                  </CheckboxGroup>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button borderRadius="full" mr={3} variant="ghost" onClick={onClose}>
+                    Close
+                  </Button>
+                  <Button borderRadius="full" colorScheme='green' onClick={handleUpload}>Agree and Submit Form</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            </>
           </VStack>
         </Box>
       </Box>
