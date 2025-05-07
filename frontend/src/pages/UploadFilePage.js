@@ -23,6 +23,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Flex,
 } from '@chakra-ui/react';
 import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import axios from 'axios';
@@ -46,6 +47,9 @@ function UploadFilePage() {
   const [surgicalHistory, setSurgicalHistory] = useState([]);
   const [allergies, setAllergies] = useState([]);
 
+  const [drugEntries, setDrugEntries] = useState([{ drug: '', reaction: '' }]);
+
+
   const [agree, setAgree] = useState([]);
 
   const [file, setFile] = useState(null);
@@ -63,6 +67,21 @@ function UploadFilePage() {
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
     }
+  };
+
+  const handleDrugChange = (index, field, value) => {
+    const updated = [...drugEntries];
+    updated[index][field] = value;
+    setDrugEntries(updated);
+  };
+
+  const addDrugEntry = () => {
+    setDrugEntries([...drugEntries, { drug: '', reaction: '' }]);
+  };
+
+  const removeDrugEntry = (index) => {
+    const updated = drugEntries.filter((_, i) => i !== index);
+    setDrugEntries(updated);
   };
 
   const handleUpload = async () => {
@@ -537,6 +556,121 @@ function UploadFilePage() {
                 </CheckboxGroup>
               </Box>
             </FormControl>
+
+            <FormLabel textColor="white" mt={4}>Medications & Reactions</FormLabel>
+            {drugEntries.map((entry, index) => (
+              <Box
+                key={index}
+                p={4}
+                mb={3}
+                border="1px solid"
+                borderColor="#4a43a5"
+                borderRadius="md"
+                backgroundColor="#2e2a68"
+              >
+                <Flex gap={4} flexWrap="wrap" alignItems="flex-end">
+                  <FormControl flex="1">
+                    <FormLabel textColor="white">Drug</FormLabel>
+                    <Select
+                      color="white"
+                      value={entry.drug}
+                      onChange={(e) => handleDrugChange(index, 'drug', e.target.value)}
+                      placeholder="Select drug"
+                      _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                      _focus={{ borderColor: '#a28df0' }}
+                      _hover={{ bg: '#3d3390' }}
+                      sx={{
+                        option: {
+                          backgroundColor: '#322a80',
+                          color: 'white',
+                        },
+                        ':not([data-placeholder="true"])': {
+                          backgroundColor: '#2e2a68',
+                        },
+                      }}
+                    >
+                      <option value="Asacol HD">Asacol HD</option>
+                      <option value="Pentasa">Pentasa</option>
+                      <option value="Lialda">Lialda</option>
+                      <option value="Apriso">Apriso</option>
+                      <option value="Delzicol">Delzicol</option>
+                      <option value="Canasa">Canasa</option>
+                      <option value="Rowasa">Rowasa</option>
+                      <option value="Colazal">Colazal</option>
+                      <option value="Dipentum">Dipentum</option>
+                      <option value="Azulfidine">Azulfidine</option>
+                      <option value="Deltasone">Deltasone</option>
+                      <option value="Entocort EC">Entocort EC</option>
+                      <option value="Uceris">Uceris</option>
+                      <option value="Hydrocortisone">Hydrocortisone</option>
+                      <option value="Methylpredisone">Methylpredisone</option>
+                      <option value="Cortenema">Cortenema</option>
+                      <option value="Uceris">Uceris</option>
+                      <option value="Proctofoam-HC">Proctofoam-HC</option>
+                      <option value="Hydrocortisone_Acetate">Hydrocortisone Acetate</option>
+                      <option value="Depo-Medrol">Depo-Medrol</option>
+                      <option value="Tremfya">Tremfya</option>
+                      <option value="Ixekizumab (Taltz)">Ixekizumab (Taltz)</option>
+                      <option value="Rapamune">Rapamune</option>
+                      <option value="Risankizumab(Skyrizi)">Risankizumab(Skyrizi)</option>
+                      <option value="Flagyl">Flagyl</option>
+                      <option value="Cipro">Cipro</option>
+                      <option value="Vancocin">Vancocin</option>
+                      <option value="Xifaxan">Xifaxan</option>
+                      <option value="Adalimumab (Humira, others)">Adalimumab (Humira, others)</option>
+                      <option value="Procyanidin b2">Procyanidin b2</option>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl flex="1">
+                    <FormLabel textColor="white">Reaction</FormLabel>
+                    <Select
+                      color="white"
+                      value={entry.reaction}
+                      onChange={(e) => handleDrugChange(index, 'reaction', e.target.value)}
+                      placeholder="Select reaction"
+                      _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                      _focus={{ borderColor: '#a28df0' }}
+                      _hover={{ bg: '#3d3390' }}
+                      sx={{
+                        option: {
+                          backgroundColor: '#322a80',
+                          color: 'white',
+                        },
+                        ':not([data-placeholder="true"])': {
+                          backgroundColor: '#2e2a68',
+                        },
+                      }}
+                    >
+                      <option value="better">Helped IBD Symptoms</option>
+                      <option value="worse">Made IBD Symptoms Worse</option>
+                      <option value="no_change">No change</option>
+                    </Select>
+                  </FormControl>
+
+                  <IconButton
+                    icon={<CloseIcon />}
+                    size="sm"
+                    onClick={() => removeDrugEntry(index)}
+                    variant="ghost"
+                    color="gray.300"
+                    _hover={{
+                      bg: '#5c3cae',
+                      color: 'white',
+                      borderRadius: '50%',
+                    }}
+                    _active={{
+                      bg: '#3b267d',
+                      color: 'white',
+                    }}
+                  />
+                </Flex>
+              </Box>
+            ))}
+
+            <Button onClick={addDrugEntry} mt={2} borderRadius="full" colorScheme="purple" variant="outline">
+              Add Drug
+            </Button>
 
             <Box
               paddingTop={4}>
