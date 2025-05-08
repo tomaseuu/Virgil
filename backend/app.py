@@ -6,6 +6,19 @@ app = Flask(__name__)
 CORS(app)
 
 TARGET_SNPS = {
+'rs2066847': 'NOD2',
+'rs2066843': 'NOD2',
+'rs2076756': 'NOD2',
+'rs2066847': 'NOD2',
+'rs122112067': 'NOD2',
+'rs6431660': 'ATG16L1',
+'rs13412102': 'ATG16L1',
+'rs2241880': 'ATG16L1',
+'rs2228055': 'IL10',
+'rs7517847': 'IL23R',
+}
+    
+'''
     'rs2066843': 'NOD2; anti-tumor necrosis factor (TNF)-α and TDM (Therapeutic drug monitoring)',
     'rs2076756': 'NOD2; AZA/6-MP',
     'rs2066844': 'NOD2; Azathioprine',
@@ -117,7 +130,7 @@ TARGET_SNPS = {
     
     'rs7848647': 'TNFSF15/TL1A (Tumor Necrosis Factor Superfamily Member 15)',
     'rs4979462': 'TNFSF15/TL1A (Tumor Necrosis Factor Superfamily Member 15)',
-}
+}'''
 
 def parse_23andme_file(file_stream):
     found = {}
