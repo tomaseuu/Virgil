@@ -1,7 +1,7 @@
 import React from 'react';
 import { AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box, Text } from '@chakra-ui/react';
 
-function Bubble({ polymorphism, description, genotype }) {
+function Bubble({ polymorphism }) {
   return (
     <AccordionItem border="none">
       <h2>
@@ -36,8 +36,7 @@ function Bubble({ polymorphism, description, genotype }) {
         py={4}
         w="100%"
       >
-        <Text fontSize="md"><strong>Description:</strong> {description}</Text>
-        <Text fontSize="md"><strong>Genotype:</strong> {genotype}</Text>
+        <Text fontSize="md"><strong>Description: </strong>Meds</Text>
       </AccordionPanel>
     </AccordionItem>
   );

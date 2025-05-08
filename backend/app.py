@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from io import BytesIO
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -149,6 +150,31 @@ def parse_23andme_file(file_stream):
             }
     return found
 
+def check_pathway_a(snps):
+    NOD2 = False
+    ATG16L1 = False
+    IL10 = False
+    IL23R = False
+    for _, info in snps.items():
+        if info['description'] == 'NOD2':
+            NOD2 = True
+        elif info['description'] == 'ATG16L1':
+            ATG16L1 = True
+        elif info['description'] == 'IL10':
+            IL10 = True
+        elif info['description'] == 'IL23R':
+            IL23R = True
+
+    if NOD2:
+        return "NOD2"
+    elif ATG16L1:
+        return "ATG16L1"
+    elif IL10:
+        return "IL10"
+    elif IL23R:
+        return "IL23R"
+    else:
+        return "None"
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -165,10 +191,24 @@ def upload_file():
 
     print(matched_snps)
 
+    path_a = check_pathway_a(matched_snps)
+
+    if path_a == "None":
+        return jsonify({
+        'message': f'File {file.filename} uploaded and processed!',
+        'matches': path_a
+        })
+    else:
+        return jsonify({
+        'message': f'File {file.filename} uploaded and processed!',
+        'matches': path_a
+        })
+
+    '''
     return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
         'matches': matched_snps
-    })
+    })'''
 
 if __name__ == '__main__':
     app.run(debug=True)
