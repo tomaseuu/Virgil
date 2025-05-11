@@ -18,6 +18,32 @@ TARGET_SNPS = {
 'rs2228055': 'IL10',
 'rs7517847': 'IL23R',
 }
+
+
+'''
+NOD2 -------------
+Asacol HD
+Pentasa
+Lialda
+Apriso
+Delzicol
+Canasa
+Rowasa
+Colazal
+Dipentum
+Azulfidine
+IL23R-------------
+Risankizumab(Skyrizi)
+Tremfya
+Ixekizumab (Taltz)
+'''
+
+meds = {
+    'NOD2': '5-ASA',
+    'IL10': 'N/A',
+    'IL23R': 'Janus Kinase (JAK) Inhibitors',
+    'ATG16L1': 'Siromulus (MTOR inhibitor)',
+}
     
 '''
     'rs2066843': 'NOD2; anti-tumor necrosis factor (TNF)-α and TDM (Therapeutic drug monitoring)',
@@ -175,6 +201,61 @@ def check_pathway_a(snps):
         return "IL23R"
     else:
         return "None"
+    
+def get_meds(drug_name):
+    drug_name_upper = drug_name.upper()
+
+    drugsfda_url = 'https://api.fda.gov/drug/drugsfda.json'
+    drugsfda_params = {
+        'search': f'products.brand_name:"{drug_name_upper}"',
+        'limit': 1
+    }
+    drugsfda_resp = requests.get(drugsfda_url, params=drugsfda_params)
+
+    label_url = 'https://api.fda.gov/drug/label.json'
+    label_params = {
+        'search': f'openfda.brand_name:"{drug_name_upper}"',
+        'limit': 1
+    }
+    label_resp = requests.get(label_url, params=label_params)
+
+    info = {}
+
+    # product info
+    if drugsfda_resp.ok:
+        try:
+            product = drugsfda_resp.json()['results'][0]['products'][0]
+            info['Brand Name'] = product.get('brand_name')
+            info['Active Ingredients'] = [
+                f"{ing['name']} ({ing['strength']})" for ing in product.get('active_ingredients', [])
+            ]
+            info['Dosage Form'] = product.get('dosage_form')
+            info['Route'] = product.get('route')
+            info['Prescription Status'] = product.get('marketing_status')
+        except Exception as e:
+            info['Product Info Error'] = f"Could not parse drugsfda data: {e}"
+    else:
+        info['Product Info Error'] = f"Failed to fetch drugsfda data ({drugsfda_resp.status_code})"
+
+    # label info
+    if label_resp.ok:
+        try:
+            label = label_resp.json()['results'][0]
+            info['Indications and Usage'] = label.get('indications_and_usage', ['Not listed'])[0]
+            info['Adverse Reactions'] = label.get('adverse_reactions', ['Not listed'])[0]
+            info['Warnings'] = label.get('warnings', ['Not listed'])[0]
+            info['Boxed Warning'] = label.get('boxed_warning', ['None'])[0]
+            info['Dosage and Administration'] = label.get('dosage_and_administration', ['Not listed'])[0]
+        except Exception as e:
+            info['Label Info Error'] = f"Could not parse label data: {e}"
+    else:
+        info['Label Info Error'] = f"Failed to fetch label data ({label_resp.status_code})"
+
+    print("\nMedication Summary for:", drug_name.capitalize())
+    for k, v in info.items():
+        print(f"\n**{k}**:\n{v[:1000] if isinstance(v, str) else v}")
+
+    return info
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -193,15 +274,17 @@ def upload_file():
 
     path_a = check_pathway_a(matched_snps)
 
+    meds = [get_meds('skyrizi')]
+
     if path_a == "None":
         return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
-        'matches': path_a
+        'matches': meds
         })
     else:
         return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
-        'matches': path_a
+        'matches': meds
         })
 
     '''

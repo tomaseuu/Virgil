@@ -1,7 +1,7 @@
 import React from 'react';
 import { AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box, Text } from '@chakra-ui/react';
 
-function Bubble({ polymorphism }) {
+function Bubble({ results }) {
   return (
     <AccordionItem border="none">
       <h2>
@@ -21,7 +21,7 @@ function Bubble({ polymorphism }) {
           w="100%"
         >
           <Box flex="1" textAlign="left" fontSize="lg">
-            {polymorphism}
+            {results["Brand Name"]}
           </Box>
           <AccordionIcon />
         </AccordionButton>

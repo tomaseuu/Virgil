@@ -34,10 +34,12 @@ function ResultsPage() {
               Results
             </Heading>
 
-            {resultString ? (
-              <Accordion allowToggle w="100%">
-                <Bubble polymorphism={resultString} />
-              </Accordion>
+            {resultString && resultString.length > 0 ? (
+            <Accordion allowToggle w="100%">
+              {resultString.map((result, index) => (
+                <Bubble key={index} results={result} />
+              ))}
+            </Accordion>
             ) : (
               <Text color="white" fontFamily="'Glacial Indifference Reg'">
                 No results found
