@@ -10,7 +10,7 @@ function ResultsPage() {
 
   return (
     <ChakraProvider>
-      <Box minH="100vh" bg="#4134bb" display="flex" flexDirection="column">
+      <Box minH="100vh" bg="#4134bb" display="flex" flexDirection="column" pb="10">
         <NavBar />
 
         <Box
@@ -21,7 +21,7 @@ function ResultsPage() {
           px={10}
           pt="10vh"
           textAlign="center"
-          maxW="lg"
+          maxW="80%"
           mx="auto"
         >
           <VStack spacing={8}>

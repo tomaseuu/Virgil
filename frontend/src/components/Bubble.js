@@ -1,42 +1,75 @@
-import React from 'react';
-import { AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box, Text } from '@chakra-ui/react';
+import {
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Box,
+  Text,
+  Divider,
+  Icon,
+} from '@chakra-ui/react';
+import {
+  InfoOutlineIcon,
+  WarningTwoIcon,
+  StarIcon,
+} from '@chakra-ui/icons';
+
+const Section = ({ icon, title, content }) => (
+  <Box>
+    <Box display="flex" alignItems="center" mb={1}>
+      <Icon as={icon} color="blue.200" mr={2} />
+      <Text fontWeight="bold" color="whiteAlpha.900" fontSize="md">
+        {title}:
+      </Text>
+    </Box>
+    <Text fontSize="sm" color="whiteAlpha.800" whiteSpace="pre-wrap">
+      {content || "N/A"}
+    </Text>
+    <Divider my={3} borderColor="whiteAlpha.300" />
+  </Box>
+);
 
 function Bubble({ results }) {
   return (
-    <AccordionItem border="none">
+    <AccordionItem border="none" mb={4}>
       <h2>
         <AccordionButton
-          _expanded={{
-            bg: "#5f4b8b",
-            color: "white",
-          }}
-          bg="#4134bb"
+          _expanded={{ bg: "#5043c3", color: "white" }}
+          bg="#2c256e"
           color="white"
           fontFamily="'Glacial Indifference Bold'"
-          borderRadius="20px"
           px={6}
           py={4}
-          mb={3}
-          textAlign="left"
           w="100%"
+          textAlign="left"
+          justifyContent="space-between"
         >
-          <Box flex="1" textAlign="left" fontSize="lg">
+          <Box flex="1" fontSize="lg">
             {results["Brand Name"]}
           </Box>
           <AccordionIcon />
         </AccordionButton>
       </h2>
+
       <AccordionPanel
-        pb={4}
-        bg="#5f4b8b"
-        borderRadius="20px"
-        color="white"
-        fontFamily="'Glacial Indifference Reg'"
         px={6}
         py={4}
+        bg="#3b3192"
+        color="white"
+        fontFamily="'Glacial Indifference Reg'"
         w="100%"
       >
-        <Text fontSize="md"><strong>Description: </strong>Meds</Text>
+        <Box>
+          <Section icon={StarIcon} title="Active Ingredients" content={results["Active Ingredients"]} />
+          <Section icon={InfoOutlineIcon} title="Dosage Form" content={results["Dosage Form"]} />
+          <Section icon={InfoOutlineIcon} title="Route" content={results["Route"]} />
+          <Section icon={InfoOutlineIcon} title="Prescription Status" content={results["Prescription Status"]} />
+          <Section icon={InfoOutlineIcon} title="Indications and Usage" content={results["Indications and Usage"]} />
+          {/* <Section icon={TimeIcon} title="Adverse Reactions" content={results["Adverse Reactions"]} /> */}
+          <Section icon={WarningTwoIcon} title="Warnings" content={results["Warnings"]} />
+          <Section icon={WarningTwoIcon} title="Boxed Warning" content={results["Boxed Warning"]} />
+          {/* <Section icon={AttachmentIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} /> */}
+        </Box>
       </AccordionPanel>
     </AccordionItem>
   );
