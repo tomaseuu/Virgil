@@ -24,6 +24,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Flex,
+  useToast,
 } from '@chakra-ui/react';
 import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import axios from 'axios';
@@ -33,19 +34,23 @@ import NavBar from '../components/NavBar';
 function UploadFilePage() {
   const [age, setAge] = useState('');
   const [sex, setSex] = useState('');
-  const [ethnicity, setEthnicity] = useState('');
-  const [familyHistory, setFamilyHistory] = useState('');
-  const [smoking, setSmoking] = useState('');
-  const [autoimmune, setAutoimmune] = useState('');
-  const [geoLocation, setGeoLocation] = useState('');
-  const [areaLocation, setAreaLocation] = useState('');
+  //const [ethnicity, setEthnicity] = useState('');
+  //const [familyHistory, setFamilyHistory] = useState('');
+  //const [smoking, setSmoking] = useState('');
+  //const [autoimmune, setAutoimmune] = useState('');
+  //const [geoLocation, setGeoLocation] = useState('');
+  //const [areaLocation, setAreaLocation] = useState('');
   const [IBD, setIBD] = useState('');
-  const [anxiety, setAnxiety] = useState('');
-  const [diet, setDiet] = useState('');
+  //const [anxiety, setAnxiety] = useState('');
+  //const [diet, setDiet] = useState('');
   const [pregnant, setPregnant] = useState('');
-  const [medicalHistory, setMedicalHistory] = useState([]);
-  const [surgicalHistory, setSurgicalHistory] = useState([]);
+  //const [medicalHistory, setMedicalHistory] = useState([]);
+  //const [surgicalHistory, setSurgicalHistory] = useState([]);
   const [allergies, setAllergies] = useState([]);
+  const [kidneys, setKidneys] = useState('');
+  const [vaccines, setVaccines] = useState('');
+  const [severity, setSeverity] = useState('');
+  const [firstTreatment, setFirstTreatment] = useState('');
 
   const [drugEntries, setDrugEntries] = useState([{ drug: '', reaction: '' }]);
 
@@ -57,6 +62,8 @@ function UploadFilePage() {
   const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const toast = useToast();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -88,37 +95,47 @@ function UploadFilePage() {
     let agree1error = true;
     let agree2error = true;
     let i = 0;
-    for (i = 0; i < 2; i++){
-      if (agree[i] === 'agree1'){
+    for (i = 0; i < 2; i++) {
+      if (agree[i] === 'agree1') {
         agree1error = false;
       } else if (agree[i] === 'agree2') {
         agree2error = false;
       }
     }
-    if (agree1error || agree2error){
-      return alert('Must submit User Agreement');
+    if (agree1error || agree2error) {
+      toast({
+        title: 'User Agreement Required',
+        description: 'You must agree to both parts of the user agreement before uploading.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
     }
 
-    if (!file) return alert('No file selected!');
+    if (!file) {
+      toast({
+        title: 'No File Selected',
+        description: 'Please choose a file to upload.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', file);
 
     formData.append('age', age);
     formData.append('sex', sex);
-    formData.append('ethnicity', ethnicity);
-    formData.append('familyHistory', familyHistory);
-    formData.append('smoking', smoking);
-    formData.append('autoimmune', autoimmune);
-    formData.append('geoLocation', geoLocation);
-    formData.append('areaLocation', areaLocation);
     formData.append('IBD', IBD);
-    formData.append('anxiety', anxiety);
-    formData.append('diet', diet);
     formData.append('pregnant', pregnant);
-    formData.append('medicalHistory', medicalHistory);
-    formData.append('surgicalHistory', surgicalHistory);
     formData.append('allergies', allergies);
+    formData.append('kidneys', kidneys);
+    formData.append('vaccines', vaccines);
+    formData.append('severity', severity);
+    formData.append('firstTreatment', firstTreatment);
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
@@ -130,10 +147,15 @@ function UploadFilePage() {
       const results = response.data.matches || [];
       console.log(results);
       navigate('/results', { state: { results } });
-
     } catch (error) {
       console.error('Upload failed:', error);
-      alert('Upload failed');
+      toast({
+        title: 'Upload Failed',
+        description: 'Something went wrong while uploading. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -201,6 +223,7 @@ function UploadFilePage() {
               </Select>
             </FormControl>
 
+          {/*
             <FormControl>
               <FormLabel textColor="white">Ethnicity</FormLabel>
               <Select
@@ -373,6 +396,7 @@ function UploadFilePage() {
                 <option style={optionStyle} value="other">Other</option>
               </Select>
             </FormControl>
+            */}
 
             <FormControl>
               <FormLabel textColor="white">Type of IBD</FormLabel>
@@ -397,10 +421,37 @@ function UploadFilePage() {
                 <option value="crohns">Crohn's Disease</option>
                 <option value="uc">Ulcerative Colitis</option>
                 <option value="both">Both</option>
-                <option value="other">Unknown</option>
+                <option value="other">Unsure</option>
               </Select>
             </FormControl>
 
+            <FormControl>
+              <FormLabel textColor="white">Severity of IBD</FormLabel>
+              <Select
+                {...selectStyles}
+                value={severity}
+                onChange={(e) => setSeverity(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
+              >
+                <option value="mild">Mild</option>
+                <option value="severe">Severe</option>
+                <option value="none">Neither</option>
+              </Select>
+            </FormControl>
+
+          {/*
             <FormControl>
               <FormLabel textColor="white">Anxiety and Stress Levels</FormLabel>
               <Select
@@ -457,6 +508,7 @@ function UploadFilePage() {
                 <option value="other">Other</option>
               </Select>
             </FormControl>
+          */}
 
             <FormControl>
               <FormLabel textColor="white">Pregnant</FormLabel>
@@ -487,26 +539,57 @@ function UploadFilePage() {
             </FormControl>
 
             <FormControl>
-              <FormLabel textColor="white">Allergies</FormLabel>
-              <Box
-                bg="rgba(255, 255, 255, 0.1)"
-                p={4}
-                borderRadius="md"
-                border="1px solid #ccc"
+              <FormLabel textColor="white">History of Kidney Issues</FormLabel>
+              <Select
+                {...selectStyles}
+                value={kidneys}
+                onChange={(e) => setKidneys(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
               >
-                <CheckboxGroup
-                  value={allergies}
-                  onChange={(values) => setAllergies(values)}
-                >
-                  <Stack color="white" textAlign="left" spacing={4} direction="column">
-                    <Checkbox colorScheme="purple" value="amino_salic">Aminosalicylate or Salicylate pain relievers such as aspirin</Checkbox>
-                    <Checkbox colorScheme="purple" value="sulfa">Sulfonamide or Salicylate, Sulfa</Checkbox>
-                    <Checkbox colorScheme="purple" value="none">None of the above</Checkbox>
-                  </Stack>
-                </CheckboxGroup>
-              </Box>
+                <option value="current">Current</option>
+                <option value="past">Past</option>
+                <option value="none">None</option>
+              </Select>
             </FormControl>
 
+            <FormControl>
+              <FormLabel textColor="white">Plans To Take Live Vaccines</FormLabel>
+              <Select
+                {...selectStyles}
+                value={vaccines}
+                onChange={(e) => setVaccines(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
+              >
+                <option value="yes">Yes (Measles, Rotavirus, Smallpox, Chicken Pox, Yellow Fever, etc.)</option>
+                <option value="no">No</option>
+              </Select>
+            </FormControl>
+
+          {/*
             <FormControl>
               <FormLabel textColor="white">Medical History</FormLabel>
               <Box
@@ -551,6 +634,53 @@ function UploadFilePage() {
                     <Checkbox colorScheme="purple" value="fistula_repair">Fistula Repair</Checkbox>
                     <Checkbox colorScheme="purple" value="abscess_drainage">Abscess Drainage</Checkbox>
                     <Checkbox colorScheme="purple" value="other_surgery">Other Surgeries Related to IBD</Checkbox>
+                    <Checkbox colorScheme="purple" value="none">None of the above</Checkbox>
+                  </Stack>
+                </CheckboxGroup>
+              </Box>
+            </FormControl>
+          */}
+
+            <FormControl>
+              <FormLabel textColor="white">Is This Your First Treatment?</FormLabel>
+              <Select
+                {...selectStyles}
+                value={firstTreatment}
+                onChange={(e) => setFirstTreatment(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
+              >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </Select>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel textColor="white">Allergies</FormLabel>
+              <Box
+                bg="rgba(255, 255, 255, 0.1)"
+                p={4}
+                borderRadius="md"
+                border="1px solid #ccc"
+              >
+                <CheckboxGroup
+                  value={allergies}
+                  onChange={(values) => setAllergies(values)}
+                >
+                  <Stack color="white" textAlign="left" spacing={4} direction="column">
+                    <Checkbox colorScheme="purple" value="amino_salic">Aminosalicylate or Salicylate pain relievers such as aspirin</Checkbox>
+                    <Checkbox colorScheme="purple" value="sulfa">Sulfonamide or Salicylate, Sulfa</Checkbox>
                     <Checkbox colorScheme="purple" value="none">None of the above</Checkbox>
                   </Stack>
                 </CheckboxGroup>

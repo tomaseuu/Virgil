@@ -31,10 +31,20 @@ const Section = ({ icon, title, content }) => (
 
 function Bubble({ results }) {
   return (
-    <AccordionItem border="none" mb={4}>
+    <AccordionItem
+      border="none"
+      mb={4}
+      borderRadius="md"
+      overflow="hidden"
+      bg="#2c256e"
+    >
       <h2>
         <AccordionButton
-          _expanded={{ bg: "#5043c3", color: "white" }}
+          _expanded={{
+            bg: "#5043c3",
+            color: "white",
+            borderBottomRadius: 0,
+          }}
           bg="#2c256e"
           color="white"
           fontFamily="'Glacial Indifference Bold'"
@@ -43,6 +53,8 @@ function Bubble({ results }) {
           w="100%"
           textAlign="left"
           justifyContent="space-between"
+          borderTopRadius="md"
+          borderBottomRadius="md"
         >
           <Box flex="1" fontSize="lg">
             {results["Brand Name"]}
@@ -58,6 +70,7 @@ function Bubble({ results }) {
         color="white"
         fontFamily="'Glacial Indifference Reg'"
         w="100%"
+        borderBottomRadius="md"
       >
         <Box>
           <Section icon={StarIcon} title="Active Ingredients" content={results["Active Ingredients"]} />
