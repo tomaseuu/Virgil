@@ -33,7 +33,7 @@ import NavBar from '../components/NavBar';
 
 function UploadFilePage() {
   const [age, setAge] = useState('');
-  const [sex, setSex] = useState('');
+  // const [sex, setSex] = useState('');
   //const [ethnicity, setEthnicity] = useState('');
   //const [familyHistory, setFamilyHistory] = useState('');
   //const [smoking, setSmoking] = useState('');
@@ -51,6 +51,7 @@ function UploadFilePage() {
   const [vaccines, setVaccines] = useState('');
   const [severity, setSeverity] = useState('');
   const [firstTreatment, setFirstTreatment] = useState('');
+  const [route, setRoute] = useState('');
 
   const [drugEntries, setDrugEntries] = useState([{ drug: '', reaction: '' }]);
 
@@ -128,7 +129,6 @@ function UploadFilePage() {
     formData.append('file', file);
 
     formData.append('age', age);
-    formData.append('sex', sex);
     formData.append('IBD', IBD);
     formData.append('pregnant', pregnant);
     formData.append('allergies', allergies);
@@ -136,6 +136,8 @@ function UploadFilePage() {
     formData.append('vaccines', vaccines);
     formData.append('severity', severity);
     formData.append('firstTreatment', firstTreatment);
+    formData.append('route', route);
+    formData.append('drugs', drugEntries);
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
@@ -665,6 +667,34 @@ function UploadFilePage() {
               >
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
+              </Select>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel textColor="white">Drug Administration Route</FormLabel>
+              <Select
+                {...selectStyles}
+                value={route}
+                onChange={(e) => setRoute(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
+              >
+                <option value="inject_prefer">Prefer Injection</option>
+                <option value="oral_prefer">Prefer Oral</option>
+                <option value="inject_only">Must Be Injection</option>
+                <option value="oral_only">Must Be Oral</option>
+                <option value="none">No Preference</option>
               </Select>
             </FormControl>
 
