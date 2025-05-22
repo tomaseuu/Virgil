@@ -197,6 +197,7 @@ function UploadFilePage() {
               />
             </FormControl>
 
+          {/*
             <FormControl>
               <FormLabel textColor="white">Sex</FormLabel>
               <Select
@@ -222,6 +223,7 @@ function UploadFilePage() {
                 <option value="other">Other</option>
               </Select>
             </FormControl>
+          */}
 
           {/*
             <FormControl>
@@ -446,8 +448,8 @@ function UploadFilePage() {
                 }}
               >
                 <option value="mild">Mild</option>
+                <option value="moderate">Moderate</option>
                 <option value="severe">Severe</option>
-                <option value="none">Neither</option>
               </Select>
             </FormControl>
 
@@ -558,8 +560,8 @@ function UploadFilePage() {
                   }
                 }}
               >
-                <option value="current">Current</option>
-                <option value="past">Past</option>
+                <option value="yes">Current</option>
+                <option value="yes">Past</option>
                 <option value="none">None</option>
               </Select>
             </FormControl>
