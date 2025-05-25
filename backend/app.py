@@ -4,6 +4,7 @@ from io import BytesIO
 import requests
 import pandas as pd
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -259,7 +260,7 @@ def get_meds(drug_name):
 
     return info
 
-def parse_metadata(answers):
+def parse_metadata(answers, drugs_taken):
     base_dir = os.path.dirname(__file__)
     csv_metadata = os.path.join(base_dir, 'excel', 'metadata_questions.csv')
     drugsWquestions=pd.read_csv(csv_metadata)
@@ -279,7 +280,7 @@ def parse_metadata(answers):
     drugsWquestionsLong = drugsWquestionsLong[drugsWquestionsLong["Answers"] == "yes"]
     Bad_Drugs=drugsWquestionsLong["Bad_Drugs"].to_list()
 
-    result = list(set(possible_drugs) - set(Bad_Drugs))
+    result = list(set(possible_drugs) - set(Bad_Drugs) - set(drugs_taken))
     return result
 
 def map_answers(form):
@@ -344,10 +345,18 @@ def upload_file():
     form_data = request.form.to_dict()
     print("Form Data:", form_data)
 
+    drugs_json = form_data.get('drugs')
+    drugs = json.loads(drugs_json)
+    drug_names = [entry['drug'] for entry in drugs]
+
+    print("Drugs Taken:")
+    print(drug_names)
+    print("")
+
     print("Metadata Results:")
     answers = map_answers(form_data)
     print(answers)
-    print(parse_metadata(answers))
+    print(parse_metadata(answers, drug_names))
     print("")
 
     file = request.files.get('file')

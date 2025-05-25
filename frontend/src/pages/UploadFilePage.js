@@ -137,7 +137,7 @@ function UploadFilePage() {
     formData.append('severity', severity);
     formData.append('firstTreatment', firstTreatment);
     formData.append('route', route);
-    formData.append('drugs', drugEntries);
+    formData.append('drugs', JSON.stringify(drugEntries));
 
     try {
       const response = await axios.post('http://localhost:5000/upload', formData, {
