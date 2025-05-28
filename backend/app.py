@@ -118,15 +118,28 @@ def parse_metadata(answers, drugs_taken):
     csv_metadata = os.path.join(base_dir, 'excel', 'metadata_questions.csv')
     drugsWquestions=pd.read_csv(csv_metadata)
     questions=drugsWquestions["Question:"]
-    # answers=["yes","no","yes","no","no","yes","no","yes","yes","no","yes","yes","no","yes"] # will change to whatever is in website
     drugsWquestions["Answers"]=answers
-
-    csv_drugs = os.path.join(base_dir, 'excel', 'scraped_meds.csv')
-    scrapedDrugs=pd.read_csv(csv_drugs)
-    # scraped does not have all drugs
-    # need to make sure compatible with API
-    possible_drugs=scrapedDrugs["name"].to_list()
-
+    
+    possible_drugs=drug_list = [
+    "Abrilada", "Adalimumab-afzb", "Amjevita", "Adalimumab-atto", "Apriso", "Mesalamine",
+    "Avsola", "Infliximab-axxq", "Azathioprine", "Azulfidine", "Budesonide", "Canasa",
+    "Cimzia", "Certolizumab pegol", "Cipro", "Ciprofloxacin", "Colazal", "Balsalazide",
+    "Cyltezo", "Adalimumab-adbm", "Depo-Medrol", "Dipentum", "Olsalazine", "Entocort EC",
+    "Entyvio", "Vedolizumab", "Flagyl", "Metronidazole", "Hadlima", "Adalimumab-bwwd",
+    "Hulio", "Adalimumab-fkjp", "Humira", "Adalimumab", "Hyrimoz", "Adalimumab-adaz",
+    "Idacio", "Adalimumab-aacf", "Imuldosa", "Ustekinumab-srlf", "Imuran", "Inflectra",
+    "Infliximab-dyyb", "IXIFI", "Infliximab-qbtx", "Jylamvo", "Lialda", "Medrol Dosepak",
+    "Mercaptopurine (6-MP)", "Methotrexate", "Mesalamine", "Neoral", "Omvoh", "Otrexup",
+    "Otulfi", "Pediapred", "Pentasa", "Prednisone", "Prograf", "Purinethol", "Pyzchiva",
+    "Rasuvo", "Remicade", "Renflexis", "RINVOQ", "Rowasa", "Sandimmune", "Selarsdi",
+    "Simlandi", "Simponi", "Skyrizi", "Solu-Medrol", "Stelara", "Tremfya", "Tyruko",
+    "Tysabri", "UCERIS", "Unbranded Infliximab", "Velsipity", "Wezlana", "Xatmep",
+    "Xeljanz", "Yesintek", "Yuflyma", "YUSIMRY", "Zeposia", "Zymfentra"
+]
+    oral= ['Apriso', 'Azathioprine', 'Azulfidine', 'Budesonide', 'Cipro', 'Colazal', 'Dipentum', 'Entocort EC', 'Flagyl', 'Imuran', 'Jylamvo', 'Lialda', 'Medrol Dosepak', 'Mercaptopurine (6-MP)', 'Mesalamine', 'Methotrexate', 'Neoral', 'Pediapred', 'Pentasa', 'Prednisone', 'Prograf', 'Purinethol', 'RINVOQ', 'Sandimmune', 'UCERIS', 'Velsipity', 'Xatmep', 'Xeljanz', 'Zeposia']
+    rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
+    IV= ['Avsola', 'Cipro', 'Entyvio', 'Imuldosa', 'Inflectra', 'IXIFI', 'Omvoh', 'Otulfi', 'Prograf', 'Pyzchiva', 'Remicade', 'Renflexis', 'Sandimmune', 'Selarsdi', 'Skyrizi', 'Solu-Medrol', 'Stelara', 'Tremfya', 'Tyruko', 'Tysabri', 'Unbranded Infliximab', 'Wezlana', 'Yesintek']
+    Injection = ['Abrilada', 'Amjevita', 'Cimzia', 'Cyltezo', 'Depo-Medrol', 'Entyvio', 'Hadlima', 'Hulio', 'Humira', 'Hyrimoz', 'Idacio', 'Imuldosa', 'Methotrexate', 'Omvoh', 'Otrexup', 'Otul', 'Pyzchiva', 'Rasuvo', 'Selarsdi', 'Simlandi', 'Simponi', 'Skyrizi', 'Stelara', 'Tremfya', 'Wezlana', 'Yesintek', 'Yuyma', 'YUSIMRY']
     drugsWquestionsLong=pd.melt(drugsWquestions, id_vars=["Question:","Answers"], var_name="Questions", value_name="Bad_Drugs")
     drugsWquestionsLong = drugsWquestionsLong[drugsWquestionsLong["Bad_Drugs"].notnull()] #filter out NaNs in drug column
     drugsWquestionsLong = drugsWquestionsLong[drugsWquestionsLong["Answers"].notnull()] #filter out unaswered questions, might need to change this
