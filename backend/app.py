@@ -53,10 +53,32 @@ def check_pathway(snps):
         node = info['node']
         description = info['description']
         if node not in result:
-            result[node] = {}
-        result[node][snp] = description
+            result[node] = {
+                'snps': {},
+                'best_drug': TARGET_MEDS.get(node, {}).get('best_drug', []),
+                'alternatives': TARGET_MEDS.get(node, {}).get('alternatives', []),
+                'description': TARGET_MEDS.get(node, {}).get('description', ''),
+                'citation': TARGET_MEDS.get(node, {}).get('citation', [])
+            }
+        result[node]['snps'][snp] = description
 
     return result
+
+def extract_valid_meds(pathway_output, accepted_drugs):
+    best_drugs = set()
+    alternatives = set()
+
+    for gene_info in pathway_output.values():
+        best_drugs.update(gene_info.get("best_drug", []))
+        alternatives.update(gene_info.get("alternatives", []))
+
+    valid_best = [drug for drug in best_drugs if drug in accepted_drugs]
+    valid_alternatives = [drug for drug in alternatives if drug in accepted_drugs]
+
+    return {
+        "valid_best_drugs": valid_best,
+        "valid_alternatives": valid_alternatives
+    }
 
 def get_med_info(drug_name):
     drug_name_upper = drug_name.upper()
@@ -228,7 +250,8 @@ def upload_file():
     print("Metadata Results:")
     answers = map_answers(form_data)
     print(answers)
-    print(parse_metadata(answers, drug_names))
+    metadata = parse_metadata(answers, drug_names)
+    print(metadata)
     print("")
 
     file = request.files.get('file')
@@ -244,13 +267,24 @@ def upload_file():
 
     path = check_pathway(matched_snps)
 
-    print("Highest Pathway:")
+    print("Highest Pathway and Matched Meds:")
     print(path)
     print("")
 
-    med_names = [ "Zymfentra" ]
+    accepted = extract_valid_meds(path, metadata)
+    print("Accepted drugs:")
+    print(accepted)
+    print("")
 
-    meds = [get_med_info(name) for name in med_names]
+    valid_best_drugs = accepted['valid_best_drugs']
+    valid_alternatives = accepted['valid_alternatives']
+
+    combined_valid_drugs = list(set(valid_best_drugs + valid_alternatives))
+
+    meds = [get_med_info(name) for name in combined_valid_drugs]
+
+    # meds = [get_med_info(name) for name in valid_best_drugs]
+    # meds = [get_med_info(name) for name in valid_alternatives]
 
     # meds = [get_med_info('skyrizi')]
 
