@@ -1,51 +1,51 @@
 {
   "NOD2": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ['Imuran', 'Purinethol'],
+    "description": "At the cellular level, this mutation affects the NOD2 protein, which plays a crucial role in immune system signaling. NOD2 is responsible for detecting bacterial components and triggering an immune response. When mutated, it can lead to dysregulated inflammation, contributing to conditions like Crohn’s disease",
+    "alternatives": ['infliximab', 'Humira', 'BRD5529', 'Dietary and microbiome-based therapies']
+    "citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3306782/"
   },
   "CARD9": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [],
-    "citation": "TBD"
+    "best_drug": ['lead compounds']
+    "description": "At the cellular level, rs10870077 affects CARD9 protein function, which is involved in innate immune responses. Specifically, this variant has been linked to altered cytokine production and immune cell activation, potentially influencing disease progression"
+    "alternatives": ['infliximab', 'Humira', 'BRD5529', 'Azathioprine', 'Methotrexate']
+    "citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6933369/"
   },
   "MEFV": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ['None known']
+    "description": "MEFV encodes pyrin, an inflammasome sensor. Gain-of-function mutations in MEFV can lead to excessive inflammation, contributing to IBD severity."
+    "alternatives": ['infliximab', 'Humira', 'Vedolizumab']
+    "citation": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6933369/"
   },
   "NCF4": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ['HSCT']
+    "description": "NCF4 (Neutrophil Cytosolic Factor 4) mutations primarily affect the NADPH oxidase complex, which plays a crucial role in immune defense. Specifically, NCF4 encodes p40-phox, a subunit involved in reactive oxygen species (ROS) production within neutrophils. Altered ROS production can contribute to excessive inflammation, potentially influencing conditions like IBD (Inflammatory Bowel Disease)"
+    "alternatives": ['infliximab', 'Humira','Azathioprine', 'Methotrexate']
+    "citation": "https://www.frontiersin.org/journals/pediatrics/articles/10.3389/fped.2020.618918/full"
   },
   "SKAP2": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ['None known']
+    "description": "SKAP2 is primarily expressed in immune cells, where it mediates cytoskeletal rearrangement, chemotaxis, and immune cell infiltration—processes that contribute to intestinal inflammation"
+    "alternatives": ['infliximab', 'Humira', 'Vedolizumab']
+    "citation": "https://www.frontiersin.org/journals/cell-and-developmental-biology/articles/10.3389/fcell.2020.00401/full"
   },
   "NOS2": {
-    "best_drug": "TBD",
-    "description": "TBD",
+    "best_drug": ['infliximab', 'Humira']
+    "description": "Mutations can affect nitric oxide (NO) production, leading to altered immune responses and intestinal inflammation"]
     "alternatives": [""],
-    "citation": "TBD"
+    "citation": "https://pubmed.ncbi.nlm.nih.gov/19334074/"
   },
   "LACC1": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ['None Known']
+    "description": "Variants in LACC1 modulate T cell gene expression and metabolism, and LACC1 mutations correlate with lower expression in CD4+ and CD8+ T cells, potentially leading to T cell dysfunction and increased IBD risk"
+    "alternatives": ['Dietary and microbiome-based therapies']
+    "citation": "https://www.google.com/url?q=https://journals.aai.org/jimmunol/article/202/1/183/107241/LACC1-Regulates-TNF-and-IL-17-in-Mouse-Models-of&sa=D&source=editors&ust=1748454796505438&usg=AOvVaw02gbbmpB48SgSsgQN_uoug"
   },
   "LRRK2": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ['MLi-2']
+    "description": "The rs10781499 mutation in CARD9 (Caspase Recruitment Domain-Containing Protein 9) has been studied in relation to inflammatory diseases and immune responses. This mutation is commonly associated with host-microbe interactions."
+    "alternatives": ['lead compounds', 'infliximab', 'Humira','Azathioprine', 'Methotrexate']
+    "citation": ['https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/', 'https://www.google.com/url?q=https://academic.oup.com/burnstrauma/article/doi/10.1093/burnst/tkad004/7151133&sa=D&source=editors&ust=1748454799534385&usg=AOvVaw234qInPawjX63o4toLdJXQ', 'https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0003391']
   },
   "ATG16L1": {
     "best_drug": "TBD",
