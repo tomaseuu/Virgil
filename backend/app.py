@@ -168,9 +168,8 @@ def map_answers(form):
     answers.append("yes" if age is not None and age < 16 else "no")
 
     # Q7 and Q8: Allergy to ? (repeat allergies value twice)
-    allergy_val = form.get('allergies', '')
-    answers.append(allergy_val if allergy_val else "no")
-    answers.append(allergy_val if allergy_val else "no")
+    answers.append("no")
+    answers.append("no")
 
     # Q9: Are you planning to take live vaccines?
     answers.append("yes" if form.get('vaccines', '').lower() == "yes" else "no")
@@ -213,10 +212,6 @@ def upload_file():
     drugs = json.loads(drugs_json)
     drug_names = [entry['drug'] for entry in drugs]
 
-    print("Drugs Taken:")
-    print(drug_names)
-    print("")
-
     print("Metadata Results:")
     answers = map_answers(form_data)
     print(answers)
@@ -234,108 +229,19 @@ def upload_file():
     print(matched_snps)
     print("")
 
-    path_a = check_pathway(matched_snps)
+    path = check_pathway(matched_snps)
 
     print("Highest Pathway:")
-    print(path_a)
+    print(path)
     print("")
 
-    med_names = [
-        "Abrilada",
-        "Adalimumab-afzb",
-        "Amjevita",
-        "Adalimumab-atto",
-        "Apriso",
-        "Mesalamine",
-        "Avsola",
-        "Infliximab-axxq",
-        "Azathioprine",
-        "Azulfidine",
-        "Budesonide",
-        "Canasa",
-        "Cimzia",
-        "Certolizumab pegol",
-        "Cipro",
-        "Ciprofloxacin",
-        "Colazal",
-        "Balsalazide",
-        "Cyltezo",
-        "Adalimumab-adbm",
-        "Depo-Medrol",
-        "Dipentum",
-        "Olsalazine",
-        "Entocort EC",
-        "Entyvio",
-        "Vedolizumab",
-        "Flagyl",
-        "Metronidazole",
-        "Hadlima",
-        "Adalimumab-bwwd",
-        "Hulio",
-        "Adalimumab-fkjp",
-        "Humira",
-        "Adalimumab",
-        "Hyrimoz",
-        "Adalimumab-adaz",
-        "Idacio",
-        "Adalimumab-aacf",
-        "Imuldosa",
-        "Ustekinumab-srlf",
-        "Imuran",
-        "Inflectra",
-        "Infliximab-dyyb",
-        "IXIFI",
-        "Infliximab-qbtx",
-        "Jylamvo",
-        "Lialda",
-        "Medrol Dosepak",
-        "Mercaptopurine (6-MP)",
-        "Methotrexate",
-        "Mesalamine",
-        "Neoral",
-        "Omvoh",
-        "Otrexup",
-        "Otulfi",
-        "Pediapred",
-        "Pentasa",
-        "Prednisone",
-        "Prograf",
-        "Purinethol",
-        "Pyzchiva",
-        "Rasuvo",
-        "Remicade",
-        "Renflexis",
-        "RINVOQ",
-        "Rowasa",
-        "Sandimmune",
-        "Selarsdi",
-        "Simlandi",
-        "Simponi",
-        "Skyrizi",
-        "Solu-Medrol",
-        "Stelara",
-        "Tremfya",
-        "Tyruko",
-        "Tysabri",
-        "UCERIS",
-        "Unbranded Infliximab",
-        "Velsipity",
-        "Wezlana",
-        "Xatmep",
-        "Xeljanz",
-        "Yesintek",
-        "Yuflyma",
-        "YUSIMRY",
-        "Zeposia",
-        "Zymfentra",
-    ]
+    med_names = [ "Zymfentra" ]
 
     meds = [get_med_info(name) for name in med_names]
 
-
     # meds = [get_med_info('skyrizi')]
 
-    if path_a == "None":
+    if path == "None":
         return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
         'matches': meds
@@ -345,12 +251,6 @@ def upload_file():
         'message': f'File {file.filename} uploaded and processed!',
         'matches': meds
         })
-
-    '''
-    return jsonify({
-        'message': f'File {file.filename} uploaded and processed!',
-        'matches': matched_snps
-    })'''
 
 if __name__ == '__main__':
     app.run(debug=True)

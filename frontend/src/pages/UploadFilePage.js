@@ -46,7 +46,7 @@ function UploadFilePage() {
   const [pregnant, setPregnant] = useState('');
   //const [medicalHistory, setMedicalHistory] = useState([]);
   //const [surgicalHistory, setSurgicalHistory] = useState([]);
-  const [allergies, setAllergies] = useState([]);
+  //const [allergies, setAllergies] = useState([]);
   const [kidneys, setKidneys] = useState('');
   const [vaccines, setVaccines] = useState('');
   const [severity, setSeverity] = useState('');
@@ -140,7 +140,6 @@ function UploadFilePage() {
     formData.append('age', age);
     formData.append('IBD', IBD);
     formData.append('pregnant', pregnant);
-    formData.append('allergies', allergies);
     formData.append('kidneys', kidneys);
     formData.append('vaccines', vaccines);
     formData.append('severity', severity);
@@ -701,12 +700,17 @@ function UploadFilePage() {
               >
                 <option value="inject_prefer">Prefer Injection</option>
                 <option value="oral_prefer">Prefer Oral</option>
+                <option value="iv_prefer">Prefer IV</option>
+                <option value="rectal_prefer">Prefer Rectal</option>
                 <option value="inject_only">Must Be Injection</option>
                 <option value="oral_only">Must Be Oral</option>
+                <option value="iv_only">Must Be IV</option>
+                <option value="rectal_only">Must Be Rectal</option>
                 <option value="none">No Preference</option>
               </Select>
             </FormControl>
 
+          {/*
             <FormControl>
               <FormLabel textColor="white">Allergies</FormLabel>
               <Box
@@ -727,6 +731,7 @@ function UploadFilePage() {
                 </CheckboxGroup>
               </Box>
             </FormControl>
+            */}
 
             <FormLabel textColor="white" mt={4}>Medications & Reactions</FormLabel>
             {drugEntries.map((entry, index) => (
