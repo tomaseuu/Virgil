@@ -1,0 +1,56 @@
+{
+  "NOD2": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "CARD9": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [],
+    "citation": "TBD"
+  },
+  "MEFV": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "NCF4": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "SKAP2": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "NOS2": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "LACC1": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "LRRK2": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  },
+  "ATG16L1": {
+    "best_drug": "TBD",
+    "description": "TBD",
+    "alternatives": [""],
+    "citation": "TBD"
+  }
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "snp": "rs2066843",
+    "node": "NOD2",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs2076756",
+    "node": "NOD2",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs2066847",
+    "node": "NOD2",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs10870077",
+    "node": "CARD9",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs10781499",
+    "node": "CARD9",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs4077515",
+    "node": "CARD9",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs200735402",
+    "node": "CARD9",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs22291130",
+    "node": "CARD9",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs4986790",
+    "node": "CARD9",
+    "description": "TBD",
+    "level": 1
+  },
+  {
+    "snp": "rs1555458284",
+    "node": "MEFV",
+    "description": "TBD",
+    "level": 2
+  },
+  {
+    "snp": "rs28940580",
+    "node": "MEFV",
+    "description": "TBD",
+    "level": 2
+  },
+  {
+    "snp": "rs369847561",
+    "node": "NCF4",
+    "description": "TBD",
+    "level": 2
+  },
+  {
+    "snp": "rs10486483",
+    "node": "SKAP2",
+    "description": "TBD",
+    "level": 2
+  },
+  {
+    "snp": "rs2297518",
+    "node": "NOS2",
+    "description": "TBD",
+    "level": 2
+  },
+  {
+    "snp": "rs730880295",
+    "node": "LACC1",
+    "description": "TBD",
+    "level": 2
+  },
+  {
+    "snp": "rs33995883",
+    "node": "LRRK2",
+    "description": "TBD",
+    "level": 3
+  },
+  {
+    "snp": "rs2241879",
+    "node": "ATG16L1",
+    "description": "TBD",
+    "level": 3
+  },
+  {
+    "snp": "rs2241880",
+    "node": "ATG16L1",
+    "description": "TBD",
+    "level": 3
+  },
+  {
+    "snp": "rs13412102",
+    "node": "ATG16L1",
+    "description": "TBD",
+    "level": 3
+  },
+  {
+    "snp": "rs6431660",
+    "node": "ATG16L1",
+    "description": "TBD",
+    "level": 3
+  },
+  {
+    "snp": "rs1441090",
+    "node": "ATG16L1",
+    "description": "TBD",
+    "level": 3
+  },
+  {
+    "snp": "rs2289472",
+    "node": "ATG16L1",
+    "description": "TBD",
+    "level": 3
+  }
+]

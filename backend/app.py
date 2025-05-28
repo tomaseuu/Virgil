@@ -9,25 +9,15 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-TARGET_SNPS = {
-'rs2066847': 'NOD2',
-'rs2066843': 'NOD2',
-'rs2076756': 'NOD2',
-'rs2066847': 'NOD2',
-'rs122112067': 'NOD2',
-'rs6431660': 'ATG16L1',
-'rs13412102': 'ATG16L1',
-'rs2241880': 'ATG16L1',
-'rs2228055': 'IL10',
-'rs7517847': 'IL23R',
-}
+base_dir = os.path.dirname(__file__)
 
-meds = {
-    'NOD2': '5-ASA',
-    'IL10': 'N/A',
-    'IL23R': 'Janus Kinase (JAK) Inhibitors',
-    'ATG16L1': 'Siromulus (MTOR inhibitor)',
-}
+snps_path = os.path.join(base_dir, 'jsons', 'target_snps.json')
+with open(snps_path, 'r') as f:
+    TARGET_SNPS = json.load(f)
+
+meds_path = os.path.join(base_dir, 'jsons', 'medications.json')
+with open(meds_path, 'r') as f:
+    TARGET_MEDS = json.load(f)
 
 def parse_23andme_file(file_stream):
     found = {}
@@ -39,40 +29,36 @@ def parse_23andme_file(file_stream):
         if len(parts) < 4:
             continue
         rsid, chromosome, position, genotype = parts[:4]
-        if rsid in TARGET_SNPS:
+        TARGET_SNP_LOOKUP = {entry['snp']: entry for entry in TARGET_SNPS}
+        if rsid in TARGET_SNP_LOOKUP:
+            entry = TARGET_SNP_LOOKUP[rsid]
             found[rsid] = {
-                'description': TARGET_SNPS[rsid],
-                'genotype': genotype
+                'node': entry['node'],
+                'description': entry['description'],
+                'level': entry['level'],
             }
     return found
 
-def check_pathway_a(snps):
-    NOD2 = False
-    ATG16L1 = False
-    IL10 = False
-    IL23R = False
-    for _, info in snps.items():
-        if info['description'] == 'NOD2':
-            NOD2 = True
-        elif info['description'] == 'ATG16L1':
-            ATG16L1 = True
-        elif info['description'] == 'IL10':
-            IL10 = True
-        elif info['description'] == 'IL23R':
-            IL23R = True
+def check_pathway(snps):
+    levels = [info['level'] for info in snps.values()]
+    if not levels:
+        return {}
 
-    if NOD2:
-        return "NOD2"
-    elif ATG16L1:
-        return "ATG16L1"
-    elif IL10:
-        return "IL10"
-    elif IL23R:
-        return "IL23R"
-    else:
-        return "None"
-    
-def get_meds(drug_name):
+    best_level = min(levels)
+
+    top_snps = {snp: info for snp, info in snps.items() if info['level'] == best_level}
+
+    result = {}
+    for snp, info in top_snps.items():
+        node = info['node']
+        description = info['description']
+        if node not in result:
+            result[node] = {}
+        result[node][snp] = description
+
+    return result
+
+def get_med_info(drug_name):
     drug_name_upper = drug_name.upper()
 
     drugsfda_url = 'https://api.fda.gov/drug/drugsfda.json'
@@ -236,9 +222,13 @@ def upload_file():
     print(matched_snps)
     print("")
 
-    path_a = check_pathway_a(matched_snps)
+    path_a = check_pathway(matched_snps)
 
-    meds = [get_meds('skyrizi')]
+    print("Highest Pathway:")
+    print(path_a)
+    print("")
+
+    meds = [get_med_info('skyrizi')]
 
     if path_a == "None":
         return jsonify({
