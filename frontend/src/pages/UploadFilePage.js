@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -61,6 +61,15 @@ function UploadFilePage() {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  const [drugOptions, setDrugOptions] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/drug-options')
+      .then((res) => res.json())
+      .then((data) => setDrugOptions(data))
+      .catch((err) => console.error('Error fetching drug options:', err));
+  }, []);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -751,36 +760,9 @@ function UploadFilePage() {
                         },
                       }}
                     >
-                      <option value="Asacol HD">Asacol HD</option>
-                      <option value="Pentasa">Pentasa</option>
-                      <option value="Lialda">Lialda</option>
-                      <option value="Apriso">Apriso</option>
-                      <option value="Delzicol">Delzicol</option>
-                      <option value="Canasa">Canasa</option>
-                      <option value="Rowasa">Rowasa</option>
-                      <option value="Colazal">Colazal</option>
-                      <option value="Dipentum">Dipentum</option>
-                      <option value="Azulfidine">Azulfidine</option>
-                      <option value="Deltasone">Deltasone</option>
-                      <option value="Entocort EC">Entocort EC</option>
-                      <option value="Uceris">Uceris</option>
-                      <option value="Hydrocortisone">Hydrocortisone</option>
-                      <option value="Methylpredisone">Methylpredisone</option>
-                      <option value="Cortenema">Cortenema</option>
-                      <option value="Uceris">Uceris</option>
-                      <option value="Proctofoam-HC">Proctofoam-HC</option>
-                      <option value="Hydrocortisone_Acetate">Hydrocortisone Acetate</option>
-                      <option value="Depo-Medrol">Depo-Medrol</option>
-                      <option value="Tremfya">Tremfya</option>
-                      <option value="Ixekizumab (Taltz)">Ixekizumab (Taltz)</option>
-                      <option value="Rapamune">Rapamune</option>
-                      <option value="Risankizumab(Skyrizi)">Risankizumab(Skyrizi)</option>
-                      <option value="Flagyl">Flagyl</option>
-                      <option value="Cipro">Cipro</option>
-                      <option value="Vancocin">Vancocin</option>
-                      <option value="Xifaxan">Xifaxan</option>
-                      <option value="Adalimumab (Humira, others)">Adalimumab (Humira, others)</option>
-                      <option value="Procyanidin b2">Procyanidin b2</option>
+                      {drugOptions.map((drug, i) => (
+                        <option key={i} value={drug}>{drug}</option>
+                      ))}
                     </Select>
                   </FormControl>
 

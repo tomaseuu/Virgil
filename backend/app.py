@@ -190,7 +190,19 @@ def map_answers(form):
     # Q14: Is this the first treatment?
     answers.append("yes" if form.get('firstTreatment', '').lower() == "yes" else "no")
 
+    '''
+    # Q15: Route
+    answers.append(form.get('route', '').lower())
+    '''
+
     return answers
+
+@app.route('/api/drug-options')
+def get_drug_options():
+    drugs_path = os.path.join(base_dir, 'jsons', 'drug_options.json')
+    with open(drugs_path) as f:
+        drug_options = json.load(f)
+    return jsonify(drug_options)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -228,7 +240,100 @@ def upload_file():
     print(path_a)
     print("")
 
-    meds = [get_med_info('skyrizi')]
+    med_names = [
+        "Abrilada",
+        "Adalimumab-afzb",
+        "Amjevita",
+        "Adalimumab-atto",
+        "Apriso",
+        "Mesalamine",
+        "Avsola",
+        "Infliximab-axxq",
+        "Azathioprine",
+        "Azulfidine",
+        "Budesonide",
+        "Canasa",
+        "Cimzia",
+        "Certolizumab pegol",
+        "Cipro",
+        "Ciprofloxacin",
+        "Colazal",
+        "Balsalazide",
+        "Cyltezo",
+        "Adalimumab-adbm",
+        "Depo-Medrol",
+        "Dipentum",
+        "Olsalazine",
+        "Entocort EC",
+        "Entyvio",
+        "Vedolizumab",
+        "Flagyl",
+        "Metronidazole",
+        "Hadlima",
+        "Adalimumab-bwwd",
+        "Hulio",
+        "Adalimumab-fkjp",
+        "Humira",
+        "Adalimumab",
+        "Hyrimoz",
+        "Adalimumab-adaz",
+        "Idacio",
+        "Adalimumab-aacf",
+        "Imuldosa",
+        "Ustekinumab-srlf",
+        "Imuran",
+        "Inflectra",
+        "Infliximab-dyyb",
+        "IXIFI",
+        "Infliximab-qbtx",
+        "Jylamvo",
+        "Lialda",
+        "Medrol Dosepak",
+        "Mercaptopurine (6-MP)",
+        "Methotrexate",
+        "Mesalamine",
+        "Neoral",
+        "Omvoh",
+        "Otrexup",
+        "Otulfi",
+        "Pediapred",
+        "Pentasa",
+        "Prednisone",
+        "Prograf",
+        "Purinethol",
+        "Pyzchiva",
+        "Rasuvo",
+        "Remicade",
+        "Renflexis",
+        "RINVOQ",
+        "Rowasa",
+        "Sandimmune",
+        "Selarsdi",
+        "Simlandi",
+        "Simponi",
+        "Skyrizi",
+        "Solu-Medrol",
+        "Stelara",
+        "Tremfya",
+        "Tyruko",
+        "Tysabri",
+        "UCERIS",
+        "Unbranded Infliximab",
+        "Velsipity",
+        "Wezlana",
+        "Xatmep",
+        "Xeljanz",
+        "Yesintek",
+        "Yuflyma",
+        "YUSIMRY",
+        "Zeposia",
+        "Zymfentra",
+    ]
+
+    meds = [get_med_info(name) for name in med_names]
+
+
+    # meds = [get_med_info('skyrizi')]
 
     if path_a == "None":
         return jsonify({
