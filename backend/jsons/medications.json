@@ -43,7 +43,7 @@
   },
   "LRRK2": {
     "best_drug": ["MLi-2"],
-    "description": "LRRK2 mutations influence immune regulation, inflammation, and autophagy, which are critical pathways in both IBD and Parkinson's Disease pathogenesis.",
+    "description": "This is a treatment still under development. It was used in mice, and mice treated achieved successful therapeutic effect. MLi-2 is an LRRK2 inhibitor. Although a higher inhibition of LRRK2 might be necessary to achieve full rescue, our results indicate that pharmacological inhibition of LRRK2 can be protective against colitis. LRRK2 mutations influence immune regulation, inflammation, and autophagy, which are critical pathways in both IBD and Parkinson's Disease pathogenesis.",
     "alternatives": ["Remicade", "Humira"],
     "citation": [
       "https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/",
@@ -53,7 +53,7 @@
   },
   "ATG16L1": {
     "best_drug": ["Rapamycin"],
-    "description": "This SNP leads to a threonine-to-alanine substitution in ATG16L1, affecting autophagy and epithelial cell function. It has been strongly associated with Crohn’s disease. Rapamycin is an MTOR inhibitor which prevents activation of T cells and B-cells by inhibiting their response to interleukin-2.",
+    "description": "The dendritic cells of Crohn's disease patients treated with the MTOR inhibitor sirolimus (Brand name Rapamune) are able to effectively reverse the ability to degrade disease-associated bacteria.",
     "alternatives": ["Remicade", "Humira", "Simponi"],
     "citation": [
       "https://pmc.ncbi.nlm.nih.gov/articles/PMC4502774/"
