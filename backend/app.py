@@ -414,11 +414,7 @@ def upload_file():
     valid_best_drugs = accepted['valid_best_drugs']
     valid_alternatives = accepted['valid_alternatives']
 
-    # Combine for testing
-    combined_valid_drugs = list(set(valid_best_drugs + valid_alternatives))
-
-    # Get med info from API (combined, best, and alternatives)
-    meds = [get_med_info(name) for name in combined_valid_drugs]
+    # Get med info from API (bestS and alternatives)
     meds_best = [get_med_info(name) for name in valid_best_drugs]
     meds_alt = [get_med_info(name) for name in valid_alternatives]
 
