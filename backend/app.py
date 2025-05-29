@@ -11,15 +11,31 @@ CORS(app)
 
 base_dir = os.path.dirname(__file__)
 
+""" 
+TARGET SNPS are the relevant SNPs we are looking for (SNPs that affect our pathway)
+* Add to this json if adding to the SNPs we are looking for
+* This json includes the SNP, node (gene), description for what it means if you have this SNP, and the SNP's level in the pathway
+"""
 snps_path = os.path.join(base_dir, 'jsons', 'target_snps.json')
 with open(snps_path, 'r') as f:
     TARGET_SNPS = json.load(f)
 
+""" 
+TARGET_MEDS are the drug options categorized by which gene they affect
+* Add to this json if adding meds to genes
+* This json includes the best drug, a description for why this is the best drug, alternative drugs, and citations
+"""
 meds_path = os.path.join(base_dir, 'jsons', 'medications.json')
 with open(meds_path, 'r') as f:
     TARGET_MEDS = json.load(f)
 
 def parse_23andme_file(file_stream):
+    """
+    parse_23andme_file searches through the 23andMe file and matches any SNPs in the TARGET_SNPS list
+
+    :param file_stream: takes in a file stream of the 23andMe file
+    :return: returns a json that includes node (gene), description (what this SNP means), and level (level in the pathway) for each SNP
+    """ 
     found = {}
     for line in file_stream:
         decoded = line.decode('utf-8').strip()
@@ -40,6 +56,12 @@ def parse_23andme_file(file_stream):
     return found
 
 def check_pathway(snps):
+    """
+    check_pathway takes the matched SNPs from the 23andMe file and returns the SNPs at the highest level of the pathway (where highest is 1)
+
+    :param snps: takes in json of found SNPs from 23andMe file, including node, description, and level
+    :return: returns a json that includes SNPs, best drug option, alternative drugs, descirption for why this drug is the best, and citations for each gene at the highest level
+    """ 
     levels = [info['level'] for info in snps.values()]
     if not levels:
         return {}
@@ -65,6 +87,13 @@ def check_pathway(snps):
     return result
 
 def extract_valid_meds(pathway_output, accepted_drugs):
+    """
+    extract_valid_meds takes in the matched genes and related info (snps, best drug, alternatives, description, citation) and the accepted drugs from the patient metadata to return drugs that are safe for the patient to take
+
+    :pathway_output: takes in json of matched genes and related info (snps, best drug, alternatives, description, citation)
+    :accepted_drugs: takes in list of accepted drugs from metadata function (drugs that are safe for patient to take based on form questions)
+    :return: returns a json of two lists, one of the valid best drugs and one of the valid alternative drugs (valid meaning safe for patient to take based on metadata)
+    """ 
     best_drugs = set()
     alternatives = set()
 
@@ -81,6 +110,12 @@ def extract_valid_meds(pathway_output, accepted_drugs):
     }
 
 def get_med_info(drug_name):
+    """
+    get_med_info takes in a drug name (string) and connects to fda.gov/drugs API to give drug information to the frontend
+
+    :drug_name: takes in drug name (string)
+    :return: returns a json of drug information pulled from fda.gov/drugs API
+    """
     drug_name_upper = drug_name.upper()
 
     drugsfda_url = 'https://api.fda.gov/drug/drugsfda.json'
@@ -128,10 +163,6 @@ def get_med_info(drug_name):
             info['Label Info Error'] = f"Could not parse label data: {e}"
     else:
         info['Label Info Error'] = f"Failed to fetch label data ({label_resp.status_code})"
-
-    '''print("\nMedication Summary for:", drug_name.capitalize())
-    for k, v in info.items():
-        print(f"\n**{k}**:\n{v[:1000] if isinstance(v, str) else v}")'''
 
     return info
 
@@ -283,20 +314,26 @@ def upload_file():
 
     meds = [get_med_info(name) for name in combined_valid_drugs]
 
-    # meds = [get_med_info(name) for name in valid_best_drugs]
-    # meds = [get_med_info(name) for name in valid_alternatives]
+    meds_best = [get_med_info(name) for name in valid_best_drugs]
+    meds_alt = [get_med_info(name) for name in valid_alternatives]
 
-    # meds = [get_med_info('skyrizi')]
-
-    if path == "None":
+    if path == {}:
         return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
-        'matches': meds
+        'matches': meds,
+        'genes_and_snps': [],
+        'best_drug': [],
+        'alternatives': [],
+        'citations': []
         })
     else:
         return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
-        'matches': meds
+        'matches': meds,
+        'genes_and_snps': [],
+        'best_drug': meds_best,
+        'alternatives': meds_alt,
+        'citations': [path[node]['citation'] for node in path]
         })
 
 if __name__ == '__main__':
