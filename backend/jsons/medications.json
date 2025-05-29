@@ -1,36 +1,36 @@
 {
   "NOD2": {
     "best_drug": ["Imuran", "Purinethol"],
-    "description": "At the cellular level, this mutation affects the NOD2 protein, which plays a crucial role in immune system signaling. NOD2 is responsible for detecting bacterial components and triggering an immune response. When mutated, it can lead to dysregulated inflammation, contributing to conditions like Crohn’s disease.",
-    "alternatives": ["Infliximab", "Humira", "BRD5529", "Dietary and microbiome-based therapies"],
+    "description": "At the cellular level, this mutation affects the NOD2 protein, which plays a crucial role in immune system signaling. NOD2 is responsible for detecting bacterial components and triggering an immune response. When mutated, it can lead to dysregulated inflammation, contributing to conditions like Crohn’s disease. Eighty-eight percent of patients with NOD2 variants went into remission under treatment with AZA/6-MP, and 12% of patients with NOD2 variants were refractory to treatment with AZA/6-MP. The percentage of patients with NOD2 variants in remission under treatment with AZA/6-MP was significantly increased as compared to patients with NOD2 WT status (Fig. 1). In contrast, significantly more patients with NOD2 WT status were refractory to treatment with AZA/6-MP (Remicade) as compared to patients with NOD2 variants. Sources for this information can be found below.",
+    "alternatives": ["Remicade", "Benzimidazole Diamides", "Dietary and microbiome-based therapies"],
     "citation": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC3306782/"]
   },
   "CARD9": {
     "best_drug": ["Lead Compounds"],
     "description": "At the cellular level, rs10870077 affects CARD9 protein function, which is involved in innate immune responses. Specifically, this variant has been linked to altered cytokine production and immune cell activation, potentially influencing disease progression.",
-    "alternatives": ["Infliximab", "Humira", "BRD5529", "Azathioprine", "Methotrexate"],
+    "alternatives": ["Remicade", "Humira", "BRD5529", "Imuran", "Methotrexate"],
     "citation": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC6933369/"]
   },
   "MEFV": {
     "best_drug": ["None known"],
     "description": "MEFV encodes pyrin, an inflammasome sensor. Gain-of-function mutations in MEFV can lead to excessive inflammation, contributing to IBD severity.",
-    "alternatives": ["Infliximab", "Humira", "Vedolizumab"],
+    "alternatives": ["Remicade", "Humira", "Vedolizumab"],
     "citation": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC6933369/"]
   },
   "NCF4": {
     "best_drug": ["Treatment: HSCT"],
     "description": "NCF4 (Neutrophil Cytosolic Factor 4) mutations primarily affect the NADPH oxidase complex, which plays a crucial role in immune defense. Specifically, NCF4 encodes p40-phox, a subunit involved in reactive oxygen species (ROS) production within neutrophils. Altered ROS production can contribute to excessive inflammation, potentially influencing conditions like IBD (Inflammatory Bowel Disease).",
-    "alternatives": ["Infliximab", "Humira", "Azathioprine", "Methotrexate"],
+    "alternatives": ["Remicade", "Humira", "Imuran", "Methotrexate"],
     "citation": ["https://www.frontiersin.org/journals/pediatrics/articles/10.3389/fped.2020.618918/full"]
   },
   "SKAP2": {
     "best_drug": ["None known"],
     "description": "SKAP2 is primarily expressed in immune cells, where it mediates cytoskeletal rearrangement, chemotaxis, and immune cell infiltration—processes that contribute to intestinal inflammation.",
-    "alternatives": ["Infliximab", "Humira", "Vedolizumab"],
+    "alternatives": ["Remicade", "Humira", "Vedolizumab"],
     "citation": ["https://www.frontiersin.org/journals/cell-and-developmental-biology/articles/10.3389/fcell.2020.00401/full"]
   },
   "NOS2": {
-    "best_drug": ["Infliximab", "Humira"],
+    "best_drug": ["Remicade", "Humira"],
     "description": "Mutations can affect nitric oxide (NO) production, leading to altered immune responses and intestinal inflammation.",
     "alternatives": [],
     "citation": ["https://pubmed.ncbi.nlm.nih.gov/19334074/"]
@@ -43,8 +43,8 @@
   },
   "LRRK2": {
     "best_drug": ["MLi-2"],
-    "description": "The rs10781499 mutation in CARD9 (Caspase Recruitment Domain-Containing Protein 9) has been studied in relation to inflammatory diseases and immune responses. This mutation is commonly associated with host-microbe interactions.",
-    "alternatives": ["Lead Compounds", "Infliximab", "Humira", "Azathioprine", "Methotrexate"],
+    "description": "LRRK2 mutations influence immune regulation, inflammation, and autophagy, which are critical pathways in both IBD and Parkinson's Disease pathogenesis.",
+    "alternatives": ["Remicade", "Humira"],
     "citation": [
       "https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/",
       "https://www.google.com/url?q=https://academic.oup.com/burnstrauma/article/doi/10.1093/burnst/tkad004/7151133&sa=D&source=editors&ust=1748454799534385&usg=AOvVaw234qInPawjX63o4toLdJXQ",
@@ -52,13 +52,11 @@
     ]
   },
   "ATG16L1": {
-    "best_drug": ["Sirolimus"],
-    "description": "This SNP leads to a threonine-to-alanine substitution in ATG16L1, affecting autophagy and epithelial cell function. It has been strongly associated with Crohn’s disease.",
-    "alternatives": ["Infliximab", "Humira", "Golimumab", "Andrographolide"],
+    "best_drug": ["Rapamycin"],
+    "description": "This SNP leads to a threonine-to-alanine substitution in ATG16L1, affecting autophagy and epithelial cell function. It has been strongly associated with Crohn’s disease. Rapamycin is an MTOR inhibitor which prevents activation of T cells and B-cells by inhibiting their response to interleukin-2.",
+    "alternatives": ["Remicade", "Humira", "Simponi"],
     "citation": [
-      "https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/",
-      "https://www.google.com/url?q=https://academic.oup.com/burnstrauma/article/doi/10.1093/burnst/tkad004/7151133&sa=D&source=editors&ust=1748481074490206&usg=AOvVaw3UDr4gOg_EgrYKv5jopLT-",
-      "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0003391"
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4502774/"
     ]
   }
 }
