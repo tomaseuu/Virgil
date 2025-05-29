@@ -18,7 +18,7 @@
     "citation": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC6933369/"]
   },
   "NCF4": {
-    "best_drug": ["HSCT"],
+    "best_drug": ["Treatment: HSCT"],
     "description": "NCF4 (Neutrophil Cytosolic Factor 4) mutations primarily affect the NADPH oxidase complex, which plays a crucial role in immune defense. Specifically, NCF4 encodes p40-phox, a subunit involved in reactive oxygen species (ROS) production within neutrophils. Altered ROS production can contribute to excessive inflammation, potentially influencing conditions like IBD (Inflammatory Bowel Disease).",
     "alternatives": ["Infliximab", "Humira", "Azathioprine", "Methotrexate"],
     "citation": ["https://www.frontiersin.org/journals/pediatrics/articles/10.3389/fped.2020.618918/full"]
