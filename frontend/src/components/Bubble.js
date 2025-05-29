@@ -101,7 +101,7 @@ function Bubble({ results }) {
               <Section icon={TimeIcon} title="Adverse Reactions" content={results["Adverse Reactions"]} />
               <Section icon={WarningTwoIcon} title="Warnings" content={results["Warnings"]} />
               <Section icon={WarningTwoIcon} title="Boxed Warning" content={results["Boxed Warning"]} />
-              <Section icon={AttachmentIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} />
+              <Section icon={TimeIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} />
             </>
           )}
         </Box>

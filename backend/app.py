@@ -448,7 +448,7 @@ def upload_file():
         },
         'best_drug': meds_best, 
         'alternatives': meds_alt,
-        'best_drug_description': [{'node': node, 'description': path[node]['description']} for node in path],
+        'best_drug_description': [{'node': node, 'drug':path[node]['best_drug'], 'description': path[node]['description']} for node in path],
         'citations': [{'best_drug': path[node]['best_drug'], 'citation': path[node]['citation']} for node in path]
         }
         return jsonify(response_data)

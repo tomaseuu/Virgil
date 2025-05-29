@@ -13,6 +13,8 @@ import {
   useToast,
   Tooltip,
   Textarea,
+  SimpleGrid,
+  AccordionItem, AccordionButton, AccordionPanel, AccordionIcon
 } from '@chakra-ui/react';
 import { useLocation, Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
@@ -29,9 +31,6 @@ function ResultsPage() {
   const genes_and_snps = results.genes_and_snps || {};
   const best_drug_description = results.best_drug_description || [];
   const citations = results.citations || [];
-
-  console.log(best_drug);
-  console.log(alternatives);
   
   const meds = best_drug.map(r => r["Brand Name"]).join(", ");
   const noteText = `Hi Doctor,
@@ -44,17 +43,6 @@ Thank you for your time and guidance!`;
   const { onCopy } = useClipboard(noteText);
   const toast = useToast();
 
-
-  {/* ADD PDF DOWNLOAD FN*/}
-  {/*const handleDownloadPDF = () => {
-    toast({
-      title: 'Coming Soon',
-      description: 'Downloadable PDF is not available yet.',
-      status: 'info',
-      duration: 3000,
-      isClosable: true,
-    });
-  }; */}
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
 
@@ -147,17 +135,208 @@ Thank you for your time and guidance!`;
                 size="md"
                 color="white"
                 fontFamily="'Glacial Indifference Bold'"
+                mb={6}
               >
                 Understanding Your Results
               </Heading>
 
-              <>
-                {/* ADD HERE YOUR SPECIFIC GENETIC PROFILE */}
-                <Text pt={4} color="white" fontFamily="'Glacial Indifference Reg'" fontWeight="bold">
-                  Your results were chosen...
-                </Text>
+              <Box
+                textAlign="left"
+                width="100%"
+                mb={8}
+                display="flex"
+                justifyContent="center"
+                flexDirection="column"
+                alignItems="center"
+                pt={6}
+              >
+                <Heading
+                  size="sm"
+                  color="white"
+                  fontFamily="'Glacial Indifference Bold'"
+                  pb={2}
+                  width="100%"
+                >
+                  Genetic Variants and SNPs
+                </Heading>
 
-                <Text pt={2} color="white" fontFamily="'Glacial Indifference Reg'" whiteSpace="pre-wrap">
+                {Object.entries(genes_and_snps).map(([gene, snps]) => (
+                  <Box key={gene} mb={6} width="100%">
+                    <Text mb={3} color="white" fontFamily="'Glacial Indifference Reg'">
+                      Your 23andMe data shows a mutation that affects the <b>{gene}</b> gene. The following SNPs were found:
+                    </Text>
+
+                    <SimpleGrid columns={[1, 2, 3]} spacing={6} width="100%">
+                      {Object.entries(snps).map(([snp, desc]) => (
+                        <Box
+                          key={snp}
+                          p={4}
+                          borderRadius="md"
+                          border="1px solid"
+                          borderColor="whiteAlpha.300"
+                          bg="rgba(255, 255, 255, 0.05)"
+                          fontFamily="'Glacial Indifference Reg'"
+                        >
+                          <Accordion allowToggle>
+                            <AccordionItem border="none">
+                              <AccordionButton px={0} color="purple.300">
+                                <Box flex="1" textAlign="left" fontWeight="bold" color="purple.300">
+                                  {snp}
+                                </Box>
+                                <AccordionIcon />
+                              </AccordionButton>
+                              <AccordionPanel pb={2} fontSize="sm" color="gray.200" whiteSpace="pre-wrap">
+                                {desc}
+                              </AccordionPanel>
+                            </AccordionItem>
+                          </Accordion>
+                        </Box>
+                      ))}
+                    </SimpleGrid>
+                  </Box>
+                ))}
+
+                <Heading
+                  size="sm"
+                  color="white"
+                  fontFamily="'Glacial Indifference Bold'"
+                  pb={2}
+                  width="100%"
+                >
+                  Treatment Recommendation
+                </Heading>
+
+                <Heading
+                  size="sm"
+                  color="white"
+                  fontFamily="'Glacial Indifference Bold'"
+                  pb={2}
+                  width="100%"
+                >
+                  Best Treatment
+                </Heading>
+
+                {best_drug_description && best_drug_description.length > 0 ? (
+                  <SimpleGrid columns={[1, 2]} spacing={6} width="100%" mb={8}>
+                    {best_drug_description.map(({ drug, description }, i) => {
+
+                      const relatedCitations = citations.filter(c => {
+                        const bestDrug = c.best_drug;
+                        const bestDrugArr = Array.isArray(bestDrug) ? bestDrug : [bestDrug];
+                        const drugArr = Array.isArray(drug) ? drug : [drug];
+                        return drugArr.some(d => bestDrugArr.includes(d));
+                      });
+
+                      return (
+                        <Box
+                          key={i}
+                          p={4}
+                          borderRadius="md"
+                          border="1px solid"
+                          borderColor="whiteAlpha.300"
+                          bg="rgba(255, 255, 255, 0.05)"
+                          fontFamily="'Glacial Indifference Reg'"
+                        >
+                          <Text mb={2} color="white">
+                            Based on Virgil algorithms, the best treatment for you is <b>{Array.isArray(drug) ? drug.join(", ") : drug}</b>.
+                          </Text>
+
+                          <Accordion allowToggle>
+                            <AccordionItem border="none">
+                              <AccordionButton px={0} fontWeight="bold" color="purple.300">
+                                <Box flex="1" textAlign="left" fontFamily="'Glacial Indifference Reg'">
+                                  View Description to learn more
+                                </Box>
+                                <AccordionIcon />
+                              </AccordionButton>
+                              <AccordionPanel pb={2} fontSize="sm" color="gray.200" whiteSpace="pre-wrap">
+                                {description}
+
+                                {relatedCitations.length > 0 && (
+                                  <>
+                                    <Text fontWeight="bold" mt={4} mb={2} color="white">
+                                      Citations:
+                                    </Text>
+                                    {relatedCitations.map(({ citation }, idx) => (
+                                      Array.isArray(citation) ? (
+                                        citation.map((url, j) => (
+                                          <Text key={`${idx}-${j}`} color="white" mb={1}>
+                                            <Link
+                                              style={{ textDecoration: 'underline', color: 'white' }}
+                                              to={url}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >
+                                              {url}
+                                            </Link>
+                                          </Text>
+                                        ))
+                                      ) : (
+                                        <Text key={idx} color="white" mb={1}>
+                                          <Link
+                                            style={{ textDecoration: 'underline', color: 'white' }}
+                                            to={citation}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            {citation}
+                                          </Link>
+                                        </Text>
+                                      )
+                                    ))}
+                                  </>
+                                )}
+                              </AccordionPanel>
+                            </AccordionItem>
+                          </Accordion>
+                        </Box>
+                      );
+                    })}
+                  </SimpleGrid>
+                ) : (
+                  <Text mb={8} color="white" fontFamily="'Glacial Indifference Reg'">
+                    Due to the info you shared, the best drug option will not work for you.
+                  </Text>
+                )}
+
+                <Heading
+                  size="sm"
+                  color="white"
+                  fontFamily="'Glacial Indifference Bold'"
+                  pb={2}
+                  width="100%"
+                >
+                  Alternative Treatment
+                </Heading>
+
+                {alternatives && alternatives.length > 0 ? (
+                  <Text mb={4} color="white" fontFamily="'Glacial Indifference Reg'">
+                    Some alternative treatment(s) are {alternatives.map(a => a["Brand Name"]).join(", ")}.
+                  </Text>
+                ) : (
+                  <Text mb={4} color="white" fontFamily="'Glacial Indifference Reg'">
+                    Due to the info you shared, alternative treatments are not recommended.
+                  </Text>
+                )}
+
+                 <Text pt={4} color="white" fontFamily="'Glacial Indifference Reg'">
+                  Expand the medication(s) below to see more specific information. All information is taken from{' '}
+                  <Link
+                    style={{ textDecoration: 'underline' }}
+                    to="https://fda.gov/drugs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    fda.gov/drugs
+                  </Link>.
+                </Text>
+              </Box>
+
+              <Divider pt={6} borderColor="whiteAlpha.300" />
+
+
+              <>
+                <Text pt={6} color="white" fontFamily="'Glacial Indifference Reg'" whiteSpace="pre-wrap">
                   Your personalized medication recommendations were generated by analyzing your unique genetic profile from your 23andMe data, combined with your health information and clinical research on IBD treatments. This tailored approach aims to help you achieve remission faster and improve your overall treatment outcomes.
                 </Text>
 
@@ -165,18 +344,6 @@ Thank you for your time and guidance!`;
                   Please remember that these recommendations are meant to support discussions with your healthcare provider. They are not a substitute for professional medical advice. We encourage you to share these results with your doctor to explore the best treatment options together.
                 </Text>
               </>
-
-              <Text pt={4} color="white" fontFamily="'Glacial Indifference Reg'">
-                Expand the medication(s) below to see more specific information. All information is taken from{' '}
-                <Link
-                  style={{ textDecoration: 'underline' }}
-                  to="https://fda.gov/drugs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  fda.gov/drugs
-                </Link>.
-              </Text>
 
               <Divider pt={6} borderColor="whiteAlpha.300" />
 
