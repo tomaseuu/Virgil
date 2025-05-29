@@ -167,96 +167,95 @@ def get_med_info(drug_name):
     return info
 
 def parse_metadata(answers, drugs_taken):
-   questions= {
-    "Are you pregnant or planning to become pregnant?": [
-        "Tofacitinib",
-        "Etrasimod",
-        "Ozanimod",
-        "Risankizumab",
-        "Upadacitinib",
-        "Filgotinib",
-        "Methotrexate"
-    ],
-    "Are you breast feeding?": [
-        "Tofacitinib",
-        "Etrasimod",
-        "Ozanimod",
-        "Risankizumab",
-        "Upadacitinib",
-        "Filgotinib",
-        "Methotrexate"
-    ],
-    "Do you have kidney issues?": [
-        "Rowasa",
-        "Monoconal antibody",
-        "Azathioprine",
-        "mercaptopurine",
-        "Canasa",
-        "Mesalamine",
-        "Pentasa"
-    ],
-    "Are you over 65?": [
-        "Tofacitinib",
-        "Etrasimod",
-        "Filgotinib",
-        "Ozanimod",
-        "Upadacitinib",
-        "Methotrexate"
-    ],
-    "Are you under 6?": [
-        "Adalimumab",
-        "Infliximab",
-        "Biologics"
-    ],
-    "Are you under 16?": [
-        "Etrasimod"
-    ],
-    "Do you have mild Crohn\u2019s?": [
-        "Biologics",
-        "small molecule medicine",
-        "Monocolna antibody",
-        "Interleukin Inhibitor"
-    ],
-    "Do you have severe Crohn\u2019s?": [],
-    "Do you have mild UC?": [
-        "Biologics",
-        "small molecule medicine",
-        "Mirikizumab",
-        "Monocolna antibody",
-        "Interleukin Inhibitor"
-    ],
-    "Do you have severe UC?": [
-        "Canasa",
-        "Mesalamine",
-        "Pentasa",
-        "Rowasa"
-    ],
-    "Do you have Crohn's?": [
-        "Etrasimod",
-        "Filgotinib",
-        "Mirikizumab",
-        "Ozanimod",
-        "Canasa",
-        "Mesalamine",
-        "Pentasa",
-        "Rowasa",
-        "Ozanimod",
-        "Tofacitinib",
-        "Gollimumab",
-        "Mesalazine",
-        "Beclometasone diprpionate"
-    ],
-    "Do you have UC?": [
-        "Methotrexate",
-        "Golimumab"
-    ],
-    "Is this the first treatment?": [
-        "Mirikizumab",
-        "Vedolizumab"
-    ]
-}
-
-possible_drugs=drug_list = [
+    questions= {
+        "Are you pregnant or planning to become pregnant?": [
+            "Tofacitinib",
+            "Etrasimod",
+            "Ozanimod",
+            "Risankizumab",
+            "Upadacitinib",
+            "Filgotinib",
+            "Methotrexate"
+        ],
+        "Are you breast feeding?": [
+            "Tofacitinib",
+            "Etrasimod",
+            "Ozanimod",
+            "Risankizumab",
+            "Upadacitinib",
+            "Filgotinib",
+            "Methotrexate"
+        ],
+        "Do you have kidney issues?": [
+            "Rowasa",
+            "Monoconal antibody",
+            "Azathioprine",
+            "mercaptopurine",
+            "Canasa",
+            "Mesalamine",
+            "Pentasa"
+        ],
+        "Are you over 65?": [
+            "Tofacitinib",
+            "Etrasimod",
+            "Filgotinib",
+            "Ozanimod",
+            "Upadacitinib",
+            "Methotrexate"
+        ],
+        "Are you under 6?": [
+            "Adalimumab",
+            "Infliximab",
+            "Biologics"
+        ],
+        "Are you under 16?": [
+            "Etrasimod"
+        ],
+        "Do you have mild Crohn\u2019s?": [
+            "Biologics",
+            "small molecule medicine",
+            "Monocolna antibody",
+            "Interleukin Inhibitor"
+        ],
+        "Do you have severe Crohn\u2019s?": [],
+        "Do you have mild UC?": [
+            "Biologics",
+            "small molecule medicine",
+            "Mirikizumab",
+            "Monocolna antibody",
+            "Interleukin Inhibitor"
+        ],
+        "Do you have severe UC?": [
+            "Canasa",
+            "Mesalamine",
+            "Pentasa",
+            "Rowasa"
+        ],
+        "Do you have Crohn's?": [
+            "Etrasimod",
+            "Filgotinib",
+            "Mirikizumab",
+            "Ozanimod",
+            "Canasa",
+            "Mesalamine",
+            "Pentasa",
+            "Rowasa",
+            "Ozanimod",
+            "Tofacitinib",
+            "Gollimumab",
+            "Mesalazine",
+            "Beclometasone diprpionate"
+        ],
+        "Do you have UC?": [
+            "Methotrexate",
+            "Golimumab"
+        ],
+        "Is this the first treatment?": [
+            "Mirikizumab",
+            "Vedolizumab"
+        ]
+    }
+    possible_drugs=drug_list = [
     "Abrilada", "Adalimumab-afzb", "Amjevita", "Adalimumab-atto", "Apriso", "Mesalamine",
     "Avsola", "Infliximab-axxq", "Azathioprine", "Azulfidine", "Budesonide", "Canasa",
     "Cimzia", "Certolizumab pegol", "Cipro", "Ciprofloxacin", "Colazal", "Balsalazide",
@@ -271,15 +270,20 @@ possible_drugs=drug_list = [
     "Simlandi", "Simponi", "Skyrizi", "Solu-Medrol", "Stelara", "Tremfya", "Tyruko",
     "Tysabri", "UCERIS", "Unbranded Infliximab", "Velsipity", "Wezlana", "Xatmep",
     "Xeljanz", "Yesintek", "Yuflyma", "YUSIMRY", "Zeposia", "Zymfentra"
-]
-drugsWquestions = pd.json_normalize(questions)
-drugsWquestions=drugsWquestions.T
-drugsWquestions["Answers"]=answers
-drugsWquestions= drugsWquestions.explode(0)
-drugsWquestions = drugsWquestions[drugsWquestions["Answers"].notnull()] #filter out unaswered questions, might need to change this
-drugsWquestions = drugsWquestions[drugsWquestions["Answers"] == "yes"]
-Bad_Drugs=drugsWquestions[0].to_list()
-result = list(set(possible_drugs) - set(Bad_Drugs) )- set(drugs_taken))
+    ]
+    oral= ['Apriso', 'Azathioprine', 'Azulfidine', 'Budesonide', 'Cipro', 'Colazal', 'Dipentum', 'Entocort EC', 'Flagyl', 'Imuran', 'Jylamvo', 'Lialda', 'Medrol Dosepak', 'Mercaptopurine (6-MP)', 'Mesalamine', 'Methotrexate', 'Neoral', 'Pediapred', 'Pentasa', 'Prednisone', 'Prograf', 'Purinethol', 'RINVOQ', 'Sandimmune', 'UCERIS', 'Velsipity', 'Xatmep', 'Xeljanz', 'Zeposia']
+    rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
+    IV= ['Avsola', 'Cipro', 'Entyvio', 'Imuldosa', 'Inflectra', 'IXIFI', 'Omvoh', 'Otulfi', 'Prograf', 'Pyzchiva', 'Remicade', 'Renflexis', 'Sandimmune', 'Selarsdi', 'Skyrizi', 'Solu-Medrol', 'Stelara', 'Tremfya', 'Tyruko', 'Tysabri', 'Unbranded Infliximab', 'Wezlana', 'Yesintek']
+    Injection = ['Abrilada', 'Amjevita', 'Cimzia', 'Cyltezo', 'Depo-Medrol', 'Entyvio', 'Hadlima', 'Hulio', 'Humira', 'Hyrimoz', 'Idacio', 'Imuldosa', 'Methotrexate', 'Omvoh', 'Otrexup', 'Otul', 'Pyzchiva', 'Rasuvo', 'Selarsdi', 'Simlandi', 'Simponi', 'Skyrizi', 'Stelara', 'Tremfya', 'Wezlana', 'Yesintek', 'Yuyma', 'YUSIMRY']
+
+    drugsWquestions = pd.json_normalize(questions)
+    drugsWquestions=drugsWquestions.T
+    drugsWquestions["Answers"]=answers
+    drugsWquestions= drugsWquestions.explode(0)
+    drugsWquestions = drugsWquestions[drugsWquestions["Answers"].notnull()] #filter out unaswered questions, might need to change this
+    drugsWquestions = drugsWquestions[drugsWquestions["Answers"] == "yes"]
+    Bad_Drugs=drugsWquestions[0].to_list()
+    result = list(set(possible_drugs) - set(Bad_Drugs)- set(drugs_taken))
     return result
 
 def map_answers(form):
@@ -313,10 +317,6 @@ def map_answers(form):
     # Q6: Are you under 16?
     answers.append("yes" if age is not None and age < 16 else "no")
 
-    # Q7 and Q8: Allergy to ? (repeat allergies value twice)
-    answers.append("no")
-    answers.append("no")
-
     # Q9: Are you planning to take live vaccines?
     answers.append("yes" if form.get('vaccines', '').lower() == "yes" else "no")
 
@@ -335,10 +335,8 @@ def map_answers(form):
     # Q14: Is this the first treatment?
     answers.append("yes" if form.get('firstTreatment', '').lower() == "yes" else "no")
 
-    '''
     # Q15: Route
     answers.append(form.get('route', '').lower())
-    '''
 
     return answers
 

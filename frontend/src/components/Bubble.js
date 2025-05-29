@@ -12,6 +12,8 @@ import {
   InfoOutlineIcon,
   WarningTwoIcon,
   StarIcon,
+  TimeIcon,
+  AttachmentIcon,
 } from '@chakra-ui/icons';
 
 const Section = ({ icon, title, content }) => (
@@ -78,10 +80,10 @@ function Bubble({ results }) {
           <Section icon={InfoOutlineIcon} title="Route" content={results["Route"]} />
           <Section icon={InfoOutlineIcon} title="Prescription Status" content={results["Prescription Status"]} />
           <Section icon={InfoOutlineIcon} title="Indications and Usage" content={results["Indications and Usage"]} />
-          {/* <Section icon={TimeIcon} title="Adverse Reactions" content={results["Adverse Reactions"]} /> */}
+          <Section icon={TimeIcon} title="Adverse Reactions" content={results["Adverse Reactions"]} />
           <Section icon={WarningTwoIcon} title="Warnings" content={results["Warnings"]} />
           <Section icon={WarningTwoIcon} title="Boxed Warning" content={results["Boxed Warning"]} />
-          {/* <Section icon={AttachmentIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} /> */}
+          <Section icon={AttachmentIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} />
         </Box>
       </AccordionPanel>
     </AccordionItem>
