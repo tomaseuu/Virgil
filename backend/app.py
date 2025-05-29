@@ -424,23 +424,28 @@ def upload_file():
 
     # Return relevant info to frontend via a json
     if path == {}:
-        return jsonify({
-        'message': f'File {file.filename} uploaded and processed!',
-        'matches': meds,
-        'genes_and_snps': [],
-        'best_drug': [],
-        'alternatives': [],
-        'citations': []
-        })
+        response_data = {
+            'message': f'File {file.filename} uploaded and processed!',
+            'genes_and_snps': [],
+            'best_drug': [],
+            'alternatives': [],
+            'best_drug_description': [],
+            'citations': []
+        }
+        return jsonify(response_data)
     else:
-        return jsonify({
+        response_data = {
         'message': f'File {file.filename} uploaded and processed!',
-        'matches': meds,
-        'genes_and_snps': [],
-        'best_drug': meds_best,
+        'genes_and_snps': {
+            node: data['snps']
+            for node, data in path.items()
+        },
+        'best_drug': meds_best, 
         'alternatives': meds_alt,
-        'citations': [path[node]['citation'] for node in path]
-        })
+        'best_drug_description': [{'node': node, 'description': path[node]['description']} for node in path],
+        'citations': [{'best_drug': path[node]['best_drug'], 'citation': path[node]['citation']} for node in path]
+        }
+        return jsonify(response_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

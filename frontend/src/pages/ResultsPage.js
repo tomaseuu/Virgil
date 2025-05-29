@@ -22,9 +22,18 @@ import jsPDF from 'jspdf';
 
 function ResultsPage() {
   const location = useLocation();
-  const resultString = location.state?.results || [];
+  const results = location.state?.results || {};
+
+  const best_drug = results.best_drug || [];
+  const alternatives = results.alternatives || [];
+  const genes_and_snps = results.genes_and_snps || {};
+  const best_drug_description = results.best_drug_description || [];
+  const citations = results.citations || [];
+
+  console.log(best_drug);
+  console.log(alternatives);
   
-  const meds = resultString.map(r => r["Brand Name"]).join(", ");
+  const meds = best_drug.map(r => r["Brand Name"]).join(", ");
   const noteText = `Hi Doctor,
 
 I recently used Virgil, an experimental platform that analyzes genetic information from 23andMe along with other health data to recommend targeted treatments for IBD patients. Based on my results, Virgil has recommended ${meds} because it is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.
@@ -279,12 +288,32 @@ Thank you for your time and guidance!`;
               color="white"
               fontFamily="'Glacial Indifference Bold'"
             >
-              Recommended Medications
+              Recommended Best Treatment
             </Heading>
 
-            {resultString && resultString.length > 0 ? (
+            {best_drug && best_drug.length > 0 ? (
               <Accordion allowToggle w="100%">
-                {resultString.map((result, index) => (
+                {best_drug.map((result, index) => (
+                  <Bubble key={index} results={result} />
+                ))}
+              </Accordion>
+            ) : (
+              <Text color="white" fontFamily="'Glacial Indifference Reg'">
+                No results found.
+              </Text>
+            )}
+
+            <Heading
+              size="md"
+              color="white"
+              fontFamily="'Glacial Indifference Bold'"
+            >
+              Recommended Alternative Treatment
+            </Heading>
+
+            {alternatives && alternatives.length > 0 ? (
+              <Accordion allowToggle w="100%">
+                {alternatives.map((result, index) => (
                   <Bubble key={index} results={result} />
                 ))}
               </Accordion>

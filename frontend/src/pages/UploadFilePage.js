@@ -154,8 +154,13 @@ function UploadFilePage() {
         },
       });
 
-      const results = response.data.matches || [];
-      console.log(results);
+      const results = {
+        best_drug: response.data.best_drug || [],
+        alternatives: response.data.alternatives || [],
+        genes_and_snps: response.data.genes_and_snps || {},
+        best_drug_description: response.data.best_drug_description || [],
+        citations: response.data.citations || [],
+      };
       navigate('/results', { state: { results } });
     } catch (error) {
       console.error('Upload failed:', error);
@@ -920,7 +925,7 @@ function UploadFilePage() {
                   >
                   <Stack textAlign="left" spacing={4} direction="column">
                     <Checkbox colorScheme="purple" value="agree1">I understand that my Virgil report is for educational and research purposes only.</Checkbox>
-                    <Checkbox colorScheme="purple" value="agree2">I understand that I am strongly encouraged to discuss my Virgil report with a doctor, genetic counselor or other health-care provider prior to making any medical decisions.</Checkbox>
+                    <Checkbox colorScheme="purple" value="agree2">I understand that I am strongly encouraged to discuss my Virgil report with a doctor, genetic counselor, or other health-care provider prior to making any medical decisions.</Checkbox>
                   </Stack>
                   </CheckboxGroup>
                 </ModalBody>
