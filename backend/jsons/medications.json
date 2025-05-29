@@ -2,7 +2,7 @@
   "NOD2": {
     "best_drug": ["Imuran", "Purinethol"],
     "description": "At the cellular level, this mutation affects the NOD2 protein, which plays a crucial role in immune system signaling. NOD2 is responsible for detecting bacterial components and triggering an immune response. When mutated, it can lead to dysregulated inflammation, contributing to conditions like Crohn’s disease.",
-    "alternatives": ["infliximab", "Humira", "BRD5529", "Dietary and microbiome-based therapies"],
+    "alternatives": ["Infliximab", "Humira", "BRD5529", "Dietary and microbiome-based therapies"],
     "citation": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC3306782/"]
   },
   "CARD9": {
@@ -32,11 +32,11 @@
   "NOS2": {
     "best_drug": ["Infliximab", "Humira"],
     "description": "Mutations can affect nitric oxide (NO) production, leading to altered immune responses and intestinal inflammation.",
-    "alternatives": [""],
+    "alternatives": [],
     "citation": ["https://pubmed.ncbi.nlm.nih.gov/19334074/"]
   },
   "LACC1": {
-    "best_drug": ["None Known"],
+    "best_drug": ["None known"],
     "description": "Variants in LACC1 modulate T cell gene expression and metabolism, and LACC1 mutations correlate with lower expression in CD4+ and CD8+ T cells, potentially leading to T cell dysfunction and increased IBD risk.",
     "alternatives": ["Dietary and microbiome-based therapies"],
     "citation": ["https://www.google.com/url?q=https://journals.aai.org/jimmunol/article/202/1/183/107241/LACC1-Regulates-TNF-and-IL-17-in-Mouse-Models-of&sa=D&source=editors&ust=1748454796505438&usg=AOvVaw02gbbmpB48SgSsgQN_uoug"]
@@ -45,12 +45,20 @@
     "best_drug": ["MLi-2"],
     "description": "The rs10781499 mutation in CARD9 (Caspase Recruitment Domain-Containing Protein 9) has been studied in relation to inflammatory diseases and immune responses. This mutation is commonly associated with host-microbe interactions.",
     "alternatives": ["Lead Compounds", "Infliximab", "Humira", "Azathioprine", "Methotrexate"],
-    "citation": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/", "https://www.google.com/url?q=https://academic.oup.com/burnstrauma/article/doi/10.1093/burnst/tkad004/7151133&sa=D&source=editors&ust=1748454799534385&usg=AOvVaw234qInPawjX63o4toLdJXQ", "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0003391"]
+    "citation": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/",
+      "https://www.google.com/url?q=https://academic.oup.com/burnstrauma/article/doi/10.1093/burnst/tkad004/7151133&sa=D&source=editors&ust=1748454799534385&usg=AOvVaw234qInPawjX63o4toLdJXQ",
+      "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0003391"
+    ]
   },
   "ATG16L1": {
-    "best_drug": "TBD",
-    "description": "TBD",
-    "alternatives": [""],
-    "citation": "TBD"
+    "best_drug": ["Sirolimus"],
+    "description": "This SNP leads to a threonine-to-alanine substitution in ATG16L1, affecting autophagy and epithelial cell function. It has been strongly associated with Crohn’s disease.",
+    "alternatives": ["Infliximab", "Humira", "Golimumab", "Andrographolide"],
+    "citation": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC10328902/",
+      "https://www.google.com/url?q=https://academic.oup.com/burnstrauma/article/doi/10.1093/burnst/tkad004/7151133&sa=D&source=editors&ust=1748481074490206&usg=AOvVaw3UDr4gOg_EgrYKv5jopLT-",
+      "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0003391"
+    ]
   }
 }
