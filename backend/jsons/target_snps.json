@@ -2,133 +2,133 @@
   {
     "snp": "rs2066843",
     "node": "NOD2",
-    "description": "hi",
+    "description": "At the cellular level, this mutation affects the NOD2 protein, which plays a crucial role in immune system signaling. NOD2 is responsible for detecting bacterial components and triggering an immune response. When mutated, it can lead to dysregulated inflammation, contributing to conditions like Crohn’s disease.",
     "level": 1
   },
   {
     "snp": "rs2076756",
     "node": "NOD2",
-    "description": "TBD",
+    "description": "At the cellular level, this mutation affects the NOD2 protein, which plays a crucial role in immune system signaling. NOD2 is responsible for detecting bacterial components and triggering an immune response. When mutated, it can lead to dysregulated inflammation, contributing to conditions like Crohn’s disease.",
     "level": 1
   },
   {
     "snp": "rs2066847",
     "node": "NOD2",
-    "description": "TBD",
+    "description": "This mutation leads to a premature stop codon, causing the NOD2 protein to be truncated. It disrupts NOD2’s ability to recognize bacterial components, impairing immune signaling and contributing to intestinal inflammation. Strongly associated with Crohn’s disease, especially in individuals who are homozygous for the mutation.",
     "level": 1
   },
   {
     "snp": "rs10870077",
     "node": "CARD9",
-    "description": "TBD",
+    "description": "This variant affects CARD9 protein function, which is key to innate immune responses. It has been linked to altered cytokine production and immune cell activation, potentially influencing inflammatory disease progression such as IBD.",
     "level": 1
   },
   {
     "snp": "rs10781499",
     "node": "CARD9",
-    "description": "TBD",
+    "description": "The rs10781499 mutation in CARD9 has been studied for its role in inflammatory diseases and immune responses, especially in host-microbe interactions that are important in gut immunity.",
     "level": 1
   },
   {
     "snp": "rs4077515",
     "node": "CARD9",
-    "description": "TBD",
+    "description": "This SNP affects cytokine networks including IL-6 and TNF-α, as well as inflammasome signaling such as NLRP3/IL-1β. It plays a role in inflammation and fibrosis, and has been linked to immune dysregulation in IBD.",
     "level": 1
   },
   {
     "snp": "rs200735402",
     "node": "CARD9",
-    "description": "TBD",
+    "description": "Although originally linked to rs4077515, rs200735402 also shows associations with ulcerative colitis and Crohn’s disease, suggesting a role in immune regulation and inflammatory signaling through CARD9.",
     "level": 1
   },
   {
     "snp": "rs22291130",
     "node": "CARD9",
-    "description": "TBD",
+    "description": "This mutation may alter CARD9 expression and function, affecting transcription factors involved in the immune response. CARD9 is essential for proper innate immune signaling, particularly in response to fungal infections.",
     "level": 1
   },
   {
     "snp": "rs4986790",
     "node": "CARD9",
-    "description": "TBD",
+    "description": "This SNP is actually associated with TLR4, not CARD9. TLR4 is vital for recognizing bacterial lipopolysaccharides and initiating innate immune responses. It plays a role in the development of inflammation in IBD.",
     "level": 1
   },
   {
     "snp": "rs1555458284",
     "node": "MEFV",
-    "description": "TBD",
+    "description": "This SNP in MEFV, a gene involved in the regulation of inflammation and encoding pyrin, is linked to autoinflammatory conditions like Familial Mediterranean Fever (FMF). It contributes to excessive inflammation due to dysregulated IL-1β signaling.",
     "level": 2
   },
   {
     "snp": "rs28940580",
     "node": "MEFV",
-    "description": "TBD",
+    "description": "This mutation in the MEFV gene is commonly associated with Familial Mediterranean Fever and causes abnormal inflammasome activation, leading to periodic episodes of fever and inflammation.",
     "level": 2
   },
   {
     "snp": "rs369847561",
     "node": "NCF4",
-    "description": "TBD",
+    "description": "This SNP is located in the NCF4 gene, which encodes a component of the NADPH oxidase complex involved in generating reactive oxygen species during the immune response. Mutations may impair pathogen clearance and influence Crohn’s disease susceptibility.",
     "level": 2
   },
   {
     "snp": "rs10486483",
     "node": "SKAP2",
-    "description": "TBD",
+    "description": "This mutation is in the SKAP2 gene, which modulates macrophage and neutrophil signaling. Variants may influence inflammatory signaling and innate immune responses relevant to intestinal inflammation.",
     "level": 2
   },
   {
     "snp": "rs2297518",
     "node": "NOS2",
-    "description": "TBD",
+    "description": "This SNP affects the NOS2 gene, which encodes inducible nitric oxide synthase. It plays a role in antimicrobial defense and inflammation, and has been associated with susceptibility to IBD and altered nitric oxide production.",
     "level": 2
   },
   {
     "snp": "rs730880295",
     "node": "LACC1",
-    "description": "TBD",
+    "description": "This mutation in LACC1, involved in macrophage metabolism and immune regulation, has been linked to various autoinflammatory and autoimmune conditions including Crohn’s disease.",
     "level": 2
   },
   {
     "snp": "rs33995883",
     "node": "LRRK2",
-    "description": "TBD",
+    "description": "This variant in LRRK2, which encodes a kinase involved in immune and neuronal function, is associated with altered immune signaling. It has been linked to both Crohn’s disease and Parkinson’s disease.",
     "level": 3
   },
   {
     "snp": "rs2241879",
     "node": "ATG16L1",
-    "description": "TBD",
+    "description": "This SNP is within ATG16L1, a key autophagy gene. It affects autophagosome formation and has been implicated in Crohn’s disease due to its role in maintaining intestinal epithelial homeostasis.",
     "level": 3
   },
   {
     "snp": "rs2241880",
     "node": "ATG16L1",
-    "description": "TBD",
+    "description": "Also known as the T300A variant, this SNP in ATG16L1 impairs autophagy and is one of the strongest genetic risk factors for Crohn’s disease. It compromises the ability of cells to clear pathogens and damaged organelles.",
     "level": 3
   },
   {
     "snp": "rs13412102",
     "node": "ATG16L1",
-    "description": "TBD",
+    "description": "This SNP is located in ATG16L1, a gene central to autophagy. Altered function may impair mucosal immunity and contribute to chronic intestinal inflammation, particularly in Crohn’s disease.",
     "level": 3
   },
   {
     "snp": "rs6431660",
     "node": "ATG16L1",
-    "description": "TBD",
+    "description": "This SNP may modulate expression of ATG16L1, disrupting autophagy and epithelial barrier integrity. It has been studied for its contribution to Crohn’s disease susceptibility.",
     "level": 3
   },
   {
     "snp": "rs1441090",
     "node": "ATG16L1",
-    "description": "TBD",
+    "description": "A variant in ATG16L1 that may impact autophagy-related pathways, contributing to impaired immune responses and intestinal inflammation observed in IBD patients.",
     "level": 3
   },
   {
     "snp": "rs2289472",
     "node": "ATG16L1",
-    "description": "TBD",
+    "description": "This SNP is part of a haplotype block in ATG16L1 associated with autophagy function. Dysfunctional variants here are linked to defective bacterial clearance and higher risk of Crohn’s disease.",
     "level": 3
   }
 ]
