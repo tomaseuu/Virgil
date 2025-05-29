@@ -283,7 +283,7 @@ def parse_metadata(answers, drugs_taken):
     drugsWquestions = drugsWquestions[drugsWquestions["Answers"].notnull()] #filter out unaswered questions, might need to change this
     drugsWquestions = drugsWquestions[drugsWquestions["Answers"] == "yes"]
     Bad_Drugs=drugsWquestions[0].to_list()
-    result = list(set(possible_drugs) - set(Bad_Drugs) )- set(drugs_taken))
+    result = list(set(possible_drugs) - set(Bad_Drugs) - set(drugs_taken))
     return result
 
 def map_answers(form):
