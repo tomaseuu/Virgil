@@ -8,6 +8,7 @@ import {
   Divider,
   Icon,
 } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import {
   InfoOutlineIcon,
   WarningTwoIcon,
@@ -75,15 +76,34 @@ function Bubble({ results }) {
         borderBottomRadius="md"
       >
         <Box>
-          <Section icon={StarIcon} title="Active Ingredients" content={results["Active Ingredients"]} />
-          <Section icon={InfoOutlineIcon} title="Dosage Form" content={results["Dosage Form"]} />
-          <Section icon={InfoOutlineIcon} title="Route" content={results["Route"]} />
-          <Section icon={InfoOutlineIcon} title="Prescription Status" content={results["Prescription Status"]} />
-          <Section icon={InfoOutlineIcon} title="Indications and Usage" content={results["Indications and Usage"]} />
-          <Section icon={TimeIcon} title="Adverse Reactions" content={results["Adverse Reactions"]} />
-          <Section icon={WarningTwoIcon} title="Warnings" content={results["Warnings"]} />
-          <Section icon={WarningTwoIcon} title="Boxed Warning" content={results["Boxed Warning"]} />
-          <Section icon={AttachmentIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} />
+          <Section
+            icon={AttachmentIcon}
+            title="Treatment Info Link"
+            content={
+              <Link
+                style={{ textDecoration: 'underline' }}
+                to={results["Backup Link"]}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {results["Backup Link"]}
+              </Link>
+            }
+          />
+
+          {!results["Label Info Error"] && (
+            <>
+              <Section icon={StarIcon} title="Active Ingredients" content={results["Active Ingredients"]} />
+              <Section icon={InfoOutlineIcon} title="Dosage Form" content={results["Dosage Form"]} />
+              <Section icon={InfoOutlineIcon} title="Route" content={results["Route"]} />
+              <Section icon={InfoOutlineIcon} title="Prescription Status" content={results["Prescription Status"]} />
+              <Section icon={InfoOutlineIcon} title="Indications and Usage" content={results["Indications and Usage"]} />
+              <Section icon={TimeIcon} title="Adverse Reactions" content={results["Adverse Reactions"]} />
+              <Section icon={WarningTwoIcon} title="Warnings" content={results["Warnings"]} />
+              <Section icon={WarningTwoIcon} title="Boxed Warning" content={results["Boxed Warning"]} />
+              <Section icon={AttachmentIcon} title="Dosage and Administration" content={results["Dosage and Administration"]} />
+            </>
+          )}
         </Box>
       </AccordionPanel>
     </AccordionItem>

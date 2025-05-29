@@ -1,17 +1,17 @@
-[
-  "Entyvio",
-  "Humira",
-  "Imuran",
-  "Otrexup",
-  "Purinethol",
-  "Remicade",
-  "Simponi",
-  "Lead Compounds",
-  "Benzimidazole Diamides",
-  "Dietary and microbiome-based therapies",
-  "None known",
-  "BRD5529",
-  "Treatment: HSCT",
-  "MLi-2",
-  "Rapamycin"
-]
+{
+  "Entyvio": "https://www.crohnscolitisfoundation.org/patientsandcaregivers/ibd-medication/vedolizumab",
+  "Humira": "https://www.crohnscolitisfoundation.org/patientsandcaregivers/ibd-medication/adalimumab",
+  "Imuran": "https://www.crohnscolitisfoundation.org/patientsandcaregivers/ibd-medication/azathioprine",
+  "Otrexup": "https://www.crohnscolitisfoundation.org/patientsandcaregivers/ibd-medication/methotrexate-6",
+  "Purinethol": "https://www.crohnscolitisfoundation.org/patientsandcaregivers/ibd-medication/mercaptopurine-6-mp",
+  "Remicade": "https://www.crohnscolitisfoundation.org/patientsandcaregivers/ibd-medication/infliximab",
+  "Simponi": "https://www.crohnscolitisfoundation.org/patientandcaregivers/ibd-medication/golimumab",
+  "Lead Compounds": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6933369/",
+  "Benzimidazole Diamides": "",
+  "Dietary and microbiome-based therapies": "",
+  "None known": "",
+  "BRD5529": "",
+  "Treatment: HSCT": "",
+  "MLi-2": "",
+  "Rapamycin": ""
+}

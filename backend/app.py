@@ -29,6 +29,14 @@ meds_path = os.path.join(base_dir, 'jsons', 'medications.json')
 with open(meds_path, encoding="utf-8") as f:
     TARGET_MEDS = json.load(f)
 
+""" 
+DRUG_OPTIONS are the drug options with backup links
+* Add to this json if adding drug/treatment options
+* This json includes drug name and backup link to drug info
+"""
+drugs_path = os.path.join(base_dir, 'jsons', 'drug_options.json')
+with open(drugs_path, encoding="utf-8") as f:
+    DRUG_OPTIONS = json.load(f)
 
 def parse_23andme_file(file_stream):
     """
@@ -166,7 +174,11 @@ def get_med_info(drug_name):
         except Exception as e:
             info['Label Info Error'] = f"Could not parse label data: {e}"
     else:
+        info['Brand Name'] = drug_name_upper
         info['Label Info Error'] = f"Failed to fetch label data ({label_resp.status_code})"
+
+    backup_link = DRUG_OPTIONS.get(drug_name)
+    info['Backup Link'] = backup_link
 
     return info
 
@@ -356,11 +368,9 @@ def get_drug_options():
     get_drug_options() sends the drug options to the frontend so users can report whether they have taken any of the medications
 
     :return: returns a json of the drugs
-    """ 
-    drugs_path = os.path.join(base_dir, 'jsons', 'drug_options.json')
-    with open(drugs_path) as f:
-        drug_options = json.load(f)
-    return jsonify(drug_options)
+    """
+    new_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
+    return jsonify(new_drugs)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
