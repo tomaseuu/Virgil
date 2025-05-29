@@ -17,7 +17,7 @@ TARGET SNPS are the relevant SNPs we are looking for (SNPs that affect our pathw
 * This json includes the SNP, node (gene), description for what it means if you have this SNP, and the SNP's level in the pathway
 """
 snps_path = os.path.join(base_dir, 'jsons', 'target_snps.json')
-with open(snps_path, 'r') as f:
+with open(snps_path, encoding="utf-8") as f:
     TARGET_SNPS = json.load(f)
 
 """ 
@@ -26,8 +26,9 @@ TARGET_MEDS are the drug options categorized by which gene they affect
 * This json includes the best drug, a description for why this is the best drug, alternative drugs, and citations
 """
 meds_path = os.path.join(base_dir, 'jsons', 'medications.json')
-with open(meds_path, 'r') as f:
+with open(meds_path, encoding="utf-8") as f:
     TARGET_MEDS = json.load(f)
+
 
 def parse_23andme_file(file_stream):
     """
@@ -102,7 +103,10 @@ def extract_valid_meds(pathway_output, accepted_drugs):
         alternatives.update(gene_info.get("alternatives", []))
 
     valid_best = [drug for drug in best_drugs if drug in accepted_drugs]
-    valid_alternatives = [drug for drug in alternatives if drug in accepted_drugs]
+    valid_alternatives = [
+        drug for drug in alternatives
+        if drug in accepted_drugs and drug not in valid_best
+    ]
 
     return {
         "valid_best_drugs": valid_best,
@@ -287,6 +291,12 @@ def parse_metadata(answers, drugs_taken):
     return result
 
 def map_answers(form):
+    """
+    map_answers takes in the json of the frontend form data (metadata) and turns the questions into a list of answers to input into the parse_metadata function
+
+    :form: takes in json of the frontend form data (metadata question answers)
+    :return: returns a list of strings corresponding to metadata questions
+    """ 
     answers = []
 
     preg_val = form.get('pregnant', '').lower()
@@ -342,6 +352,11 @@ def map_answers(form):
 
 @app.route('/api/drug-options')
 def get_drug_options():
+    """
+    get_drug_options() sends the drug options to the frontend so users can report whether they have taken any of the medications
+
+    :return: returns a json of the drugs
+    """ 
     drugs_path = os.path.join(base_dir, 'jsons', 'drug_options.json')
     with open(drugs_path) as f:
         drug_options = json.load(f)
@@ -349,13 +364,21 @@ def get_drug_options():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    """
+    upload_file() is the main function from the frontend that takes in a 23andMe file as well as form data and calls the above functions to determine the best treatment for users
+
+    :return: returns a json of snps and their causes, best drug and description, alternative drugs, and citations
+    """ 
+    # Extract form data from frontend
     form_data = request.form.to_dict()
     print("Form Data:", form_data)
 
+    # Extract just the drug names from drugs the patient has taken
     drugs_json = form_data.get('drugs')
     drugs = json.loads(drugs_json)
     drug_names = [entry['drug'] for entry in drugs]
 
+    # Get list of acceptable drugs from metadata
     print("Metadata Results:")
     answers = map_answers(form_data)
     print(answers)
@@ -363,38 +386,43 @@ def upload_file():
     print(metadata)
     print("")
 
+    # Make sure file is uploaded
     file = request.files.get('file')
     if not file:
         return jsonify({'error': 'No file uploaded'}), 400
 
+    # Get matched SNPs from 23andMe file
     file_stream = BytesIO(file.read())
     matched_snps = parse_23andme_file(file_stream.readlines())
-
     print("Matched SNPs:")
     print(matched_snps)
     print("")
 
+    # Get highlest level of the pathway and match meds
     path = check_pathway(matched_snps)
-
     print("Highest Pathway and Matched Meds:")
     print(path)
     print("")
 
+    # Get accepted drugs based on 23andMe data and metadata results
     accepted = extract_valid_meds(path, metadata)
     print("Accepted drugs:")
     print(accepted)
     print("")
 
+    # Separate valid best drugs and valid alternative drugs
     valid_best_drugs = accepted['valid_best_drugs']
     valid_alternatives = accepted['valid_alternatives']
 
+    # Combine for testing
     combined_valid_drugs = list(set(valid_best_drugs + valid_alternatives))
 
+    # Get med info from API (combined, best, and alternatives)
     meds = [get_med_info(name) for name in combined_valid_drugs]
-
     meds_best = [get_med_info(name) for name in valid_best_drugs]
     meds_alt = [get_med_info(name) for name in valid_alternatives]
 
+    # Return relevant info to frontend via a json
     if path == {}:
         return jsonify({
         'message': f'File {file.filename} uploaded and processed!',
