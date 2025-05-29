@@ -283,21 +283,7 @@ def parse_metadata(answers, drugs_taken):
     drugsWquestions = drugsWquestions[drugsWquestions["Answers"].notnull()] #filter out unaswered questions, might need to change this
     drugsWquestions = drugsWquestions[drugsWquestions["Answers"] == "yes"]
     Bad_Drugs=drugsWquestions[0].to_list()
-    result = list(set(possible_drugs) - set(Bad_Drugs)- set(drugs_taken))
-]
-oral= ['Apriso', 'Azathioprine', 'Azulfidine', 'Budesonide', 'Cipro', 'Colazal', 'Dipentum', 'Entocort EC', 'Flagyl', 'Imuran', 'Jylamvo', 'Lialda', 'Medrol Dosepak', 'Mercaptopurine (6-MP)', 'Mesalamine', 'Methotrexate', 'Neoral', 'Pediapred', 'Pentasa', 'Prednisone', 'Prograf', 'Purinethol', 'RINVOQ', 'Sandimmune', 'UCERIS', 'Velsipity', 'Xatmep', 'Xeljanz', 'Zeposia']
-rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
-IV= ['Avsola', 'Cipro', 'Entyvio', 'Imuldosa', 'Inflectra', 'IXIFI', 'Omvoh', 'Otulfi', 'Prograf', 'Pyzchiva', 'Remicade', 'Renflexis', 'Sandimmune', 'Selarsdi', 'Skyrizi', 'Solu-Medrol', 'Stelara', 'Tremfya', 'Tyruko', 'Tysabri', 'Unbranded Infliximab', 'Wezlana', 'Yesintek']
-Injection = ['Abrilada', 'Amjevita', 'Cimzia', 'Cyltezo', 'Depo-Medrol', 'Entyvio', 'Hadlima', 'Hulio', 'Humira', 'Hyrimoz', 'Idacio', 'Imuldosa', 'Methotrexate', 'Omvoh', 'Otrexup', 'Otul', 'Pyzchiva', 'Rasuvo', 'Selarsdi', 'Simlandi', 'Simponi', 'Skyrizi', 'Stelara', 'Tremfya', 'Wezlana', 'Yesintek', 'Yuyma', 'YUSIMRY']
-
-drugsWquestions = pd.json_normalize(questions)
-drugsWquestions=drugsWquestions.T
-drugsWquestions["Answers"]=answers
-drugsWquestions= drugsWquestions.explode(0)
-drugsWquestions = drugsWquestions[drugsWquestions["Answers"].notnull()] #filter out unaswered questions, might need to change this
-drugsWquestions = drugsWquestions[drugsWquestions["Answers"] == "yes"]
-Bad_Drugs=drugsWquestions[0].to_list()
-result = list(set(possible_drugs) - set(Bad_Drugs) )- set(drugs_taken))
+    result = list(set(possible_drugs) - set(Bad_Drugs) )- set(drugs_taken))
     return result
 
 def map_answers(form):
