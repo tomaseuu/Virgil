@@ -8,7 +8,6 @@ import {
   Divider,
   Icon,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
 import {
   InfoOutlineIcon,
   WarningTwoIcon,
@@ -80,14 +79,19 @@ function Bubble({ results }) {
             icon={AttachmentIcon}
             title="Treatment Info Link"
             content={
-              <Link
-                style={{ textDecoration: 'underline' }}
-                to={results["Backup Link"]}
+              <Text
+                fontSize="sm"
+                color="purple.200"
+                as="a"
+                href={results['Backup Link']}
                 target="_blank"
                 rel="noopener noreferrer"
+                display="block"
+                mb={1}
+                textDecoration="underline"
               >
-                {results["Backup Link"]}
-              </Link>
+                {results['Backup Link']}
+              </Text>
             }
           />
 

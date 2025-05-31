@@ -432,10 +432,10 @@ def upload_file():
     if path == {}:
         response_data = {
             'message': f'File {file.filename} uploaded and processed!',
-            'genes_and_snps': [],
+            'genes_and_snps': {},
             'best_drug': [],
             'alternatives': [],
-            'best_drug_description': [],
+            'best_drug_description': {},
             'citations': []
         }
         return jsonify(response_data)
