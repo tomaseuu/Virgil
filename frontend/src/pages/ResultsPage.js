@@ -13,6 +13,7 @@ import {
   Tooltip,
   Textarea,
   SimpleGrid,
+  Link,
   AccordionItem, AccordionButton, AccordionPanel, AccordionIcon
 } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
@@ -318,22 +319,31 @@ Thank you for your time and guidance!`;
                 {/* Alternative Treatment */}
                 <Box>
                   <Heading size="sm" color="white" fontFamily="'Glacial Indifference Reg'" mb={3}>
-                    Alternative Treatment
+                    Alternate Treatment
                   </Heading>
 
                   {alternatives && alternatives.length > 0 ? (
                     <Text mb={4} color="white" fontFamily="'Glacial Indifference Reg'">
-                      Some alternative treatment(s) are {alternatives.map(a => a["Brand Name"]).join(", ")}.
+                      Some alternate treatment(s) are {alternatives.map(a => a["Brand Name"]).join(", ")}.
                     </Text>
                   ) : (
                     <Text mb={4} color="white" fontFamily="'Glacial Indifference Reg'">
-                      Due to the info you shared, alternative treatments are not recommended.
+                      Due to the info you shared, alternate treatments are not recommended.
                     </Text>
                   )}
                 </Box>
 
                 <Text mt={3} color="white" fontStyle="italic" fontSize="sm">
-                  * For detailed treatment/medication information, please check the Treatment Information section below.
+                  * For detailed treatment/medication information, please check the <Link
+                    onClick={() => scrollToSection('treatment')}
+                    textDecoration="underline"
+                    cursor="pointer"
+                    color="white"
+                    _hover={{ color: '#bdbdfd' }}
+                  >
+                    Treatment Information
+                  </Link>{' '}
+                  section below.
                 </Text>
               </Box>
             </Box>

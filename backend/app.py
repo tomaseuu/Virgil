@@ -271,22 +271,7 @@ def parse_metadata(answers, drugs_taken):
             "Vedolizumab"
         ]
     }
-    possible_drugs=drug_list = [
-    "Abrilada", "Adalimumab-afzb", "Amjevita", "Adalimumab-atto", "Apriso", "Mesalamine",
-    "Avsola", "Infliximab-axxq", "Azathioprine", "Azulfidine", "Budesonide", "Canasa",
-    "Cimzia", "Certolizumab pegol", "Cipro", "Ciprofloxacin", "Colazal", "Balsalazide",
-    "Cyltezo", "Adalimumab-adbm", "Depo-Medrol", "Dipentum", "Olsalazine", "Entocort EC",
-    "Entyvio", "Vedolizumab", "Flagyl", "Metronidazole", "Hadlima", "Adalimumab-bwwd",
-    "Hulio", "Adalimumab-fkjp", "Humira", "Adalimumab", "Hyrimoz", "Adalimumab-adaz",
-    "Idacio", "Adalimumab-aacf", "Imuldosa", "Ustekinumab-srlf", "Imuran", "Inflectra",
-    "Infliximab-dyyb", "IXIFI", "Infliximab-qbtx", "Jylamvo", "Lialda", "Medrol Dosepak",
-    "Mercaptopurine (6-MP)", "Methotrexate", "Mesalamine", "Neoral", "Omvoh", "Otrexup",
-    "Otulfi", "Pediapred", "Pentasa", "Prednisone", "Prograf", "Purinethol", "Pyzchiva",
-    "Rasuvo", "Remicade", "Renflexis", "RINVOQ", "Rowasa", "Sandimmune", "Selarsdi",
-    "Simlandi", "Simponi", "Skyrizi", "Solu-Medrol", "Stelara", "Tremfya", "Tyruko",
-    "Tysabri", "UCERIS", "Unbranded Infliximab", "Velsipity", "Wezlana", "Xatmep",
-    "Xeljanz", "Yesintek", "Yuflyma", "YUSIMRY", "Zeposia", "Zymfentra"
-    ]
+    possible_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
     oral= ['Apriso', 'Azathioprine', 'Azulfidine', 'Budesonide', 'Cipro', 'Colazal', 'Dipentum', 'Entocort EC', 'Flagyl', 'Imuran', 'Jylamvo', 'Lialda', 'Medrol Dosepak', 'Mercaptopurine (6-MP)', 'Mesalamine', 'Methotrexate', 'Neoral', 'Pediapred', 'Pentasa', 'Prednisone', 'Prograf', 'Purinethol', 'RINVOQ', 'Sandimmune', 'UCERIS', 'Velsipity', 'Xatmep', 'Xeljanz', 'Zeposia']
     rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
     IV= ['Avsola', 'Cipro', 'Entyvio', 'Imuldosa', 'Inflectra', 'IXIFI', 'Omvoh', 'Otulfi', 'Prograf', 'Pyzchiva', 'Remicade', 'Renflexis', 'Sandimmune', 'Selarsdi', 'Skyrizi', 'Solu-Medrol', 'Stelara', 'Tremfya', 'Tyruko', 'Tysabri', 'Unbranded Infliximab', 'Wezlana', 'Yesintek']
