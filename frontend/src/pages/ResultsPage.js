@@ -304,10 +304,10 @@ Thank you for your time and guidance!`;
                   )}
                 </Box>
 
-                {/* Alternative Treatments */}
+                {/* Alternative Treatment */}
                 <Box>
                   <Heading size="sm" color="white" fontFamily="'Glacial Indifference Reg'" mb={3}>
-                    Alternative Treatments
+                    Alternative Treatment
                   </Heading>
 
                   {alternatives && alternatives.length > 0 ? (
@@ -322,7 +322,7 @@ Thank you for your time and guidance!`;
                 </Box>
 
                 <Text mt={3} color="white" fontStyle="italic" fontSize="sm">
-                  * For detailed medication information, please check the Medication Information section below.
+                  * For detailed treatment/medication information, please check the Treatment Information section below.
                 </Text>
               </Box>
             </Box>
@@ -448,10 +448,29 @@ Thank you for your time and guidance!`;
                 >
                   Treatment Information
                 </Heading>
+
+              {nextStepsCheck && (
+                <Text pb={4} color="white" fontFamily="'Glacial Indifference Reg'">
+                  Expand the treatment(s) below to see more specific information. All information is taken from{' '}
+                  <Text
+                    fontSize="sm"
+                    color="white"
+                    as="a"
+                    href="https://www.fda.gov/drugs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    mb={1}
+                    textDecoration="underline"
+                  >
+                    fda.gov/drugs
+                  </Text>
+                  .
+                </Text>
+                )} 
                 <>
                 {best_drug && best_drug.length > 0 ? (
                   <>
-                    <Text color="white" mb={4} fontWeight="bold" fontFamily="'Glacial Indifference Reg'">
+                    <Text color="white" mb={4} fontFamily="'Glacial Indifference Bold'">
                       Best Treatment
                     </Text>
                     <Accordion allowToggle w="100%">
@@ -468,7 +487,7 @@ Thank you for your time and guidance!`;
 
                 {alternatives && alternatives.length > 0 ? (
                   <>
-                    <Text color="white" mb={4} fontWeight="bold" fontFamily="'Glacial Indifference Reg'">
+                    <Text color="white" mb={4} fontFamily="'Glacial Indifference Bold'">
                       Alternate Treatment
                     </Text>
                     <Accordion allowToggle w="100%">
