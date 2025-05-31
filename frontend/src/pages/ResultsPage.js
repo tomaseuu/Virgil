@@ -18,6 +18,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Bubble from '../components/Bubble';
+import SideNav from '../components/SideNav';
 import { CopyIcon, DownloadIcon } from '@chakra-ui/icons';
 import jsPDF from 'jspdf';
 
@@ -97,10 +98,19 @@ Thank you for your time and guidance!`;
     });
   };
 
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <ChakraProvider>
       <Box minH="100vh" bg="#4134bb" display="flex" flexDirection="column" pb={10}>
         <NavBar />
+
+        <SideNav scrollToSection={scrollToSection} />
 
         <Box
           display="flex"
@@ -125,6 +135,7 @@ Thank you for your time and guidance!`;
 
             {/* Understanding Your Results Section */}
             <Box
+              id="understanding"
               textAlign="left"
               width="100%"
               bg="#675cc4"
@@ -330,6 +341,7 @@ Thank you for your time and guidance!`;
 
             {/* Next Steps Section */}
             <Box
+              id="next-steps"
               textAlign="left"
               width="100%"
               bg="#675cc4"
@@ -430,6 +442,7 @@ Thank you for your time and guidance!`;
 
             {/* Treatment Information Section */}
             <Box
+              id="treatment"
               textAlign="left"
               width="100%"
               bg="#675cc4"

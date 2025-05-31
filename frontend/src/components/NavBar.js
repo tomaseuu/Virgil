@@ -11,7 +11,6 @@ function NavBar() {
       px={6}
       py={4}
       boxShadow="md"
-      position="sticky"
       top={0}
       zIndex={10}
     >
