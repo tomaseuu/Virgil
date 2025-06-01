@@ -185,98 +185,119 @@ def get_med_info(drug_name):
 def parse_metadata(answers, drugs_taken):
     questions= {
         "Are you pregnant or planning to become pregnant?": [
-            "Tofacitinib",
-            "Etrasimod",
-            "Ozanimod",
-            "Risankizumab",
-            "Upadacitinib",
-            "Filgotinib",
-            "Methotrexate"
+            # Avoid these if pregnant: Imuran, Otrexup, Purinethol, Rapamycin
+            "Entyvio",
+            "Humira",
+            "Remicade",
+            "Simponi"
         ],
         "Are you breast feeding?": [
-            "Tofacitinib",
-            "Etrasimod",
-            "Ozanimod",
-            "Risankizumab",
-            "Upadacitinib",
-            "Filgotinib",
-            "Methotrexate"
+            # Avoid these if breastfeeding: Imuran, Otrexup, Purinethol, Rapamycin
+            "Entyvio",
+            "Humira",
+            "Remicade",
+            "Simponi"
         ],
         "Do you have kidney issues?": [
-            "Rowasa",
-            "Monoconal antibody",
-            "Azathioprine",
-            "mercaptopurine",
-            "Canasa",
-            "Mesalamine",
-            "Pentasa"
+            # Avoid these if kidney issues: Imuran, Otrexup, Purinethol, Rapamycin
+            "Entyvio",
+            "Humira",
+            "Remicade",
+            "Simponi"
         ],
         "Are you over 65?": [
-            "Tofacitinib",
-            "Etrasimod",
-            "Filgotinib",
-            "Ozanimod",
-            "Upadacitinib",
-            "Methotrexate"
+            # Avoid these if over 65: Imuran, Otrexup, Rapamycin
+            "Entyvio",
+            "Humira",
+            "Remicade",
+            "Simponi"
+            "Purinethol"
         ],
         "Are you under 6?": [
-            "Adalimumab",
-            "Infliximab",
-            "Biologics"
+            # Avoid these if under 6: Otrexup, Imuran, Purinethol, Rapamycin, Entyvio
+            "Humira",
+            "Remicade",
+            "Simponi"
         ],
         "Are you under 16?": [
-            "Etrasimod"
+            "Humira",
+            "Remicade",
+            "Simponi"
         ],
         "Do you have mild Crohn\u2019s?": [
-            "Biologics",
-            "small molecule medicine",
-            "Monocolna antibody",
-            "Interleukin Inhibitor"
+            "Entyvio",
+            "Humira",
+            "Imuran",
+            "Purinethol"
         ],
-        "Do you have severe Crohn\u2019s?": [],
+
+        "Do you have severe Crohn\u2019s?": [
+            "Otrexup",
+            "Remicade",
+            "Simponi",
+            "Rapamycin"
+        ],
         "Do you have mild UC?": [
-            "Biologics",
-            "small molecule medicine",
-            "Mirikizumab",
-            "Monocolna antibody",
-            "Interleukin Inhibitor"
+            "Entyvio",
+            "Humira",
+            "Imuran",
+            "Purinethol"
         ],
         "Do you have severe UC?": [
-            "Canasa",
-            "Mesalamine",
-            "Pentasa",
-            "Rowasa"
+            "Otrexup",
+            "Remicade",
+            "Simponi",
+            "Rapamycin"
         ],
         "Do you have Crohn's?": [
-            "Etrasimod",
-            "Filgotinib",
-            "Mirikizumab",
-            "Ozanimod",
-            "Canasa",
-            "Mesalamine",
-            "Pentasa",
-            "Rowasa",
-            "Ozanimod",
-            "Tofacitinib",
-            "Gollimumab",
-            "Mesalazine",
-            "Beclometasone diprpionate"
+            "Entyvio",
+            "Humira",
+            "Imuran",
+            "Otrexup",
+            "Purinethol",
+            "Remicade",
+            "Simponi",
+            "Rapamycin"
         ],
         "Do you have UC?": [
-            "Methotrexate",
-            "Golimumab"
+            "Entyvio",
+            "Humira",
+            "Imuran",
+            "Otrexup",
+            "Purinethol",
+            "Remicade",
+            "Simponi",
+            "Rapamycin"
         ],
         "Is this the first treatment?": [
-            "Mirikizumab",
-            "Vedolizumab"
+            "Entyvio",
+            "Imuran",
+            "Purinethol",
         ]
     }
-    possible_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
-    oral= ['Apriso', 'Azathioprine', 'Azulfidine', 'Budesonide', 'Cipro', 'Colazal', 'Dipentum', 'Entocort EC', 'Flagyl', 'Imuran', 'Jylamvo', 'Lialda', 'Medrol Dosepak', 'Mercaptopurine (6-MP)', 'Mesalamine', 'Methotrexate', 'Neoral', 'Pediapred', 'Pentasa', 'Prednisone', 'Prograf', 'Purinethol', 'RINVOQ', 'Sandimmune', 'UCERIS', 'Velsipity', 'Xatmep', 'Xeljanz', 'Zeposia']
-    rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
-    IV= ['Avsola', 'Cipro', 'Entyvio', 'Imuldosa', 'Inflectra', 'IXIFI', 'Omvoh', 'Otulfi', 'Prograf', 'Pyzchiva', 'Remicade', 'Renflexis', 'Sandimmune', 'Selarsdi', 'Skyrizi', 'Solu-Medrol', 'Stelara', 'Tremfya', 'Tyruko', 'Tysabri', 'Unbranded Infliximab', 'Wezlana', 'Yesintek']
-    Injection = ['Abrilada', 'Amjevita', 'Cimzia', 'Cyltezo', 'Depo-Medrol', 'Entyvio', 'Hadlima', 'Hulio', 'Humira', 'Hyrimoz', 'Idacio', 'Imuldosa', 'Methotrexate', 'Omvoh', 'Otrexup', 'Otul', 'Pyzchiva', 'Rasuvo', 'Selarsdi', 'Simlandi', 'Simponi', 'Skyrizi', 'Stelara', 'Tremfya', 'Wezlana', 'Yesintek', 'Yuyma', 'YUSIMRY']
+    possible_drugs=drug_list = [
+            "Entyvio",
+            "Humira",
+            "Imuran",
+            "Otrexup",
+            "Purinethol",
+            "Remicade",
+            "Simponi",
+            "Rapamycin",
+            "Lead Compounds",
+            "Benzimidazole Diamides",
+            "Dietary and microbiome-based therapies",
+            "None known",
+            "BRD5529",
+            "Treatment: HSCT",
+            "MLi-2"
 
+    ]
+    oral= ['Imuran', 'Otrexup', 'Purinethol', 'Rapamycin']
+    #Not updated, none of the provided drugs can be taken rectally
+    rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
+    IV= ['Entyvio', 'Remicade']
+    Injection = ['Otrexup', 'Humira', 'Simponi']
     drugsWquestions = pd.json_normalize(questions)
     drugsWquestions=drugsWquestions.T
     drugsWquestions["Answers"]=answers
