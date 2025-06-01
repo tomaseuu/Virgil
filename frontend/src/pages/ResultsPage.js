@@ -108,7 +108,7 @@ function ResultsPage() {
     return note;
   };
 
- // const noteText = formatNoteText();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const noteText = useMemo(() => formatNoteText(), [doctorName, best_drug, best_drug_description, genes_and_snps, citations]);
   const { onCopy } = useClipboard(noteText);
   const toast = useToast();
