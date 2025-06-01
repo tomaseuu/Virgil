@@ -22,7 +22,7 @@ function SideNav({ scrollToSection }) {
         bg="#2e2a68"
         color="white"
         _hover={{ bg: '#4b47a3' }}
-        borderRadius="1.25rem 0 0 1.25rem" // 20px in rem
+        borderRadius="1.25rem 0 0 1.25rem"
         boxShadow="md"
         width={toggleBtnSize}
         height={toggleBtnSize}

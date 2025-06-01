@@ -38,66 +38,153 @@ function ResultsPage() {
     nextStepsCheck = false;
   }
 
-  const meds = best_drug.map(r => r["Brand Name"]).join(", ");
-  const noteText = `Hi Doctor,
+  let meds = "";
+  let altList = "";
 
-I recently used Virgil, an experimental platform that analyzes genetic information from 23andMe along with other health data to recommend targeted treatments for IBD patients. Based on my results, Virgil has recommended ${meds} because it is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.
+  if (best_drug.length > 0) {
+    const brandNames = best_drug.map(r => r["Brand Name"]);
 
-I would appreciate the opportunity to discuss this recommendation with you at our next appointment to understand if this medication could be suitable for my treatment plan.
+    if (brandNames.length === 1) {
+      meds = brandNames[0];
+    } else if (brandNames.length === 2) {
+      meds = `${brandNames[0]} and ${brandNames[1]}`;
+    } else {
+      meds = `${brandNames.slice(0, -1).join(", ")}, and ${brandNames[brandNames.length - 1]}`;
+    }
+  }
 
-Thank you for your time and guidance!`;
+  if (alternatives.length > 0) {
+    const altNames = alternatives.map(a => a["Brand Name"]);
+
+    if (altNames.length === 1) {
+      altList = altNames[0];
+    } else if (altNames.length === 2) {
+      altList = `${altNames[0]} and ${altNames[1]}`;
+    } else {
+      altList = `${altNames.slice(0, -1).join(", ")}, and ${altNames[altNames.length - 1]}`;
+    }
+  }
+
+  function isDrugMatch(citationDrug, descDrug) {
+    const citationDrugs = Array.isArray(citationDrug) ? citationDrug : [citationDrug];
+    const descDrugs = Array.isArray(descDrug) ? descDrug : [descDrug];
+
+    const normalizedCitationDrugs = citationDrugs.map(d => d.toLowerCase().trim());
+    const normalizedDescDrugs = descDrugs.map(d => d.toLowerCase().trim());
+
+    return normalizedDescDrugs.some(d => normalizedCitationDrugs.includes(d));
+  }
+
+  const formatNoteText = () => {
+    let note = `Hi Doctor,\n\nI recently used Virgil, an experimental platform that analyzes genetic information from 23andMe along with other health data to recommend targeted treatments for IBD patients.\n\n`;
+
+    if (best_drug.length > 0) {
+      note += `Based on my results, Virgil has recommended ${meds} because it is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.\n\n`;
+    }
+
+    best_drug_description.forEach(desc => {
+      const snpsRaw = genes_and_snps[desc['node']];
+      const snps = snpsRaw && typeof snpsRaw === 'object' ? Object.keys(snpsRaw).join(", ") : "N/A";
+      const citationObj = citations.find(c => isDrugMatch(c.best_drug, desc.drug));
+      let citationURL = "No citation provided.";
+      if (citationObj) {
+        if (Array.isArray(citationObj.citation)) {
+          citationURL = citationObj.citation.join(", ");
+        } else {
+          citationURL = citationObj.citation;
+        }
+      }
+
+      note += `My 23andMe data shows mutations affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this mutation is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
+    });
+
+    note += `I would appreciate the opportunity to discuss this recommendation with you at our next appointment to understand if this medication could be suitable for my treatment plan.\n\n`;
+    note += `Thank you for your time and guidance!\n`;
+
+    return note;
+  };
+
+  const noteText = formatNoteText();
   const { onCopy } = useClipboard(noteText);
   const toast = useToast();
 
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
+  function cleanText(input) {
+    return input
+      .replace(/[“”«»„]/g, '"')
+      .replace(/[‘’‚‛]/g, "'")
+      .replace(/[–—―]/g, '-')
+      .replace(/[^\x20-\x7E\n\r]/g, ' ')
+      .trim();
+  }
 
-    const lineHeight = 8;
-    let y = 10;
+const handleDownloadPDF = () => {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 25;
+  const lineHeight = 8;
+  let y = margin;
 
-    const addWrappedText = (text, fontSize = 12) => {
-      doc.setFontSize(fontSize);
-      const lines = doc.splitTextToSize(text, 180);
-      lines.forEach(line => {
-        if (y > 280) {
+  const maxWidth = pageWidth - 2 * margin;
+
+  doc.setFont('times', 'bold');
+  doc.setFontSize(16);
+  doc.text('Virgil IBD Summary', pageWidth / 2, y, { align: 'center' });
+
+  y += lineHeight * 2;
+
+  doc.setFont('times', 'normal');
+  doc.setFontSize(12);
+  const today = new Date().toLocaleDateString();
+  doc.text(today, margin, y);
+
+  y += lineHeight * 2;
+
+  doc.setFontSize(12);
+  doc.setFont('times', 'normal');
+  doc.setTextColor(0, 0, 0);
+
+  const addJustifiedText = (text) => {
+    const paragraphs = text.split(/\n\s*\n/);
+    paragraphs.forEach((para) => {
+      const lines = doc.splitTextToSize(para.trim(), maxWidth);
+      lines.forEach((line) => {
+        if (y > pageHeight - margin) {
           doc.addPage();
-          y = 10;
+          y = margin;
         }
-        doc.text(line, 15, y);
+        doc.text(line, margin, y, { align: 'justify', maxWidth });
         y += lineHeight;
       });
-      y += lineHeight / 2;
-    };
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text('Note to Doctor', 15, y);
-    y += lineHeight;
-
-    doc.setFont('helvetica', 'normal');
-    addWrappedText(noteText);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text('Understanding Your Results', 15, y);
-    y += lineHeight;
-
-    doc.setFont('helvetica', 'normal');
-    addWrappedText('Your results were chosen based on your unique genetic profile from 23andMe data combined with your health information and clinical research on IBD treatments.');
-    addWrappedText('This tailored approach aims to help you achieve remission faster and improve your overall treatment outcomes.');
-    addWrappedText('Please remember that these recommendations support discussions with your healthcare provider and are not a substitute for professional medical advice. We encourage you to share these results with your doctor to explore the best treatment options together.');
-    addWrappedText('Expand the medication(s) below to see more specific information. All information is taken from fda.gov/drugs.');
-
-    doc.save('Virgil_IBD_Results.pdf');
-
-    toast({
-      title: 'Download Started',
-      description: 'Your PDF has been downloaded.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
+      y += lineHeight;
     });
   };
+
+  addJustifiedText(cleanText(noteText.trim()));
+
+  y += lineHeight * 2;
+  doc.setFontSize(12);
+  doc.setTextColor(120);
+  doc.text('Generated via Virgil', margin, y);
+
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor(150);
+    doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+  }
+
+  doc.save('Virgil_IBD_Summary.pdf');
+
+  toast({
+    title: 'Download Started',
+    description: 'Your PDF has been downloaded.',
+    status: 'success',
+    duration: 3000,
+    isClosable: true,
+  });
+};
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -324,7 +411,7 @@ Thank you for your time and guidance!`;
 
                   {alternatives && alternatives.length > 0 ? (
                     <Text mb={4} color="white" fontFamily="'Glacial Indifference Reg'">
-                      Some alternate treatment(s) are {alternatives.map(a => a["Brand Name"]).join(", ")}.
+                      Some alternate treatment(s) are {altList}.
                     </Text>
                   ) : (
                     <Text mb={4} color="white" fontFamily="'Glacial Indifference Reg'">
@@ -410,10 +497,10 @@ Thank you for your time and guidance!`;
                   readOnly
                   size="md"
                   height="160px"
-                  resize="none"
                   mb={3}
                   bg="whiteAlpha.200"
                   color="white"
+                  resize="vertical"
                 />
                 <Flex justifyContent="flex-end" gap={4}>
                   <Tooltip label="Copy to clipboard" placement="top">
