@@ -14,8 +14,10 @@ import {
   Textarea,
   SimpleGrid,
   Link,
-  AccordionItem, AccordionButton, AccordionPanel, AccordionIcon
+  AccordionItem, AccordionButton, AccordionPanel, AccordionIcon,
+  FormControl, FormLabel, Input
 } from '@chakra-ui/react';
+import { useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Bubble from '../components/Bubble';
@@ -32,6 +34,8 @@ function ResultsPage() {
   const genes_and_snps = results.genes_and_snps || {};
   const best_drug_description = results.best_drug_description || [];
   const citations = results.citations || [];
+
+  const [doctorName, setDoctorName] = useState('');
 
   let nextStepsCheck = true;
   if (Object.keys(genes_and_snps).length === 0) {
@@ -76,7 +80,7 @@ function ResultsPage() {
   }
 
   const formatNoteText = () => {
-    let note = `Hi Doctor,\n\nI recently used Virgil, an experimental platform that analyzes genetic information from 23andMe along with other health data to recommend targeted treatments for IBD patients.\n\n`;
+    let note = `Hi ${doctorName || "Doctor"},\n\nI recently used Virgil, an experimental platform that analyzes genetic information from 23andMe along with other health data to recommend targeted treatments for IBD patients.\n\n`;
 
     if (best_drug.length > 0) {
       note += `Based on my results, Virgil has recommended ${meds} because it is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.\n\n`;
@@ -104,7 +108,8 @@ function ResultsPage() {
     return note;
   };
 
-  const noteText = formatNoteText();
+ // const noteText = formatNoteText();
+  const noteText = useMemo(() => formatNoteText(), [doctorName, best_drug, best_drug_description, genes_and_snps, citations]);
   const { onCopy } = useClipboard(noteText);
   const toast = useToast();
 
@@ -491,6 +496,18 @@ const handleDownloadPDF = () => {
                 <Heading size="sm" color="white" fontFamily="'Glacial Indifference Bold'" mb={3}>
                   Note to Doctor
                 </Heading>
+
+                <FormControl mb={4}>
+                  <FormLabel color="white" fontFamily="'Glacial Indifference Reg'" fontWeight="bold">Enter your doctor's name to customize the note</FormLabel>
+                  <Input
+                    placeholder="e.g., Dr. Smith"
+                    value={doctorName}
+                    onChange={(e) => setDoctorName(e.target.value)}
+                    bg="whiteAlpha.200"
+                    color="white"
+                    _placeholder={{ color: 'whiteAlpha.500' }}
+                  />
+                </FormControl>
 
                 <Textarea
                   value={noteText}
