@@ -83,7 +83,7 @@ function ResultsPage() {
     let note = `Hi ${doctorName || "Doctor"},\n\nI recently used Virgil, an experimental platform that analyzes genetic information from 23andMe along with other health data to recommend targeted treatments for IBD patients.\n\n`;
 
     if (best_drug.length > 0) {
-      note += `Based on my results, Virgil has recommended ${meds} because it is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.\n\n`;
+      note += `Based on my results, Virgil has recommended ${meds}. This treatment plan is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.\n\n`;
     }
 
     best_drug_description.forEach(desc => {
@@ -99,7 +99,7 @@ function ResultsPage() {
         }
       }
 
-      note += `My 23andMe data shows mutations affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this mutation is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
+      note += `My 23andMe data shows a mutation affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this mutation is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
     });
 
     note += `I would appreciate the opportunity to discuss this recommendation with you at our next appointment to understand if this medication could be suitable for my treatment plan.\n\n`;
