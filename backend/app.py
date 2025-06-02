@@ -70,12 +70,14 @@ def parse_23andme_file(file_stream):
             print(genotype)
             print(entry['bases'])
             print(genotype in entry['bases'])
-            if genotype in TARGET_SNP_LOOKUP[rsid]['bases']:
-                found[rsid] = {
-                    'node': entry['node'],
-                    'description': entry['description'],
-                    'level': entry['level'],
-                }
+            # if genotype in TARGET_SNP_LOOKUP[rsid]['bases']:
+            found[rsid] = {
+                'node': entry['node'],
+                'description': entry['description'],
+                'level': entry['level'],
+                'link': entry['link'],
+                'genotype': genotype
+            }
     return found
 
 def check_pathway(snps):
@@ -97,6 +99,8 @@ def check_pathway(snps):
     for snp, info in top_snps.items():
         node = info['node']
         description = info['description']
+        link = info['link']
+        genotype = info['genotype']
         if node not in result:
             result[node] = {
                 'snps': {},
@@ -105,7 +109,11 @@ def check_pathway(snps):
                 'description': TARGET_MEDS.get(node, {}).get('description', ''),
                 'citation': TARGET_MEDS.get(node, {}).get('citation', [])
             }
-        result[node]['snps'][snp] = description
+        result[node]['snps'][snp] = {
+            'description': description,
+            'link': link,
+            'genotype': genotype
+        }
 
     return result
 

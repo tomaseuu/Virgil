@@ -42,6 +42,11 @@ function ResultsPage() {
     nextStepsCheck = false;
   }
 
+  let bestMedsCheck = true;
+  if (best_drug.length === 0) {
+    bestMedsCheck = false;
+  }
+
   let meds = "";
   let altList = "";
 
@@ -98,7 +103,7 @@ function ResultsPage() {
           }
         }
 
-        note += `My 23andMe data shows a mutation affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this mutation is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
+        note += `My 23andMe data shows a risk factor affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this risk factor is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
       });
     }
 
@@ -266,11 +271,11 @@ const handleDownloadPDF = () => {
                 Object.entries(genes_and_snps).map(([gene, snps]) => (
                   <Box key={gene} mb={6}>
                     <Text mb={3} color="white">
-                      Your 23andMe data shows a mutation that affects the <b>{gene}</b> gene. The following SNPs were found:
+                      Your 23andMe data shows a risk factor that affects the <b>{gene}</b> gene. The following SNPs were found:
                     </Text>
 
                     <SimpleGrid columns={[1, 2, 3]} spacing={6} width="100%">
-                      {Object.entries(snps).map(([snp, desc]) => (
+                      {Object.entries(snps).map(([snp, data]) => (
                         <Box
                           key={snp}
                           p={4}
@@ -288,7 +293,29 @@ const handleDownloadPDF = () => {
                                 <AccordionIcon />
                               </AccordionButton>
                               <AccordionPanel pb={2} fontSize="sm" color="gray.200" whiteSpace="pre-wrap">
-                                {desc}
+                                <>
+                                  <Text fontFamily="'Glacial Indifference Reg'">This SNP has a <b>{data.genotype}</b> genotype.</Text>
+
+                                  <Text fontFamily="'Glacial Indifference Reg'">{data.description}</Text>
+
+                                  <Text fontFamily="'Glacial Indifference Reg'"><b>Citation: </b></Text>
+                                  {data.link && (
+                                    <Text
+                                      fontSize="sm"
+                                      color="purple.200"
+                                      as="a"
+                                      href={data.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      display="block"
+                                      mb={1}
+                                      textDecoration="underline"
+                                      fontFamily="'Glacial Indifference Reg'"
+                                    >
+                                      {data.link}
+                                    </Text>
+                                  )}
+                                </>
                               </AccordionPanel>
                             </AccordionItem>
                           </Accordion>
@@ -332,7 +359,7 @@ const handleDownloadPDF = () => {
                             bg="rgba(255, 255, 255, 0.05)"
                           >
                             <Text mb={2} color="white">
-                              {`Based on Virgil algorithms, the best treatment for your ${node} mutation ${
+                              {`Based on Virgil algorithms, the best treatment for your ${node} risk factor ${
                                 Array.isArray(drug)
                                   ? drug.length === 1
                                     ? 'is'
@@ -472,6 +499,20 @@ const handleDownloadPDF = () => {
                     No next steps are available at this time.
                   </Text>
                 </Stack>
+              ) : !bestMedsCheck ? (
+                <Stack spacing={4}>
+                  <Text color="white" fontFamily="'Glacial Indifference Reg'" whiteSpace="pre-wrap">
+                    Unfortunately, since the best treatment is not known, the Virgil algorithm is unable to give you a recommended best treatment plan.
+                  </Text>
+
+                  <Text color="white" fontFamily="'Glacial Indifference Reg'" whiteSpace="pre-wrap">
+                    Some alternate treatment options may be listed above, though they are not targeted to your specific risk factor(s).
+                  </Text>
+                    
+                  <Text color="white" fontFamily="'Glacial Indifference Reg'" whiteSpace="pre-wrap">
+                    No next steps are available at this time.
+                  </Text>
+                </Stack>
               ) : (
               <>
               {/* Disclaimer */}
@@ -595,40 +636,36 @@ const handleDownloadPDF = () => {
                 </Text>
                 )} 
                 <>
-                {best_drug && best_drug.length > 0 ? (
-                  <>
-                    <Text color="white" mb={4} fontFamily="'Glacial Indifference Bold'">
-                      Best Treatment
-                    </Text>
+                  <Text color="white" mb={4} fontFamily="'Glacial Indifference Bold'">
+                    Best Treatment
+                  </Text>
+                  {best_drug && best_drug.length > 0 ? (
                     <Accordion allowToggle w="100%">
                       {best_drug.map((result, index) => (
                         <Bubble key={index} results={result} />
                       ))}
                     </Accordion>
-                  </>
-                ) : (
-                  <Text color="white" fontFamily="'Glacial Indifference Reg'">
-                    No best treatment(s) found.
-                  </Text>
-                )}
-
-                {alternatives && alternatives.length > 0 ? (
-                  <>
-                    <Text color="white" mb={4} fontFamily="'Glacial Indifference Bold'">
-                      Alternate Treatment
+                  ) : (
+                    <Text color="white" fontFamily="'Glacial Indifference Reg'">
+                      No best treatment(s) found.
                     </Text>
+                  )}
+
+                  <Text color="white" mt={6} mb={4} fontFamily="'Glacial Indifference Bold'">
+                    Alternate Treatment
+                  </Text>
+                  {alternatives && alternatives.length > 0 ? (
                     <Accordion allowToggle w="100%">
                       {alternatives.map((result, index) => (
                         <Bubble key={index} results={result} />
                       ))}
                     </Accordion>
-                  </>
-                ) : (
-                  <Text color="white" fontFamily="'Glacial Indifference Reg'">
-                    No alternate treatment(s) found.
-                  </Text>
-                )}
-              </>
+                  ) : (
+                    <Text color="white" fontFamily="'Glacial Indifference Reg'">
+                      No alternate treatment(s) found.
+                    </Text>
+                  )}
+                </>
               </Box>
               </Box>
           </VStack>
