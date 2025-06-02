@@ -6,7 +6,8 @@ Tool to use genetic information to identify targeted treatment options for IBD.
 Setup
 
 Backend Setup (Python Flask)
-Make sure python is downloaded
+
+* Make sure python is downloaded
 1. Open a new terminal and navigate to the backend directory:
    cd backend
 2. Create and activate a virtual environment:
@@ -20,7 +21,8 @@ Make sure python is downloaded
 You can check this is running at http://localhost:5000.
 
 Frontend Setup (React)
-Make sure node.js is downloaded
+
+* Make sure node.js is downloaded
 1. Open a new terminal and navigate to the frontend directory:
    cd frontend
 2. Install dependencies (if first time running):
