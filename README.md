@@ -29,4 +29,4 @@ Frontend Setup (React)
    npm install
 3. Run the development server:
    npm start
-You can check this is running at http://localhost:3000.
+You can check this is running (and interact with the web app) at http://localhost:3000.
