@@ -38,6 +38,7 @@ function UploadFilePage() {
   const [kidneys, setKidneys] = useState('');
   const [firstTreatment, setFirstTreatment] = useState('');
   const [route, setRoute] = useState('');
+  const [severity, setSeverity] = useState('');
 
   const [drugEntries, setDrugEntries] = useState([{ drug: '', reaction: '' }]);
 
@@ -129,6 +130,7 @@ function UploadFilePage() {
     formData.append('kidneys', kidneys);
     formData.append('firstTreatment', firstTreatment);
     formData.append('route', route);
+    formData.append('severity', severity);
     formData.append('drugs', JSON.stringify(drugEntries));
 
     try {
@@ -222,6 +224,32 @@ function UploadFilePage() {
             </FormControl>
 
             <FormControl>
+              <FormLabel textColor="white">Severity of IBD</FormLabel>
+              <Select
+                {...selectStyles}
+                value={severity}
+                onChange={(e) => setSeverity(e.target.value)}
+                placeholder="Select option"
+                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
+                _focus={{ borderColor: '#a28df0' }}
+                _hover={{ bg: '#3d3390' }}
+                sx={{
+                  option: {
+                    backgroundColor: '#322a80',
+                    color: 'white',
+                  },
+                  ':not([data-placeholder="true"])': {
+                    backgroundColor: '#2e2a68',
+                  }
+                }}
+              >
+                <option value="mild">Mild</option>
+                <option value="moderate">Moderate</option>
+                <option value="severe">Severe</option>
+              </Select>
+            </FormControl>
+
+            <FormControl>
               <FormLabel textColor="white">Pregnant</FormLabel>
               <Select
                 {...selectStyles}
@@ -269,8 +297,8 @@ function UploadFilePage() {
                   }
                 }}
               >
-                <option value="yes">Current</option>
-                <option value="yes">Past</option>
+                <option value="current">Current</option>
+                <option value="past">Past</option>
                 <option value="none">None</option>
               </Select>
             </FormControl>

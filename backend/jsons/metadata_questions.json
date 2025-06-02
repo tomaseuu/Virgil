@@ -12,27 +12,69 @@
     "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
   },
   {
-    "condition": { "kidneys": "yes" },
+    "condition": { "kidneys": "current" },
     "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
   },
   {
-    "condition": { "age_gt": 65 },
+    "condition": { "kidneys": "past" },
+    "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
+  },
+  {
+    "condition": { "age_gt65": 65 },
     "banned_drugs": ["Imuran", "Otrexup", "Rapamycin"]
   },
   {
-    "condition": { "age_lt": 6 },
+    "condition": { "age_lt16": 16 },
+    "banned_drugs": ["Entyvio", "Imuran", "Otrexup", "Purinethol"]
+  },
+  {
+    "condition": { "age_lt6": 6 },
     "banned_drugs": ["Otrexup", "Imuran", "Purinethol", "Rapamycin", "Entyvio"]
   },
   {
-    "condition": { "IBD": "crohns" },
-    "banned_drugs": ["Simponi"]
+    "condition": { 
+      "IBD": "crohns",
+      "severity": "mild"
+    },
+    "banned_drugs": ["Otrexup", "Remicade", "Simponi", "Rapamycin"]
   },
   {
-    "condition": { "IBD": "uc" },
-    "banned_drugs": ["Otrexup", "Simponi"]
+    "condition": { 
+      "IBD": "crohns",
+      "severity": "severe"
+    },
+    "banned_drugs": ["Entyvio", "Humira", "Imuran", "Purinethol"]
+  },
+    {
+    "condition": { 
+      "IBD": "both",
+      "severity": "mild"
+    },
+    "banned_drugs": ["Otrexup", "Remicade", "Simponi", "Rapamycin"]
+  },
+  {
+    "condition": { 
+      "IBD": "both",
+      "severity": "severe"
+    },
+    "banned_drugs": ["Entyvio", "Humira", "Imuran", "Purinethol"]
+  },
+  {
+    "condition": { 
+      "IBD": "uc",
+      "severity": "mild"
+    },
+    "banned_drugs": ["Otrexup", "Remicade", "Simponi", "Rapamycin"]
+  },
+  {
+    "condition": { 
+      "IBD": "uc",
+      "severity": "severe"
+    },
+    "banned_drugs": ["Entyvio", "Humira", "Imuran", "Purinethol"]
   },
   {
     "condition": { "firstTreatment": "yes" },
-    "banned_drugs": ["Entyvio"]
+    "banned_drugs": ["Humira", "Otrexup", "Remicade", "Simponi", "Rapamycin"]
   }
 ]

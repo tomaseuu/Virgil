@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from io import BytesIO
 import requests
-import pandas as pd
 import os
 import json
 
@@ -12,37 +11,38 @@ CORS(app)
 base_dir = os.path.dirname(__file__)
 
 """ 
-TARGET SNPS are the relevant SNPs we are looking for (SNPs that affect our pathway)
-* Add to this json if adding to the SNPs we are looking for
-* This json includes the SNP, node (gene), description for what it means if you have this SNP, and the SNP's level in the pathway
+TARGET_SNPS contains relevant SNPs (single nucleotide polymorphisms) that impact our pathway of interest.
+* Add entries to this JSON when adding new SNPs.
+* Each entry includes the SNP ID, associated gene (node), a description of its biological or clinical significance, and its position in the pathway.
 """
 snps_path = os.path.join(base_dir, 'jsons', 'target_snps.json')
 with open(snps_path, encoding="utf-8") as f:
     TARGET_SNPS = json.load(f)
 
 """ 
-TARGET_MEDS are the drug options categorized by which gene they affect
-* Add to this json if adding meds to genes
-* This json includes the best drug, a description for why this is the best drug, alternative drugs, and citations
+TARGET_MEDS contains drug recommendations categorized by the gene they target.
+* Add entries to this JSON when adding new drug-gene relationships.
+* Each entry includes the recommended drug, a rationale for its use, alternative treatment options, and supporting citations.
 """
 meds_path = os.path.join(base_dir, 'jsons', 'medications.json')
 with open(meds_path, encoding="utf-8") as f:
     TARGET_MEDS = json.load(f)
 
 """ 
-DRUG_OPTIONS are the drug options with backup links
-* Add to this json if adding drug/treatment options
-* This json includes drug name and backup link to drug info
+DRUG_OPTIONS provides drug or treatment options along with backup informational links.
+* Add entries to this JSON when including new drug or treatment options.
+* Each entry includes the drug name and a link to additional information about the drug.
 """
 drugs_path = os.path.join(base_dir, 'jsons', 'drug_options.json')
 with open(drugs_path, encoding="utf-8") as f:
     DRUG_OPTIONS = json.load(f)
 
 """ 
-METADATA_QUESTIONS are the metadata questions with a list of drugs the user cannot take if the asnwer is yes
-* Add to this json if adding metadata questions
-* This json includes question and drugs user cannot take
-* must also update frontend
+METADATA_QUESTIONS contains a list of user-specific conditions and the drugs that should be avoided if the condition is met.
+* Each entry has a 'condition' field with key-value pairs representing metadata (e.g., pregnancy status, age, IBD type and severity).
+* If a user's metadata matches the condition, the corresponding drugs in 'banned_drugs' should be excluded from consideration.
+* Add new entries to this JSON when introducing new conditions or drug restrictions.
+* Note: The frontend must also be updated to reflect changes to this structure.
 """
 metadata_path = os.path.join(base_dir, 'jsons', 'metadata_questions.json')
 with open(metadata_path, encoding="utf-8") as f:
@@ -50,11 +50,16 @@ with open(metadata_path, encoding="utf-8") as f:
 
 def parse_23andme_file(file_stream):
     """
-    parse_23andme_file searches through the 23andMe file and matches any SNPs in the TARGET_SNPS list
+    Parses a 23andMe raw data file to identify SNPs that match entries in TARGET_SNPS.
 
-    :param file_stream: takes in a file stream of the 23andMe file
-    :return: returns a json that includes node (gene), description (what this SNP means), and level (level in the pathway) for each SNP
-    """ 
+    :param file_stream: File stream of the user's 23andMe file (expected tab-delimited format).
+    :return: A dictionary of matched SNPs, where each entry includes:
+             - node: associated gene or pathway node
+             - description: explanation of SNP relevance
+             - level: position in the biological pathway (lower = higher priority)
+             - link: source or reference link
+             - genotype: user's specific genotype for the SNP
+    """
     found = {}
     for line in file_stream:
         decoded = line.decode('utf-8').strip()
@@ -82,11 +87,16 @@ def parse_23andme_file(file_stream):
 
 def check_pathway(snps):
     """
-    check_pathway takes the matched SNPs from the 23andMe file and returns the SNPs at the highest level of the pathway (where highest is 1)
+    Identifies the most critical SNPs (highest priority = lowest pathway level) and retrieves drug recommendations for those genes.
 
-    :param snps: takes in json of found SNPs from 23andMe file, including node, description, and level
-    :return: returns a json that includes SNPs, best drug option, alternative drugs, descirption for why this drug is the best, and citations for each gene at the highest level
-    """ 
+    :param snps: Dictionary of matched SNPs from parse_23andme_file().
+    :return: A dictionary of genes at the top priority level, with:
+             - snps: matching SNPs with genotype, description, and link
+             - best_drug: recommended drug(s) for the gene
+             - alternatives: alternative drug(s)
+             - description: rationale for recommendation
+             - citation: supporting scientific references
+    """
     levels = [info['level'] for info in snps.values()]
     if not levels:
         return {}
@@ -119,12 +129,14 @@ def check_pathway(snps):
 
 def extract_valid_meds(pathway_output, accepted_drugs):
     """
-    extract_valid_meds takes in the matched genes and related info (snps, best drug, alternatives, description, citation) and the accepted drugs from the patient metadata to return drugs that are safe for the patient to take
+    Filters recommended and alternative drugs to include only those safe for the patient based on their metadata.
 
-    :pathway_output: takes in json of matched genes and related info (snps, best drug, alternatives, description, citation)
-    :accepted_drugs: takes in list of accepted drugs from metadata function (drugs that are safe for patient to take based on form questions)
-    :return: returns a json of two lists, one of the valid best drugs and one of the valid alternative drugs (valid meaning safe for patient to take based on metadata)
-    """ 
+    :param pathway_output: Output from check_pathway() containing genes, drugs, and SNPs.
+    :param accepted_drugs: List of drugs deemed safe based on patient metadata.
+    :return: Dictionary with two lists:
+             - valid_best_drugs: recommended drugs that are safe
+             - valid_alternatives: safe alternatives not already in valid_best_drugs
+    """
     best_drugs = set()
     alternatives = set()
 
@@ -145,10 +157,21 @@ def extract_valid_meds(pathway_output, accepted_drugs):
 
 def get_med_info(drug_name):
     """
-    get_med_info takes in a drug name (string) and connects to fda.gov/drugs API to give drug information to the frontend
+    Retrieves drug safety and usage information from the FDA API based on a drug name.
 
-    :drug_name: takes in drug name (string)
-    :return: returns a json of drug information pulled from fda.gov/drugs API
+    :param drug_name: The name of the drug (string).
+    :return: Dictionary containing FDA drug information including:
+             - Brand Name
+             - Active Ingredients
+             - Dosage Form
+             - Route
+             - Prescription Status
+             - Indications and Usage
+             - Adverse Reactions
+             - Warnings
+             - Boxed Warning
+             - Dosage and Administration
+             - Backup Link (fallback resource if FDA data is incomplete)
     """
     drug_name_upper = drug_name.upper()
 
@@ -205,6 +228,28 @@ def get_med_info(drug_name):
     return info
 
 def parse_metadata(form_data):
+    """
+    Parses user metadata and determines the list of allowed drugs based on input conditions.
+
+    This function takes form data submitted by the user and evaluates it against a set of 
+    predefined medical conditions and drug restrictions (from METADATA_QUESTIONS). It filters 
+    out drugs that are:
+    - Already taken by the user,
+    - Banned due to the user's age, medical conditions, or other metadata,
+    - Not allowed based on the user's preferred route of administration.
+
+    :param form_data: A dictionary containing user-submitted form fields, including:
+                      - 'age'
+                      - 'pregnant'
+                      - 'kidneys'
+                      - 'IBD'
+                      - 'severity'
+                      - 'firstTreatment'
+                      - 'route'
+                      - 'drugs' (JSON string list of drugs already taken)
+
+    :return: A list of drug names (strings) that are allowed for the user based on the provided metadata.
+    """
     drugs_json = form_data.get('drugs')
     drugs = json.loads(drugs_json)
     drugs_taken = set(entry['drug'] for entry in drugs)
@@ -217,12 +262,17 @@ def parse_metadata(form_data):
 
         match = True
         for key, val in cond.items():
-            if key == "age_gt":
+            if key == "age_gt65":
                 age_str = form_data.get("age", "")
                 if not age_str.isdigit() or int(age_str) <= val:
                     match = False
                     break
-            elif key == "age_lt":
+            elif key == "age_lt16":
+                age_str = form_data.get("age", "")
+                if not age_str.isdigit() or int(age_str) >= val:
+                    match = False
+                    break
+            elif key == "age_lt6":
                 age_str = form_data.get("age", "")
                 if not age_str.isdigit() or int(age_str) >= val:
                     match = False
@@ -259,9 +309,11 @@ def parse_metadata(form_data):
 @app.route('/api/drug-options')
 def get_drug_options():
     """
-    get_drug_options() sends the drug options to the frontend so users can report whether they have taken any of the medications
+    Provides a list of available drug options to the frontend.
 
-    :return: returns a json of the drugs
+    This allows users to indicate if they have taken any of these medications.
+
+    :return: JSON list of drug names, excluding the placeholder "None known".
     """
     new_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
     return jsonify(new_drugs)
@@ -269,10 +321,25 @@ def get_drug_options():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     """
-    upload_file() is the main function from the frontend that takes in a 23andMe file as well as form data and calls the above functions to determine the best treatment for users
+    Handles 23andMe file uploads and form data from the frontend to analyze SNPs and recommend treatments.
 
-    :return: returns a json of snps and their causes, best drug and description, alternative drugs, and citations
-    """ 
+    Workflow:
+    - Extracts form data and user metadata.
+    - Reads the uploaded 23andMe raw data file.
+    - Matches user's SNPs against known targets.
+    - Determines highest priority pathway genes and related drug options.
+    - Filters drug recommendations based on patient metadata.
+    - Retrieves detailed drug info from the FDA API.
+    - Returns a JSON response containing SNP info, drug recommendations, descriptions, and citations.
+
+    :return: JSON with keys:
+             - message: upload status
+             - genes_and_snps: matched SNPs by gene/node
+             - best_drug: detailed info on recommended drugs
+             - alternatives: detailed info on alternative drugs
+             - best_drug_description: rationale for best drug per gene
+             - citations: supporting scientific references for recommendations
+    """
     # Extract form data from frontend
     form_data = request.form.to_dict()
     print("Form Data:", form_data)
@@ -337,7 +404,15 @@ def upload_file():
         },
         'best_drug': meds_best, 
         'alternatives': meds_alt,
-        'best_drug_description': [{'node': node, 'drug':path[node]['best_drug'], 'description': path[node]['description']} for node in path],
+        'best_drug_description': [
+            {
+                'node': node,
+                'drug': path[node]['best_drug'],
+                'description': path[node]['description']
+            }
+            for node in path
+            if any(drug in valid_best_drugs for drug in path[node]['best_drug'])
+        ],
         'citations': [{'best_drug': path[node]['best_drug'], 'citation': path[node]['citation']} for node in path]
         }
         return jsonify(response_data)
