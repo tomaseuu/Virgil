@@ -84,23 +84,23 @@ function ResultsPage() {
 
     if (best_drug.length > 0) {
       note += `Based on my results, Virgil has recommended ${meds}. This treatment plan is predicted to be more effective in helping me achieve remission faster by targeting my specific genetic profile and disease characteristics.\n\n`;
-    }
-
-    best_drug_description.forEach(desc => {
-      const snpsRaw = genes_and_snps[desc['node']];
-      const snps = snpsRaw && typeof snpsRaw === 'object' ? Object.keys(snpsRaw).join(", ") : "N/A";
-      const citationObj = citations.find(c => isDrugMatch(c.best_drug, desc.drug));
-      let citationURL = "No citation provided.";
-      if (citationObj) {
-        if (Array.isArray(citationObj.citation)) {
-          citationURL = citationObj.citation.join(", ");
-        } else {
-          citationURL = citationObj.citation;
+    
+      best_drug_description.forEach(desc => {
+        const snpsRaw = genes_and_snps[desc['node']];
+        const snps = snpsRaw && typeof snpsRaw === 'object' ? Object.keys(snpsRaw).join(", ") : "N/A";
+        const citationObj = citations.find(c => isDrugMatch(c.best_drug, desc.drug));
+        let citationURL = "No citation provided.";
+        if (citationObj) {
+          if (Array.isArray(citationObj.citation)) {
+            citationURL = citationObj.citation.join(", ");
+          } else {
+            citationURL = citationObj.citation;
+          }
         }
-      }
 
-      note += `My 23andMe data shows a mutation affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this mutation is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
-    });
+        note += `My 23andMe data shows a mutation affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this mutation is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
+      });
+    }
 
     note += `I would appreciate the opportunity to discuss this recommendation with you at our next appointment to understand if this medication could be suitable for my treatment plan.\n\n`;
     note += `Thank you for your time and guidance!\n`;

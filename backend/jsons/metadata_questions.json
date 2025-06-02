@@ -1,0 +1,10 @@
+[
+  {"condition": {"pregnant": "yes"}, "banned_drugs": ["Otrexup"]},
+  {"condition": {"breastfeeding": "yes"}, "banned_drugs": ["Otrexup"]},
+  {"condition": {"kidneys": "issues"}, "banned_drugs": ["Imuran", "Purinethol"]},
+  {"condition": {"age_gt": 65}, "banned_drugs": ["Otrexup"]},
+  {"condition": {"age_lt": 6}, "banned_drugs": ["Humira", "Remicade"]},
+  {"condition": {"IBD": "crohns"}, "banned_drugs": ["Simponi"]},
+  {"condition": {"IBD": "uc"}, "banned_drugs": ["Otrexup", "Simponi"]},
+  {"condition": {"firstTreatment": "yes"}, "banned_drugs": ["Entyvio"]}
+]

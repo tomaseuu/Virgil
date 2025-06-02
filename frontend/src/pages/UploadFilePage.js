@@ -36,8 +36,6 @@ function UploadFilePage() {
   const [IBD, setIBD] = useState('');
   const [pregnant, setPregnant] = useState('');
   const [kidneys, setKidneys] = useState('');
-  const [vaccines, setVaccines] = useState('');
-  const [severity, setSeverity] = useState('');
   const [firstTreatment, setFirstTreatment] = useState('');
   const [route, setRoute] = useState('');
 
@@ -129,8 +127,6 @@ function UploadFilePage() {
     formData.append('IBD', IBD);
     formData.append('pregnant', pregnant);
     formData.append('kidneys', kidneys);
-    formData.append('vaccines', vaccines);
-    formData.append('severity', severity);
     formData.append('firstTreatment', firstTreatment);
     formData.append('route', route);
     formData.append('drugs', JSON.stringify(drugEntries));
@@ -226,32 +222,6 @@ function UploadFilePage() {
             </FormControl>
 
             <FormControl>
-              <FormLabel textColor="white">Severity of IBD</FormLabel>
-              <Select
-                {...selectStyles}
-                value={severity}
-                onChange={(e) => setSeverity(e.target.value)}
-                placeholder="Select option"
-                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
-                _focus={{ borderColor: '#a28df0' }}
-                _hover={{ bg: '#3d3390' }}
-                sx={{
-                  option: {
-                    backgroundColor: '#322a80',
-                    color: 'white',
-                  },
-                  ':not([data-placeholder="true"])': {
-                    backgroundColor: '#2e2a68',
-                  }
-                }}
-              >
-                <option value="mild">Mild</option>
-                <option value="moderate">Moderate</option>
-                <option value="severe">Severe</option>
-              </Select>
-            </FormControl>
-
-            <FormControl>
               <FormLabel textColor="white">Pregnant</FormLabel>
               <Select
                 {...selectStyles}
@@ -306,31 +276,6 @@ function UploadFilePage() {
             </FormControl>
 
             <FormControl>
-              <FormLabel textColor="white">Plans To Take Live Vaccines</FormLabel>
-              <Select
-                {...selectStyles}
-                value={vaccines}
-                onChange={(e) => setVaccines(e.target.value)}
-                placeholder="Select option"
-                _placeholder={{ color: 'gray.300', backgroundColor: 'transparent' }}
-                _focus={{ borderColor: '#a28df0' }}
-                _hover={{ bg: '#3d3390' }}
-                sx={{
-                  option: {
-                    backgroundColor: '#322a80',
-                    color: 'white',
-                  },
-                  ':not([data-placeholder="true"])': {
-                    backgroundColor: '#2e2a68',
-                  }
-                }}
-              >
-                <option value="yes">Yes (Measles, Rotavirus, Smallpox, Chicken Pox, Yellow Fever, etc.)</option>
-                <option value="no">No</option>
-              </Select>
-            </FormControl>
-
-            <FormControl>
               <FormLabel textColor="white">Is This Your First Treatment?</FormLabel>
               <Select
                 {...selectStyles}
@@ -375,11 +320,11 @@ function UploadFilePage() {
                   }
                 }}
               >
-                <option value="inject_prefer">Prefer Injection</option>
+                <option value="injection_prefer">Prefer Injection</option>
                 <option value="oral_prefer">Prefer Oral</option>
                 <option value="iv_prefer">Prefer IV</option>
                 <option value="rectal_prefer">Prefer Rectal</option>
-                <option value="inject_only">Must Be Injection</option>
+                <option value="injection_only">Must Be Injection</option>
                 <option value="oral_only">Must Be Oral</option>
                 <option value="iv_only">Must Be IV</option>
                 <option value="rectal_only">Must Be Rectal</option>

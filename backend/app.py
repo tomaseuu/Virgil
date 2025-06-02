@@ -38,6 +38,16 @@ drugs_path = os.path.join(base_dir, 'jsons', 'drug_options.json')
 with open(drugs_path, encoding="utf-8") as f:
     DRUG_OPTIONS = json.load(f)
 
+""" 
+METADATA_QUESTIONS are the metadata questions with a list of drugs the user cannot take if the asnwer is yes
+* Add to this json if adding metadata questions
+* This json includes question and drugs user cannot take
+* must also update frontend
+"""
+metadata_path = os.path.join(base_dir, 'jsons', 'metadata_questions.json')
+with open(metadata_path, encoding="utf-8") as f:
+    METADATA_QUESTIONS = json.load(f)
+
 def parse_23andme_file(file_stream):
     """
     parse_23andme_file searches through the 23andMe file and matches any SNPs in the TARGET_SNPS list
@@ -57,11 +67,15 @@ def parse_23andme_file(file_stream):
         TARGET_SNP_LOOKUP = {entry['snp']: entry for entry in TARGET_SNPS}
         if rsid in TARGET_SNP_LOOKUP:
             entry = TARGET_SNP_LOOKUP[rsid]
-            found[rsid] = {
-                'node': entry['node'],
-                'description': entry['description'],
-                'level': entry['level'],
-            }
+            print(genotype)
+            print(entry['bases'])
+            print(genotype in entry['bases'])
+            if genotype in TARGET_SNP_LOOKUP[rsid]['bases']:
+                found[rsid] = {
+                    'node': entry['node'],
+                    'description': entry['description'],
+                    'level': entry['level'],
+                }
     return found
 
 def check_pathway(snps):
@@ -182,170 +196,57 @@ def get_med_info(drug_name):
 
     return info
 
-def parse_metadata(answers, drugs_taken):
-    questions= {
-        "Are you pregnant or planning to become pregnant?": [
-            "Tofacitinib",
-            "Etrasimod",
-            "Ozanimod",
-            "Risankizumab",
-            "Upadacitinib",
-            "Filgotinib",
-            "Methotrexate"
-        ],
-        "Are you breast feeding?": [
-            "Tofacitinib",
-            "Etrasimod",
-            "Ozanimod",
-            "Risankizumab",
-            "Upadacitinib",
-            "Filgotinib",
-            "Methotrexate"
-        ],
-        "Do you have kidney issues?": [
-            "Rowasa",
-            "Monoconal antibody",
-            "Azathioprine",
-            "mercaptopurine",
-            "Canasa",
-            "Mesalamine",
-            "Pentasa"
-        ],
-        "Are you over 65?": [
-            "Tofacitinib",
-            "Etrasimod",
-            "Filgotinib",
-            "Ozanimod",
-            "Upadacitinib",
-            "Methotrexate"
-        ],
-        "Are you under 6?": [
-            "Adalimumab",
-            "Infliximab",
-            "Biologics"
-        ],
-        "Are you under 16?": [
-            "Etrasimod"
-        ],
-        "Do you have mild Crohn\u2019s?": [
-            "Biologics",
-            "small molecule medicine",
-            "Monocolna antibody",
-            "Interleukin Inhibitor"
-        ],
-        "Do you have severe Crohn\u2019s?": [],
-        "Do you have mild UC?": [
-            "Biologics",
-            "small molecule medicine",
-            "Mirikizumab",
-            "Monocolna antibody",
-            "Interleukin Inhibitor"
-        ],
-        "Do you have severe UC?": [
-            "Canasa",
-            "Mesalamine",
-            "Pentasa",
-            "Rowasa"
-        ],
-        "Do you have Crohn's?": [
-            "Etrasimod",
-            "Filgotinib",
-            "Mirikizumab",
-            "Ozanimod",
-            "Canasa",
-            "Mesalamine",
-            "Pentasa",
-            "Rowasa",
-            "Ozanimod",
-            "Tofacitinib",
-            "Gollimumab",
-            "Mesalazine",
-            "Beclometasone diprpionate"
-        ],
-        "Do you have UC?": [
-            "Methotrexate",
-            "Golimumab"
-        ],
-        "Is this the first treatment?": [
-            "Mirikizumab",
-            "Vedolizumab"
-        ]
+def parse_metadata(form_data):
+    drugs_json = form_data.get('drugs')
+    drugs = json.loads(drugs_json)
+    drugs_taken = set(entry['drug'] for entry in drugs)
+
+    banned_drugs = set()
+
+    rules = METADATA_QUESTIONS
+    for rule in rules:
+        cond = rule["condition"]
+
+        match = True
+        for key, val in cond.items():
+            if key == "age_gt":
+                age_str = form_data.get("age", "")
+                if not age_str.isdigit() or int(age_str) <= val:
+                    match = False
+                    break
+            elif key == "age_lt":
+                age_str = form_data.get("age", "")
+                if not age_str.isdigit() or int(age_str) >= val:
+                    match = False
+                    break
+            else:
+                user_val = form_data.get(key, "").strip()
+                if not user_val:
+                    match = False
+                    break
+                if user_val.lower() != val.lower():
+                    match = False
+                    break
+
+        if match:
+            banned_drugs.update(rule["banned_drugs"])
+
+    routes_map = {
+        "oral_only": ["Imuran", "Purinethol"],
+        "iv_only": ["Entyvio", "Remicade"],
+        "injection_only": ["Entyvio", "Humira", "Otrexup", "Simponi"]
     }
-    possible_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
-    oral= ['Apriso', 'Azathioprine', 'Azulfidine', 'Budesonide', 'Cipro', 'Colazal', 'Dipentum', 'Entocort EC', 'Flagyl', 'Imuran', 'Jylamvo', 'Lialda', 'Medrol Dosepak', 'Mercaptopurine (6-MP)', 'Mesalamine', 'Methotrexate', 'Neoral', 'Pediapred', 'Pentasa', 'Prednisone', 'Prograf', 'Purinethol', 'RINVOQ', 'Sandimmune', 'UCERIS', 'Velsipity', 'Xatmep', 'Xeljanz', 'Zeposia']
-    rectal= ['Budesonide', 'Canasa', 'Mesalamine', 'Pentasa', 'Rowasa', 'Uceris']
-    IV= ['Avsola', 'Cipro', 'Entyvio', 'Imuldosa', 'Inflectra', 'IXIFI', 'Omvoh', 'Otulfi', 'Prograf', 'Pyzchiva', 'Remicade', 'Renflexis', 'Sandimmune', 'Selarsdi', 'Skyrizi', 'Solu-Medrol', 'Stelara', 'Tremfya', 'Tyruko', 'Tysabri', 'Unbranded Infliximab', 'Wezlana', 'Yesintek']
-    Injection = ['Abrilada', 'Amjevita', 'Cimzia', 'Cyltezo', 'Depo-Medrol', 'Entyvio', 'Hadlima', 'Hulio', 'Humira', 'Hyrimoz', 'Idacio', 'Imuldosa', 'Methotrexate', 'Omvoh', 'Otrexup', 'Otul', 'Pyzchiva', 'Rasuvo', 'Selarsdi', 'Simlandi', 'Simponi', 'Skyrizi', 'Stelara', 'Tremfya', 'Wezlana', 'Yesintek', 'Yuyma', 'YUSIMRY']
 
-    drugsWquestions = pd.json_normalize(questions)
-    drugsWquestions=drugsWquestions.T
-    drugsWquestions["Answers"]=answers
-    drugsWquestions= drugsWquestions.explode(0)
-    drugsWquestions = drugsWquestions[drugsWquestions["Answers"].notnull()] #filter out unaswered questions, might need to change this
-    drugsWquestions = drugsWquestions[drugsWquestions["Answers"] == "yes"]
-    Bad_Drugs=drugsWquestions[0].to_list()
-    result = list(set(possible_drugs) - set(Bad_Drugs) - set(drugs_taken))
-    return result
+    master_drugs_list = set([drug for drug in DRUG_OPTIONS if drug != "None known"])
 
-def map_answers(form):
-    """
-    map_answers takes in the json of the frontend form data (metadata) and turns the questions into a list of answers to input into the parse_metadata function
+    route = form_data.get("route", "").lower()
+    if route in routes_map:
+        allowed_drugs_by_route = set(routes_map[route])
+    else:
+        allowed_drugs_by_route = master_drugs_list
 
-    :form: takes in json of the frontend form data (metadata question answers)
-    :return: returns a list of strings corresponding to metadata questions
-    """ 
-    answers = []
-
-    preg_val = form.get('pregnant', '').lower()
-    age_str = form.get('age', '')
-    try:
-        age = int(age_str)
-    except ValueError:
-        age = None
-    
-    IBD = form.get('IBD', '').lower()
-    severity = form.get('severity', '').lower()
-
-    # Q1: Are you pregnant or planning to become pregnant?
-    answers.append("yes" if preg_val == "yes" else "no")
-
-    # Q2: Are you breast feeding?
-    answers.append("yes" if preg_val == "breastfeeding" else "no")
-
-    # Q3: Do you have kidney issues?
-    answers.append("yes" if form.get('kidneys', '').lower() == "yes" else "no")
-
-    # Q4: Are you over 65?
-    answers.append("yes" if age is not None and age > 65 else "no")
-
-    # Q5: Are you under 6?
-    answers.append("yes" if age is not None and age < 6 else "no")
-
-    # Q6: Are you under 16?
-    answers.append("yes" if age is not None and age < 16 else "no")
-
-    # Q9: Are you planning to take live vaccines?
-    answers.append("yes" if form.get('vaccines', '').lower() == "yes" else "no")
-
-    # Q10: Do you have mild Crohn’s?
-    answers.append("yes" if IBD == "crohns" and severity == "mild" else "no")
-
-    # Q11: Do you have mild UC?
-    answers.append("yes" if IBD == "uc" and severity == "mild" else "no")
-
-    # Q12: Do you have Crohn's?
-    answers.append("yes" if IBD == "crohns" else "no")
-
-    # Q13: Do you have UC?
-    answers.append("yes" if IBD == "uc" else "no")
-
-    # Q14: Is this the first treatment?
-    answers.append("yes" if form.get('firstTreatment', '').lower() == "yes" else "no")
-
-    # Q15: Route
-    answers.append(form.get('route', '').lower())
-
-    return answers
+    allowed = allowed_drugs_by_route - banned_drugs - drugs_taken
+    return list(allowed)
 
 @app.route('/api/drug-options')
 def get_drug_options():
@@ -368,16 +269,9 @@ def upload_file():
     form_data = request.form.to_dict()
     print("Form Data:", form_data)
 
-    # Extract just the drug names from drugs the patient has taken
-    drugs_json = form_data.get('drugs')
-    drugs = json.loads(drugs_json)
-    drug_names = [entry['drug'] for entry in drugs]
-
     # Get list of acceptable drugs from metadata
     print("Metadata Results:")
-    answers = map_answers(form_data)
-    print(answers)
-    metadata = parse_metadata(answers, drug_names)
+    metadata = parse_metadata(form_data)
     print(metadata)
     print("")
 
@@ -423,6 +317,8 @@ def upload_file():
             'best_drug_description': {},
             'citations': []
         }
+        print("hi")
+        print(response_data)
         return jsonify(response_data)
     else:
         response_data = {
