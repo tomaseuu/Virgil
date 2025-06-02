@@ -25,6 +25,7 @@ import {
   useDisclosure,
   Flex,
   useToast,
+  Spinner
 } from '@chakra-ui/react';
 import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import axios from 'axios';
@@ -48,6 +49,8 @@ function UploadFilePage() {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  const [isUploading, setIsUploading] = useState(false);
 
   const [drugOptions, setDrugOptions] = useState([]);
 
@@ -121,6 +124,8 @@ function UploadFilePage() {
       return;
     }
 
+    setIsUploading(true);
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -147,8 +152,10 @@ function UploadFilePage() {
         best_drug_description: response.data.best_drug_description || [],
         citations: response.data.citations || [],
       };
+      setIsUploading(false);
       navigate('/results', { state: { results } });
     } catch (error) {
+      setIsUploading(false);
       console.error('Upload failed:', error);
       toast({
         title: 'Upload Failed',
@@ -556,9 +563,30 @@ function UploadFilePage() {
                   <Button borderRadius="full" mr={3} variant="ghost" onClick={onClose}>
                     Close
                   </Button>
-                  <Button borderRadius="full" colorScheme='green' onClick={handleUpload}>Agree and Submit Form</Button>
+                  <Button
+                    borderRadius="full"
+                    colorScheme="green"
+                    onClick={handleUpload}
+                    isDisabled={isUploading} // Optional: disable button while uploading
+                  >
+                    Agree and Submit Form
+                  </Button>
                 </ModalFooter>
               </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isUploading} onClose={() => {}} isCentered closeOnOverlayClick={false}>
+              <ModalOverlay bg="transparent" backdropFilter="blur(3px)" />
+                <ModalContent bg="transparent" boxShadow="none" display="flex" justifyContent="center" alignItems="center" height="150px">
+                  <ModalBody>
+                    <Flex direction="column" align="center" justify="center" gap={3}>
+                      <Spinner size="xl" color="#5c3cae" mb={4}/>
+                      <Text fontSize="lg" color="#5c3cae" fontWeight="medium">
+                        Generating results… please wait.
+                      </Text>
+                    </Flex>
+                  </ModalBody>
+                </ModalContent>
             </Modal>
             </>
           </VStack>
