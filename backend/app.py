@@ -15,7 +15,7 @@ TARGET_SNPS contains relevant SNPs (single nucleotide polymorphisms) that impact
 * Add entries to this JSON when adding new SNPs.
 * Each entry includes the SNP ID, associated gene (node), a description of its biological or clinical significance, and its position in the pathway.
 """
-snps_path = os.path.join(base_dir, 'jsons', 'target_snps.json')
+snps_path = os.path.join(base_dir, 'jsons', 'pathway1_target_snps.json')
 with open(snps_path, encoding="utf-8") as f:
     TARGET_SNPS = json.load(f)
 
@@ -48,17 +48,25 @@ metadata_path = os.path.join(base_dir, 'jsons', 'metadata_questions.json')
 with open(metadata_path, encoding="utf-8") as f:
     METADATA_QUESTIONS = json.load(f)
 
-def parse_23andme_file(file_stream):
+def parse_23andme_file(file_stream, pathway_snps):
     """
-    Parses a 23andMe raw data file to identify SNPs that match entries in TARGET_SNPS.
+    Parses a 23andMe raw data file to identify SNPs that match entries in a specified pathway SNP list.
 
-    :param file_stream: File stream of the user's 23andMe file (expected tab-delimited format).
-    :return: A dictionary of matched SNPs, where each entry includes:
+    :param file_stream: File stream of the user's 23andMe raw data file, expected to be tab-delimited.
+                        Each line should contain at least four columns: rsid, chromosome, position, genotype.
+    :param pathway_snps: A list of dictionaries defining SNPs of interest for a particular biological pathway.
+                         Each dictionary must include keys: 'snp', 'node', 'description', 'level', 'link', and 'bases'.
+
+    :return: A dictionary mapping matched SNP rsids to detailed information including:
              - node: associated gene or pathway node
-             - description: explanation of SNP relevance
-             - level: position in the biological pathway (lower = higher priority)
-             - link: source or reference link
-             - genotype: user's specific genotype for the SNP
+             - description: explanation of the SNP's biological relevance within the pathway
+             - level: importance or position within the biological pathway (lower number indicates higher priority)
+             - link: reference URL or source for the SNP data
+             - genotype: the user's genotype for the SNP from the 23andMe data file
+
+    This function is designed to be flexible, allowing analysis of any SNP pathway by providing
+    a custom list of pathway SNPs, making it easy to adapt for new or different biological pathways
+    simply by supplying a different SNP JSON list.
     """
     found = {}
     for line in file_stream:
@@ -69,7 +77,7 @@ def parse_23andme_file(file_stream):
         if len(parts) < 4:
             continue
         rsid, chromosome, position, genotype = parts[:4]
-        TARGET_SNP_LOOKUP = {entry['snp']: entry for entry in TARGET_SNPS}
+        TARGET_SNP_LOOKUP = {entry['snp']: entry for entry in pathway_snps}
         if rsid in TARGET_SNP_LOOKUP:
             entry = TARGET_SNP_LOOKUP[rsid]
             print(genotype)
@@ -357,7 +365,7 @@ def upload_file():
 
     # Get matched SNPs from 23andMe file
     file_stream = BytesIO(file.read())
-    matched_snps = parse_23andme_file(file_stream.readlines())
+    matched_snps = parse_23andme_file(file_stream.readlines(), TARGET_SNPS)
     print("Matched SNPs:")
     print(matched_snps)
     print("")
