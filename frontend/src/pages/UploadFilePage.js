@@ -567,7 +567,7 @@ function UploadFilePage() {
                     borderRadius="full"
                     colorScheme="green"
                     onClick={handleUpload}
-                    isDisabled={isUploading} // Optional: disable button while uploading
+                    isDisabled={isUploading}
                   >
                     Agree and Submit Form
                   </Button>
