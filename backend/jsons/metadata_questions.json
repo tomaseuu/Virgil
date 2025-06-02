@@ -1,10 +1,38 @@
 [
-  {"condition": {"pregnant": "yes"}, "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]},
-  {"condition": {"breastfeeding": "yes"}, "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]},
-  {"condition": {"kidneys": "issues"}, "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]},
-  {"condition": {"age_gt": 65}, "banned_drugs": ["Imuran", "Otrexup", "Rapamycin"]},
-  {"condition": {"age_lt": 6}, "banned_drugs": ["Otrexup", "Imuran", "Purinethol", "Rapamycin", "Entyvio"]},
-  {"condition": {"IBD": "crohns"}, "banned_drugs": ["Simponi"]},
-  {"condition": {"IBD": "uc"}, "banned_drugs": ["Otrexup", "Simponi"]},
-  {"condition": {"firstTreatment": "yes"}, "banned_drugs": ["Entyvio"]}
+  {
+    "condition": { "pregnant": "yes" },
+    "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
+  },
+  {
+    "condition": { "pregnant": "breastfeeding" },
+    "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
+  },
+  {
+    "condition": { "pregnant": "planning" },
+    "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
+  },
+  {
+    "condition": { "kidneys": "yes" },
+    "banned_drugs": ["Imuran", "Otrexup", "Purinethol", "Rapamycin"]
+  },
+  {
+    "condition": { "age_gt": 65 },
+    "banned_drugs": ["Imuran", "Otrexup", "Rapamycin"]
+  },
+  {
+    "condition": { "age_lt": 6 },
+    "banned_drugs": ["Otrexup", "Imuran", "Purinethol", "Rapamycin", "Entyvio"]
+  },
+  {
+    "condition": { "IBD": "crohns" },
+    "banned_drugs": ["Simponi"]
+  },
+  {
+    "condition": { "IBD": "uc" },
+    "banned_drugs": ["Otrexup", "Simponi"]
+  },
+  {
+    "condition": { "firstTreatment": "yes" },
+    "banned_drugs": ["Entyvio"]
+  }
 ]
