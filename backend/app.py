@@ -10,6 +10,16 @@ CORS(app)
 
 base_dir = os.path.dirname(__file__)
 
+# ADD TO THIS LIST IF ADDING A PATHWAY
+""" 
+each path in this list is a JSON that contains relevant SNPs (single nucleotide polymorphisms) that impact our pathway of interest.
+* Add entries to this JSON when adding new SNPs.
+* Each entry includes the SNP ID, associated gene (node), a description of its biological or clinical significance, and its position in the pathway.
+"""
+PATHWAY_FILES = [
+    os.path.join(base_dir, 'jsons', 'pathway1_target_snps.json'),
+]
+
 """ 
 TARGET_MEDS contains drug recommendations categorized by the gene they target.
 * Add entries to this JSON when adding new drug-gene relationships.
@@ -350,22 +360,12 @@ def upload_file():
     file = request.files.get('file')
     if not file:
         return jsonify({'error': 'No file uploaded'}), 400
-    
-    # ADD TO THIS LIST IF ADDING A PATHWAY
-    """ 
-    each path in this list is a JSON that contains relevant SNPs (single nucleotide polymorphisms) that impact our pathway of interest.
-    * Add entries to this JSON when adding new SNPs.
-    * Each entry includes the SNP ID, associated gene (node), a description of its biological or clinical significance, and its position in the pathway.
-    """
-    pathway_files = [
-        os.path.join(base_dir, 'jsons', 'pathway1_target_snps.json'),
-    ]
 
     file_stream = file.stream.readlines()
     path = {}
 
     # Goes through each pathway to look for relevant SNPs to match with meds
-    for my_path in pathway_files:
+    for my_path in PATHWAY_FILES:
         with open(my_path, encoding="utf-8") as f:
             pathway_snps = json.load(f)
 
