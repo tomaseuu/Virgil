@@ -80,17 +80,14 @@ def parse_23andme_file(file_stream, pathway_snps):
         TARGET_SNP_LOOKUP = {entry['snp']: entry for entry in pathway_snps}
         if rsid in TARGET_SNP_LOOKUP:
             entry = TARGET_SNP_LOOKUP[rsid]
-            print(genotype)
-            print(entry['bases'])
-            print(genotype in entry['bases'])
-            # if genotype in TARGET_SNP_LOOKUP[rsid]['bases']:
-            found[rsid] = {
-                'node': entry['node'],
-                'description': entry['description'],
-                'level': entry['level'],
-                'link': entry['link'],
-                'genotype': genotype
-            }
+            if genotype in TARGET_SNP_LOOKUP[rsid]['bases']:
+                found[rsid] = {
+                    'node': entry['node'],
+                    'description': entry['description'],
+                    'level': entry['level'],
+                    'link': entry['link'],
+                    'genotype': genotype
+                }
     return found
 
 def check_pathway(snps):
@@ -350,13 +347,9 @@ def upload_file():
     """
     # Extract form data from frontend
     form_data = request.form.to_dict()
-    print("Form Data:", form_data)
 
     # Get list of acceptable drugs from metadata
-    print("Metadata Results:")
     metadata = parse_metadata(form_data)
-    print(metadata)
-    print("")
 
     # Make sure file is uploaded
     file = request.files.get('file')
@@ -372,15 +365,9 @@ def upload_file():
 
     # Get highlest level of the pathway and match meds
     path = check_pathway(matched_snps)
-    print("Highest Pathway and Matched Meds:")
-    print(path)
-    print("")
 
     # Get accepted drugs based on 23andMe data and metadata results
     accepted = extract_valid_meds(path, metadata)
-    print("Accepted drugs:")
-    print(accepted)
-    print("")
 
     # Separate valid best drugs and valid alternative drugs
     valid_best_drugs = accepted['valid_best_drugs']
@@ -400,8 +387,6 @@ def upload_file():
             'best_drug_description': {},
             'citations': []
         }
-        print("hi")
-        print(response_data)
         return jsonify(response_data)
     else:
         response_data = {
