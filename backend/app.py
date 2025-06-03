@@ -423,7 +423,10 @@ def upload_file():
                 'description': path[node]['description']
             }
             for node in path
-            if any(drug in valid_best_drugs for drug in path[node]['best_drug'])
+            if (
+                any(drug in valid_best_drugs for drug in path[node]['best_drug'])
+                or any(drug.lower() == "none known" for drug in path[node]['best_drug'])
+            )
         ],
         'citations': [{'best_drug': path[node]['best_drug'], 'citation': path[node]['citation']} for node in path]
         }
