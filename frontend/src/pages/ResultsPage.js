@@ -92,18 +92,31 @@ function ResultsPage() {
     
       best_drug_description.forEach(desc => {
         const snpsRaw = genes_and_snps[desc['node']];
-        const snps = snpsRaw && typeof snpsRaw === 'object' ? Object.keys(snpsRaw).join(", ") : "N/A";
+        let snpDetails = "";
+
+        const snpList = snpsRaw && typeof snpsRaw === 'object' ? Object.keys(snpsRaw).join(", ") : "N/A";
+
+        if (snpsRaw && typeof snpsRaw === 'object') {
+          snpDetails = Object.entries(snpsRaw)
+            .map(([snp, data]) =>
+              `${snp}, with a ${data.genotype} genotype at this location. According to Virgil: ${data.description} (Citation: ${data.link || "No citation provided."})`
+            )
+            .join("\n\n");
+        } else {
+          snpDetails = "No SNP data found for this gene.";
+        }
+
         const citationObj = citations.find(c => isDrugMatch(c.best_drug, desc.drug));
         let citationURL = "No citation provided.";
         if (citationObj) {
-          if (Array.isArray(citationObj.citation)) {
-            citationURL = citationObj.citation.join(", ");
-          } else {
-            citationURL = citationObj.citation;
-          }
+          citationURL = Array.isArray(citationObj.citation)
+            ? citationObj.citation.join(", ")
+            : citationObj.citation;
         }
 
-        note += `My 23andMe data shows a risk factor affecting the ${desc.node} gene (SNPs: ${snps}). The best treatment for this risk factor is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
+        note += `My 23andMe data shows a risk factor affecting the ${desc.node} gene (SNPs: ${snpList}).\n\n` +
+          `Problematic SNPs:\n${snpDetails}\n\n` +
+          `The best treatment for this risk factor is ${desc.drug}. According to Virgil: ${desc.description} (Citation: ${citationURL}).\n\n`;
       });
     }
 

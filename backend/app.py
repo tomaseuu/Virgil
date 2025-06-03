@@ -11,15 +11,6 @@ CORS(app)
 base_dir = os.path.dirname(__file__)
 
 """ 
-TARGET_SNPS contains relevant SNPs (single nucleotide polymorphisms) that impact our pathway of interest.
-* Add entries to this JSON when adding new SNPs.
-* Each entry includes the SNP ID, associated gene (node), a description of its biological or clinical significance, and its position in the pathway.
-"""
-snps_path = os.path.join(base_dir, 'jsons', 'pathway1_target_snps.json')
-with open(snps_path, encoding="utf-8") as f:
-    TARGET_SNPS = json.load(f)
-
-""" 
 TARGET_MEDS contains drug recommendations categorized by the gene they target.
 * Add entries to this JSON when adding new drug-gene relationships.
 * Each entry includes the recommended drug, a rationale for its use, alternative treatment options, and supporting citations.
@@ -50,12 +41,14 @@ with open(metadata_path, encoding="utf-8") as f:
 
 def parse_23andme_file(file_stream, pathway_snps):
     """
-    Parses a 23andMe raw data file to identify SNPs that match entries in a specified pathway SNP list.
+    Parses a 23andMe raw data file to identify SNPs that match entries in a specified pathway SNP list,
+    filtering by both rsid and genotype.
 
     :param file_stream: File stream of the user's 23andMe raw data file, expected to be tab-delimited.
                         Each line should contain at least four columns: rsid, chromosome, position, genotype.
     :param pathway_snps: A list of dictionaries defining SNPs of interest for a particular biological pathway.
                          Each dictionary must include keys: 'snp', 'node', 'description', 'level', 'link', and 'bases'.
+                         The 'bases' field defines a list of genotypes (e.g., ['AA', 'AG']) that are considered matches.
 
     :return: A dictionary mapping matched SNP rsids to detailed information including:
              - node: associated gene or pathway node
@@ -65,8 +58,9 @@ def parse_23andme_file(file_stream, pathway_snps):
              - genotype: the user's genotype for the SNP from the 23andMe data file
 
     This function is designed to be flexible, allowing analysis of any SNP pathway by providing
-    a custom list of pathway SNPs, making it easy to adapt for new or different biological pathways
-    simply by supplying a different SNP JSON list.
+    a custom list of pathway SNPs. Only SNPs whose rsid and genotype match the criteria in the
+    pathway SNP list will be included in the output, making it easy to adapt for new or different
+    biological pathways simply by supplying a different SNP JSON list.
     """
     found = {}
     for line in file_stream:
@@ -326,24 +320,25 @@ def get_drug_options():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     """
-    Handles 23andMe file uploads and form data from the frontend to analyze SNPs and recommend treatments.
+    Handles 23andMe raw file uploads and analyzes user genetic data to generate personalized drug recommendations.
 
     Workflow:
-    - Extracts form data and user metadata.
-    - Reads the uploaded 23andMe raw data file.
-    - Matches user's SNPs against known targets.
-    - Determines highest priority pathway genes and related drug options.
-    - Filters drug recommendations based on patient metadata.
-    - Retrieves detailed drug info from the FDA API.
-    - Returns a JSON response containing SNP info, drug recommendations, descriptions, and citations.
+    1. Extracts user-submitted form data (e.g., age, sex, etc.).
+    2. Reads and parses the uploaded 23andMe raw data file.
+    3. Compares user SNPs against known pathway-target SNPs.
+    4. Identifies relevant genes and their associated drug treatments.
+    5. Filters recommended drugs using user metadata (e.g., contraindications).
+    6. Fetches drug details and citations from an external FDA API.
+    7. Returns a structured JSON response with analysis results.
 
-    :return: JSON with keys:
-             - message: upload status
-             - genes_and_snps: matched SNPs by gene/node
-             - best_drug: detailed info on recommended drugs
-             - alternatives: detailed info on alternative drugs
-             - best_drug_description: rationale for best drug per gene
-             - citations: supporting scientific references for recommendations
+    Returns:
+        JSON object with:
+        - message (str): Status of the upload and processing.
+        - genes_and_snps (dict): Genes matched to the user's SNPs.
+        - best_drug (list): Valid top-priority drug(s) with metadata.
+        - alternatives (list): Valid alternative treatment options.
+        - best_drug_description (list): Explanation for each best drug selection.
+        - citations (list): Supporting literature or database references.
     """
     # Extract form data from frontend
     form_data = request.form.to_dict()
@@ -355,16 +350,40 @@ def upload_file():
     file = request.files.get('file')
     if not file:
         return jsonify({'error': 'No file uploaded'}), 400
+    
+    # ADD TO THIS LIST IF ADDING A PATHWAY
+    """ 
+    each path in this list is a JSON that contains relevant SNPs (single nucleotide polymorphisms) that impact our pathway of interest.
+    * Add entries to this JSON when adding new SNPs.
+    * Each entry includes the SNP ID, associated gene (node), a description of its biological or clinical significance, and its position in the pathway.
+    """
+    pathway_files = [
+        os.path.join(base_dir, 'jsons', 'pathway1_target_snps.json'),
+    ]
 
-    # Get matched SNPs from 23andMe file
-    file_stream = BytesIO(file.read())
-    matched_snps = parse_23andme_file(file_stream.readlines(), TARGET_SNPS)
-    print("Matched SNPs:")
-    print(matched_snps)
-    print("")
+    file_stream = file.stream.readlines()
+    path = {}
 
-    # Get highlest level of the pathway and match meds
-    path = check_pathway(matched_snps)
+    # Goes through each pathway to look for relevant SNPs to match with meds
+    for my_path in pathway_files:
+        with open(my_path, encoding="utf-8") as f:
+            pathway_snps = json.load(f)
+
+        # Get matched SNPs from 23andMe file
+        matched_snps = parse_23andme_file(file_stream, pathway_snps)
+        # Get highlest level of the pathway and match meds
+        result = check_pathway(matched_snps)
+
+        # Merge all relevant highest level SNPs for each pathway
+        for gene, data in result.items():
+            if gene not in path:
+                path[gene] = data
+            else:
+                # Merge SNPs and avoid duplication
+                path[gene]['snps'].update(data.get('snps', {}))
+                path[gene]['best_drug'] = list(set(path[gene]['best_drug']) | set(data.get('best_drug', [])))
+                path[gene]['alternatives'] = list(set(path[gene]['alternatives']) | set(data.get('alternatives', [])))
+                path[gene]['citation'] = list(set(path[gene]['citation']) | set(data.get('citation', [])))
 
     # Get accepted drugs based on 23andMe data and metadata results
     accepted = extract_valid_meds(path, metadata)
