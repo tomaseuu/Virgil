@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Text, Button, Spacer } from '@chakra-ui/react';
+import { Box, Flex, Text, Button, Spacer, Image, HStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 function NavBar() {
@@ -15,21 +15,30 @@ function NavBar() {
       zIndex={10}
     >
       <Flex align="center">
-        <Text
-          fontSize="xl"
-          color="white"
-          fontWeight="bold"
-          fontFamily="'Glacial Indifference Bold'"
+        <HStack
+          spacing={3}
           cursor="pointer"
-          _hover={{
-            color: '#5c3cae',
-            transform: 'scale(1.05)',
-          }}
-          transition="all 0.3s ease-in-out"
           onClick={() => navigate('/')}
+          transition="transform 0.25s ease"
+          _hover={{ transform: 'translateY(-1px)' }}
         >
-          VIRGIL
-        </Text>
+          <Image
+            src="/Logo.png"
+            alt="Virgil logo"
+            boxSize={{ base: '38px', md: '46px' }}
+            objectFit="contain"
+            filter="drop-shadow(0 8px 18px rgba(0, 0, 0, 0.22))"
+          />
+          <Text
+            fontSize="xl"
+            color="white"
+            fontWeight="bold"
+            fontFamily="'Glacial Indifference Bold'"
+            letterSpacing="0.08em"
+          >
+            VIRGIL
+          </Text>
+        </HStack>
         <Spacer />
         <Button
           variant="ghost"

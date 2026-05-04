@@ -1,9 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from io import BytesIO
 import requests
 import os
 import json
+
+from patient_context import (
+    EXPECTED_PIPELINE_FIELDS,
+    merge_pipeline_form_data,
+    normalize_supabase_context_to_form_data,
+)
+from supabase_client import (
+    fetch_check_in,
+    fetch_check_in_medications,
+    fetch_profile,
+    fetch_symptoms,
+    insert_recommendation,
+    supabase_is_configured,
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -315,53 +328,22 @@ def parse_metadata(form_data):
     allowed = allowed_drugs_by_route - banned_drugs - drugs_taken
     return list(allowed)
 
-@app.route('/api/drug-options')
-def get_drug_options():
+
+def build_recommendation_response(file_name, form_data, file_stream):
     """
-    Provides a list of available drug options to the frontend.
+    Runs the existing genetics and metadata pipeline and returns the legacy response payload.
 
-    This allows users to indicate if they have taken any of these medications.
-
-    :return: JSON list of drug names, excluding the placeholder "None known".
+    :param file_name: Original uploaded filename.
+    :param form_data: Normalized form data matching the legacy frontend contract.
+    :param file_stream: Iterable of uploaded file lines.
+    :return: Recommendation payload previously returned by /upload.
     """
-    new_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
-    return jsonify(new_drugs)
-
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    """
-    Handles 23andMe raw file uploads and analyzes user genetic data to generate personalized drug recommendations.
-
-    Workflow:
-    1. Extracts user-submitted form data (e.g., age, sex, etc.).
-    2. Reads and parses the uploaded 23andMe raw data file.
-    3. Compares user SNPs against known pathway-target SNPs.
-    4. Identifies relevant genes and their associated drug treatments.
-    5. Filters recommended drugs using user metadata (e.g., contraindications).
-    6. Fetches drug details and citations from an external FDA API.
-    7. Returns a structured JSON response with analysis results.
-
-    Returns:
-        JSON object with:
-        - message (str): Status of the upload and processing.
-        - genes_and_snps (dict): Genes matched to the user's SNPs.
-        - best_drug (list): Valid top-priority drug(s) with metadata.
-        - alternatives (list): Valid alternative treatment options.
-        - best_drug_description (list): Explanation for each best drug selection.
-        - citations (list): Supporting literature or database references.
-    """
-    # Extract form data from frontend
-    form_data = request.form.to_dict()
+    normalized_form_data = dict(form_data)
+    normalized_form_data.setdefault("drugs", "[]")
 
     # Get list of acceptable drugs from metadata
-    metadata = parse_metadata(form_data)
+    metadata = parse_metadata(normalized_form_data)
 
-    # Make sure file is uploaded
-    file = request.files.get('file')
-    if not file:
-        return jsonify({'error': 'No file uploaded'}), 400
-
-    file_stream = file.stream.readlines()
     path = {}
 
     # Goes through each pathway to look for relevant SNPs to match with meds
@@ -371,7 +353,7 @@ def upload_file():
 
         # Get matched SNPs from 23andMe file
         matched_snps = parse_23andme_file(file_stream, pathway_snps)
-        # Get highlest level of the pathway and match meds
+        # Get highest level of the pathway and match meds
         result = check_pathway(matched_snps)
 
         # Merge all relevant highest level SNPs for each pathway
@@ -392,31 +374,40 @@ def upload_file():
     valid_best_drugs = accepted['valid_best_drugs']
     valid_alternatives = accepted['valid_alternatives']
 
-    # Get med info from API (bestS and alternatives)
+    # Get med info from API (best and alternatives)
     meds_best = [get_med_info(name) for name in valid_best_drugs]
     meds_alt = [get_med_info(name) for name in valid_alternatives]
 
-    # Return relevant info to frontend via a json
+    filtered_out_drugs = sorted(
+        {
+            drug
+            for gene_data in path.values()
+            for drug in (gene_data.get("best_drug", []) + gene_data.get("alternatives", []))
+            if drug
+            and drug.lower() != "none known"
+            and drug not in valid_best_drugs
+            and drug not in valid_alternatives
+        }
+    )
+
+    # Return relevant info to frontend via json
     if path == {}:
         response_data = {
-            'message': f'File {file.filename} uploaded and processed!',
-            'genes_and_snps': {},
-            'best_drug': [],
-            'alternatives': [],
-            'best_drug_description': {},
-            'citations': []
+            "message": f"File {file_name} uploaded and processed!",
+            "genes_and_snps": {},
+            "best_drug": [],
+            "alternatives": [],
+            "best_drug_description": {},
+            "citations": []
         }
-        return jsonify(response_data)
-    else:
-        response_data = {
-        'message': f'File {file.filename} uploaded and processed!',
-        'genes_and_snps': {
-            node: data['snps']
-            for node, data in path.items()
-        },
-        'best_drug': meds_best, 
-        'alternatives': meds_alt,
-        'best_drug_description': [
+        return response_data, {
+            "path": path,
+            "valid_best_drugs": valid_best_drugs,
+            "valid_alternatives": valid_alternatives,
+            "filtered_out_drugs": filtered_out_drugs,
+        }
+
+    best_drug_description = [
             {
                 'node': node,
                 'drug': path[node]['best_drug'],
@@ -427,10 +418,259 @@ def upload_file():
                 any(drug in valid_best_drugs for drug in path[node]['best_drug'])
                 or any(drug.lower() == "none known" for drug in path[node]['best_drug'])
             )
-        ],
+        ]
+
+    response_data = {
+        'message': f'File {file_name} uploaded and processed!',
+        'genes_and_snps': {
+            node: data['snps']
+            for node, data in path.items()
+        },
+        'best_drug': meds_best,
+        'alternatives': meds_alt,
+        'best_drug_description': best_drug_description,
         'citations': [{'best_drug': path[node]['best_drug'], 'citation': path[node]['citation']} for node in path]
+    }
+    return response_data, {
+        "path": path,
+        "valid_best_drugs": valid_best_drugs,
+        "valid_alternatives": valid_alternatives,
+        "filtered_out_drugs": filtered_out_drugs,
+    }
+
+
+def extract_brand_names(drug_records):
+    names = []
+    for record in drug_records or []:
+        if not isinstance(record, dict):
+            continue
+        brand_name = record.get("Brand Name")
+        if brand_name:
+            names.append(brand_name)
+    return names
+
+
+def build_shared_recommendation_row(response_data, analysis_context):
+    path = analysis_context.get("path", {})
+    valid_best_drugs = analysis_context.get("valid_best_drugs", [])
+    filtered_out_drugs = analysis_context.get("filtered_out_drugs", [])
+
+    description_entries = response_data.get("best_drug_description") or []
+    top_gene = ""
+    description = ""
+    top_score = 0
+
+    if description_entries:
+        top_gene = description_entries[0].get("node") or ""
+        description = description_entries[0].get("description") or ""
+    elif response_data.get("genes_and_snps"):
+        top_gene = next(iter(response_data["genes_and_snps"]), "")
+
+    if top_gene:
+        top_score = len((response_data.get("genes_and_snps") or {}).get(top_gene, {}))
+        if not description and path.get(top_gene):
+            description = path[top_gene].get("description", "")
+
+    if not top_gene and path:
+        top_gene = next(iter(path), "")
+        top_score = len(path[top_gene].get("snps", {}))
+        description = path[top_gene].get("description", "")
+
+    best_drugs = extract_brand_names(response_data.get("best_drug", []))
+    alternatives = extract_brand_names(response_data.get("alternatives", []))
+
+    if not best_drugs and valid_best_drugs:
+        best_drugs = valid_best_drugs
+
+    return {
+        "top_gene": top_gene,
+        "top_score": top_score,
+        "best_drugs": best_drugs,
+        "alternatives": alternatives,
+        "description": description,
+        "filtered_out_drugs": filtered_out_drugs,
+    }
+
+
+def build_form_data_from_supabase(profile_id=None, check_in_id=None):
+    """
+    Fetches shared patient context from Supabase and maps it to the legacy pipeline contract.
+
+    :param profile_id: Shared profile identifier.
+    :param check_in_id: Shared check-in identifier.
+    :return: Tuple of (normalized_form_data, debug_context).
+    """
+    if not supabase_is_configured():
+        raise RuntimeError(
+            "Supabase IDs were provided but the backend is not configured for Supabase."
+        )
+
+    check_in = fetch_check_in(profile_id=profile_id, check_in_id=check_in_id)
+    if check_in_id and not check_in:
+        raise ValueError(f"Could not find check-in {check_in_id} in Supabase.")
+
+    resolved_profile_id = profile_id
+
+    if check_in and not resolved_profile_id:
+        resolved_profile_id = (
+            check_in.get("profile_id")
+            or check_in.get("user_id")
+        )
+
+    profile = fetch_profile(resolved_profile_id) if resolved_profile_id else None
+    if profile_id and not profile:
+        raise ValueError(f"Could not find profile {profile_id} in Supabase.")
+
+    symptoms = fetch_symptoms(check_in.get("id")) if check_in else []
+    medications = fetch_check_in_medications(check_in.get("id")) if check_in else []
+
+    normalized_form_data = normalize_supabase_context_to_form_data(
+        profile,
+        check_in,
+        symptoms,
+        medications,
+    )
+
+    return normalized_form_data, {
+        "profile": profile,
+        "check_in": check_in,
+        "symptoms": symptoms,
+        "medications": medications,
+        "profile_id": profile.get("id") if profile else resolved_profile_id,
+        "check_in_id": check_in.get("id") if check_in else check_in_id,
+    }
+
+
+def run_recommendation_pipeline(uploaded_file, request_form_data=None, profile_id=None, check_in_id=None):
+    """
+    Shared orchestration entrypoint for legacy uploads and shared Supabase-backed runs.
+
+    :param uploaded_file: Werkzeug uploaded file object.
+    :param request_form_data: Raw form values from the request.
+    :param profile_id: Optional shared profile identifier.
+    :param check_in_id: Optional shared check-in identifier.
+    :return: Recommendation payload with extra debug IDs when available.
+    """
+    if not uploaded_file:
+        raise ValueError("No file uploaded")
+
+    request_form_data = request_form_data or {}
+    for field in EXPECTED_PIPELINE_FIELDS:
+        request_form_data.setdefault(field, "")
+
+    context_source = "form_upload"
+    debug_context = {
+        "profile_id": profile_id,
+        "check_in_id": check_in_id,
+    }
+
+    if profile_id or check_in_id:
+        supabase_form_data, debug_context = build_form_data_from_supabase(
+            profile_id=profile_id,
+            check_in_id=check_in_id,
+        )
+        effective_form_data = merge_pipeline_form_data(
+            supabase_form_data,
+            request_form_data,
+        )
+        context_source = "supabase"
+    else:
+        effective_form_data = merge_pipeline_form_data({}, request_form_data)
+
+    file_stream = uploaded_file.stream.readlines()
+    response_data, analysis_context = build_recommendation_response(
+        uploaded_file.filename,
+        effective_form_data,
+        file_stream,
+    )
+
+    recommendation_id = None
+    if debug_context.get("profile_id") or debug_context.get("check_in_id"):
+        shared_recommendation_row = build_shared_recommendation_row(
+            response_data,
+            analysis_context,
+        )
+        inserted_row = insert_recommendation(
+            profile=debug_context.get("profile"),
+            profile_id=debug_context.get("profile_id"),
+            check_in_id=debug_context.get("check_in_id"),
+            top_gene=shared_recommendation_row["top_gene"],
+            top_score=shared_recommendation_row["top_score"],
+            best_drugs=shared_recommendation_row["best_drugs"],
+            alternatives=shared_recommendation_row["alternatives"],
+            description=shared_recommendation_row["description"],
+            filtered_out_drugs=shared_recommendation_row["filtered_out_drugs"],
+            debug_payload={
+                "source": "virgil_1_0",
+                "file_name": uploaded_file.filename,
+                "inputs": effective_form_data,
+                "outputs": response_data,
+                "shared_recommendation_row": shared_recommendation_row,
+            },
+        )
+        recommendation_id = inserted_row.get("id") if inserted_row else None
+
+    response_data.update(
+        {
+            "context_source": context_source,
+            "profile_id": debug_context.get("profile_id"),
+            "check_in_id": debug_context.get("check_in_id"),
+            "recommendation_id": recommendation_id,
         }
+    )
+    return response_data
+
+
+def handle_recommendation_request():
+    form_data = request.form.to_dict()
+    profile_id = form_data.get("profile_id") or None
+    check_in_id = form_data.get("check_in_id") or None
+
+    file = request.files.get('file')
+    if not file:
+        return jsonify({'error': 'No file uploaded'}), 400
+
+    try:
+        response_data = run_recommendation_pipeline(
+            file,
+            request_form_data=form_data,
+            profile_id=profile_id,
+            check_in_id=check_in_id,
+        )
         return jsonify(response_data)
+    except ValueError as error:
+        return jsonify({"error": str(error)}), 400
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+
+@app.route('/api/drug-options')
+def get_drug_options():
+    """
+    Provides a list of available drug options to the frontend.
+
+    This allows users to indicate if they have taken any of these medications.
+
+    :return: JSON list of drug names, excluding the placeholder "None known".
+    """
+    new_drugs = [drug for drug in DRUG_OPTIONS if drug != "None known"]
+    return jsonify(new_drugs)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    """
+    Legacy upload endpoint. Still accepts the original form contract and can now optionally
+    accept profile_id or check_in_id to enrich the pipeline from shared Supabase patient data.
+    """
+    return handle_recommendation_request()
+
+
+@app.route('/api/recommendations/run', methods=['POST'])
+def run_recommendation():
+    """
+    Shared API endpoint for running the genetics pipeline against a 23andMe upload and optional
+    Supabase-backed patient context identified by profile_id or check_in_id.
+    """
+    return handle_recommendation_request()
 
 if __name__ == '__main__':
     app.run(debug=True)

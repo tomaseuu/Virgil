@@ -89,6 +89,31 @@ function UploadFilePage() {
   };
 
   const handleUpload = async () => {
+    const requiredFields = [
+      { label: 'Age', value: age },
+      { label: 'Type of IBD', value: IBD },
+      { label: 'Severity of IBD', value: severity },
+      { label: 'Pregnant', value: pregnant },
+      { label: 'History of Kidney Issues', value: kidneys },
+      { label: 'First Treatment', value: firstTreatment },
+      { label: 'Drug Administration Route', value: route },
+    ];
+
+    const missingFields = requiredFields
+      .filter(({ value }) => !String(value || '').trim())
+      .map(({ label }) => label);
+
+    if (missingFields.length > 0) {
+      toast({
+        title: 'Required Fields Missing',
+        description: `Please complete: ${missingFields.join(', ')}.`,
+        status: 'warning',
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
+
     let agree1error = true;
     let agree2error = true;
     let i = 0;
@@ -186,7 +211,7 @@ function UploadFilePage() {
               Upload your 23andMe results to get started.
             </Text>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">Age</FormLabel>
               <Input
                 type="number"
@@ -200,7 +225,7 @@ function UploadFilePage() {
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">Type of IBD</FormLabel>
               <Select
                 {...selectStyles}
@@ -227,7 +252,7 @@ function UploadFilePage() {
               </Select>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">Severity of IBD</FormLabel>
               <Select
                 {...selectStyles}
@@ -253,7 +278,7 @@ function UploadFilePage() {
               </Select>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">Pregnant</FormLabel>
               <Select
                 {...selectStyles}
@@ -281,7 +306,7 @@ function UploadFilePage() {
               </Select>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">History of Kidney Issues</FormLabel>
               <Select
                 {...selectStyles}
@@ -307,7 +332,7 @@ function UploadFilePage() {
               </Select>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">Is This Your First Treatment?</FormLabel>
               <Select
                 {...selectStyles}
@@ -332,7 +357,7 @@ function UploadFilePage() {
               </Select>
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel textColor="white">Drug Administration Route</FormLabel>
               <Select
                 {...selectStyles}

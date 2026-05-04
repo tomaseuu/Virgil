@@ -1,0 +1,5 @@
+# This is a synthetic 23andMe-style raw data fixture for local testing only.
+# rsid	chromosome	position	genotype
+rs2066843	16	50756540	TT
+rs2076756	16	50763778	GG
+rs2066847	16	50763791	CC
