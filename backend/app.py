@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from io import BytesIO
 import requests
 import os
 import json
@@ -12,9 +13,11 @@ from patient_context import (
 from supabase_client import (
     fetch_check_in,
     fetch_check_in_medications,
+    fetch_profile_document,
     fetch_profile,
     fetch_symptoms,
     insert_recommendation,
+    download_profile_document,
     supabase_is_configured,
 )
 
@@ -517,6 +520,13 @@ def build_form_data_from_supabase(profile_id=None, check_in_id=None):
             or check_in.get("user_id")
         )
 
+    if check_in and profile_id:
+        linked_profile_id = check_in.get("profile_id") or check_in.get("user_id")
+        if linked_profile_id and linked_profile_id != profile_id:
+            raise ValueError(
+                f"Check-in {check_in_id} does not belong to profile {profile_id}."
+            )
+
     profile = fetch_profile(resolved_profile_id) if resolved_profile_id else None
     if profile_id and not profile:
         raise ValueError(f"Could not find profile {profile_id} in Supabase.")
@@ -541,7 +551,33 @@ def build_form_data_from_supabase(profile_id=None, check_in_id=None):
     }
 
 
-def run_recommendation_pipeline(uploaded_file, request_form_data=None, profile_id=None, check_in_id=None):
+def validate_required_context_fields(form_data):
+    missing_fields = [
+        field
+        for field in ("age", "IBD", "severity", "pregnant", "kidneys", "firstTreatment", "route")
+        if not str(form_data.get(field, "") or "").strip()
+    ]
+    if missing_fields:
+        raise ValueError(
+            "Patient context is incomplete. Missing required fields: "
+            + ", ".join(missing_fields)
+            + "."
+        )
+
+
+class InMemoryUploadedFile:
+    def __init__(self, file_name, file_bytes):
+        self.filename = file_name
+        self.stream = BytesIO(file_bytes)
+
+
+def run_recommendation_pipeline(
+    uploaded_file,
+    request_form_data=None,
+    profile_id=None,
+    check_in_id=None,
+    require_complete_context=False,
+):
     """
     Shared orchestration entrypoint for legacy uploads and shared Supabase-backed runs.
 
@@ -576,6 +612,9 @@ def run_recommendation_pipeline(uploaded_file, request_form_data=None, profile_i
         context_source = "supabase"
     else:
         effective_form_data = merge_pipeline_form_data({}, request_form_data)
+
+    if require_complete_context:
+        validate_required_context_fields(effective_form_data)
 
     file_stream = uploaded_file.stream.readlines()
     response_data, analysis_context = build_recommendation_response(
@@ -621,6 +660,39 @@ def run_recommendation_pipeline(uploaded_file, request_form_data=None, profile_i
     return response_data
 
 
+def validate_genetics_document(profile_id, genetics_document_id, genetics_storage_path):
+    document = fetch_profile_document(
+        document_id=genetics_document_id,
+        profile_id=profile_id,
+        storage_path=genetics_storage_path,
+    )
+
+    if not document:
+        raise ValueError(
+            "Could not find a matching genetics document for the provided profile_id, "
+            "genetics_document_id, and genetics_storage_path."
+        )
+
+    if document.get("profile_id") != profile_id:
+        raise ValueError(
+            f"Genetics document {genetics_document_id} does not belong to profile {profile_id}."
+        )
+
+    if document.get("storage_path") != genetics_storage_path:
+        raise ValueError(
+            f"Genetics document {genetics_document_id} does not match storage path "
+            f"{genetics_storage_path}."
+        )
+
+    category = str(document.get("category", "") or "").strip().lower()
+    if category != "genetics":
+        raise ValueError(
+            f"Document {genetics_document_id} is not a genetics document."
+        )
+
+    return document
+
+
 def handle_recommendation_request():
     form_data = request.form.to_dict()
     profile_id = form_data.get("profile_id") or None
@@ -642,6 +714,65 @@ def handle_recommendation_request():
         return jsonify({"error": str(error)}), 400
     except Exception as error:
         return jsonify({"error": str(error)}), 500
+
+
+def handle_storage_recommendation_request():
+    payload = request.get_json(silent=True) or {}
+    profile_id = payload.get("profile_id")
+    check_in_id = payload.get("check_in_id")
+    genetics_document_id = payload.get("genetics_document_id")
+    genetics_storage_path = payload.get("genetics_storage_path")
+
+    if not genetics_storage_path:
+        return jsonify({"error": "Missing genetics_storage_path."}), 400
+    if not profile_id:
+        return jsonify({"error": "Missing profile_id."}), 400
+
+    check_in_selection = "selected" if check_in_id else "latest"
+
+    try:
+        document = validate_genetics_document(
+            profile_id,
+            genetics_document_id,
+            genetics_storage_path,
+        )
+        file_bytes = download_profile_document(genetics_storage_path)
+        file_name = document.get("name") or os.path.basename(genetics_storage_path)
+        uploaded_file = InMemoryUploadedFile(file_name, file_bytes)
+
+        response_data = run_recommendation_pipeline(
+            uploaded_file,
+            request_form_data={},
+            profile_id=profile_id,
+            check_in_id=check_in_id,
+            require_complete_context=True,
+        )
+
+        resolved_check_in_id = response_data.get("check_in_id")
+        if not resolved_check_in_id:
+            raise ValueError(
+                f"No check-ins exist for profile {profile_id}, so a recommendation could not be generated."
+            )
+
+        return jsonify(
+            {
+                "success": True,
+                "message": "Recommendation generated from storage-backed genetics file.",
+                "check_in_resolution": check_in_selection,
+                "profile_id": profile_id,
+                "check_in_id": resolved_check_in_id,
+                "genetics_document_id": genetics_document_id,
+                "genetics_storage_path": genetics_storage_path,
+                "recommendation_id": response_data.get("recommendation_id"),
+                "result": response_data,
+            }
+        )
+    except ValueError as error:
+        return jsonify({"success": False, "error": str(error)}), 400
+    except FileNotFoundError as error:
+        return jsonify({"success": False, "error": str(error)}), 404
+    except Exception as error:
+        return jsonify({"success": False, "error": str(error)}), 500
 
 @app.route('/api/drug-options')
 def get_drug_options():
@@ -671,6 +802,15 @@ def run_recommendation():
     Supabase-backed patient context identified by profile_id or check_in_id.
     """
     return handle_recommendation_request()
+
+
+@app.route('/api/recommendations/run-from-storage', methods=['POST'])
+def run_recommendation_from_storage():
+    """
+    Shared API endpoint for Virgil 2.0 to trigger genetics recommendations from a file
+    already stored in Supabase Storage.
+    """
+    return handle_storage_recommendation_request()
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -21,6 +21,8 @@ Backend Setup (Python Flask)
 4. Set backend environment variables when using the shared Supabase integration:
    - `SUPABASE_URL`
    - `SUPABASE_SERVICE_KEY` or `SUPABASE_API_KEY`
+   - Optional for storage-backed genetics file retrieval:
+     - `SUPABASE_PROFILE_DOCUMENTS_BUCKET` (default: `profile-documents`)
    - Optional if your `recommendations` table uses different column names:
      - `SUPABASE_RECOMMENDATION_CHECK_IN_COLUMN` (default: `check_in_id`)
      - `SUPABASE_RECOMMENDATION_USER_ID_COLUMN` (default: `user_id`)
@@ -49,6 +51,51 @@ legacy recommendation pipeline contract, and writes the final result to the shar
 
 A second route, `POST /api/recommendations/run`, exposes the same behavior for cleaner
 Virgil 2.0 integration.
+
+Virgil 2.0 storage-backed trigger
+
+Virgil 1.0 also supports a storage-backed trigger endpoint for genetics files already stored
+in Supabase Storage:
+
+`POST /api/recommendations/run-from-storage`
+
+JSON body:
+- `profile_id`
+- `check_in_id` optional
+- `genetics_document_id`
+- `genetics_storage_path`
+
+Assumptions in this flow:
+- the storage bucket is `profile-documents` unless overridden by `SUPABASE_PROFILE_DOCUMENTS_BUCKET`
+- the `profile_documents` row belongs to the provided `profile_id`
+- the document `category` is `genetics`
+- the provided `storage_path` matches the `profile_documents.storage_path`
+- if `check_in_id` is omitted, Virgil 1.0 resolves the latest available check-in for the provided profile
+
+Example curl:
+
+```bash
+curl -X POST http://127.0.0.1:5000/api/recommendations/run-from-storage \
+  -H "Content-Type: application/json" \
+  -d '{
+    "profile_id": "43a081cd-97d7-44d1-a917-57f1bbef3a89",
+    "check_in_id": "ed8e7919-ba96-4801-94bd-d7b755bfbf6c",
+    "genetics_document_id": "YOUR_DOCUMENT_ID",
+    "genetics_storage_path": "YOUR/STORAGE/PATH.txt"
+  }'
+```
+
+Latest-check-in example:
+
+```bash
+curl -X POST http://127.0.0.1:5000/api/recommendations/run-from-storage \
+  -H "Content-Type: application/json" \
+  -d '{
+    "profile_id": "43a081cd-97d7-44d1-a917-57f1bbef3a89",
+    "genetics_document_id": "YOUR_DOCUMENT_ID",
+    "genetics_storage_path": "YOUR/STORAGE/PATH.txt"
+  }'
+```
 
 Schema verification and smoke test
 

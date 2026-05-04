@@ -9,6 +9,11 @@ CHECK_INS_TABLE = "check_ins"
 SYMPTOMS_TABLE = "symptoms"
 CHECK_IN_MEDICATIONS_TABLE = "check_in_medications"
 RECOMMENDATIONS_TABLE = "recommendations"
+PROFILE_DOCUMENTS_TABLE = "profile_documents"
+PROFILE_DOCUMENTS_BUCKET = os.getenv(
+    "SUPABASE_PROFILE_DOCUMENTS_BUCKET",
+    "profile-documents",
+)
 CHECK_INS_PROFILE_LINK_COLUMNS = ("profile_id", "user_id")
 
 RECOMMENDATION_CHECK_IN_COLUMN = os.getenv(
@@ -273,6 +278,34 @@ def fetch_check_in_medications(check_in_id):
         .execute()
     )
     return response.data or []
+
+
+def fetch_profile_document(document_id=None, profile_id=None, storage_path=None):
+    if not document_id and not storage_path:
+        return None
+
+    query = get_supabase_client().table(PROFILE_DOCUMENTS_TABLE).select("*")
+    if document_id:
+        query = query.eq("id", document_id)
+    if profile_id:
+        query = query.eq("profile_id", profile_id)
+    if storage_path:
+        query = query.eq("storage_path", storage_path)
+
+    response = query.limit(1).execute()
+    return _first_row(response)
+
+
+def download_profile_document(storage_path):
+    if not storage_path:
+        raise ValueError("Missing genetics storage path.")
+
+    try:
+        return get_supabase_client().storage.from_(PROFILE_DOCUMENTS_BUCKET).download(storage_path)
+    except Exception as error:
+        raise FileNotFoundError(
+            f"Could not download genetics file from storage path '{storage_path}': {error}"
+        ) from error
 
 
 def fetch_recommendation_by_id(recommendation_id):
