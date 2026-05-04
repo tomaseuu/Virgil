@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6] [cursor=pointer]: VIRGIL
+      - button "Upload" [ref=e8] [cursor=pointer]
+    - generic [ref=e10]:
+      - heading "Welcome to VIRGIL" [level=2] [ref=e11]
+      - paragraph [ref=e12]: Guiding patients out of darkness.
+      - button "Get Started" [ref=e13] [cursor=pointer]
+  - generic:
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"

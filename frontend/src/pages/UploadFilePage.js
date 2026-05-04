@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -31,6 +31,7 @@ import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
+import { getApiUrl } from '../lib/api';
 
 function UploadFilePage() {
   const [age, setAge] = useState('');
@@ -47,7 +48,6 @@ function UploadFilePage() {
   const [agree, setAgree] = useState([]);
 
   const [file, setFile] = useState(null);
-  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   const [isUploading, setIsUploading] = useState(false);
@@ -55,7 +55,7 @@ function UploadFilePage() {
   const [drugOptions, setDrugOptions] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/drug-options')
+    fetch(getApiUrl('/api/drug-options'))
       .then((res) => res.json())
       .then((data) => setDrugOptions(data))
       .catch((err) => console.error('Error fetching drug options:', err));
@@ -71,9 +71,6 @@ function UploadFilePage() {
 
   const handleRemoveFile = () => {
     setFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null;
-    }
   };
 
   const handleDrugChange = (index, field, value) => {
@@ -139,7 +136,7 @@ function UploadFilePage() {
     formData.append('drugs', JSON.stringify(drugEntries));
 
     try {
-      const response = await axios.post('http://localhost:5000/upload', formData, {
+      const response = await axios.post(getApiUrl('/upload'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -455,16 +452,17 @@ function UploadFilePage() {
               Add Drug
             </Button>
 
-            <Box
-              paddingTop={4}>
+            <Box paddingTop={4}>
               <Input
-                ref={fileInputRef}
+                id="genetic-file-upload"
                 type="file"
                 onChange={handleFileChange}
                 display="none"
+                accept=".txt,.zip"
               />
               <Button
-                as="span"
+                as="label"
+                htmlFor="genetic-file-upload"
                 bg="transparent"
                 border="2px solid #5c3cae"
                 color="white"
@@ -485,7 +483,7 @@ function UploadFilePage() {
                 px={8}
                 py={4}
                 leftIcon={<DownloadIcon />}
-                onClick={() => fileInputRef.current.click()}
+                cursor="pointer"
               >
                 {file ? 'Change 23andMe File' : 'Choose 23andMe File'}
               </Button>

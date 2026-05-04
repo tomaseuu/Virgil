@@ -1,0 +1,10 @@
+[     611ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:3000/static/js/bundle.js:69008
+[     740ms] [LOG] Supabase session check {hasSession: false, error: null} @ http://127.0.0.1:3000/static/js/bundle.js:850
+[     741ms] [LOG] Supabase session check {hasSession: false, error: null} @ http://127.0.0.1:3000/static/js/bundle.js:850
+[   11830ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726
+[   13934ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726
+[   18021ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726
+[   26049ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726
+[   42194ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726
+[   74248ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726
+[  138417ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:77726

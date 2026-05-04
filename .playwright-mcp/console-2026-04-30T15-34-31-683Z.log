@@ -1,0 +1,38 @@
+[     243ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:3000/static/js/bundle.js:69461
+[     471ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:3000/:0
+[    6724ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[    8818ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[   12914ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[   20978ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[   37073ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[   47920ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://qohjgkmerbkhrmrwbvhp.supabase.co/auth/v1/token?grant_type=password:0
+[   53104ms] [ERROR] Access to fetch at 'http://localhost:5000/api/drug-options' from origin 'http://127.0.0.1:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:3000/uploadfile:0
+[   53106ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:5000/api/drug-options:0
+[   53106ms] [ERROR] Error fetching drug options: TypeError: Failed to fetch
+    at http://127.0.0.1:3000/static/js/bundle.js:2642:5
+    at commitHookEffectListMount (http://127.0.0.1:3000/static/js/bundle.js:63756:30)
+    at commitPassiveMountOnFiber (http://127.0.0.1:3000/static/js/bundle.js:65249:17)
+    at commitPassiveMountEffects_complete (http://127.0.0.1:3000/static/js/bundle.js:65221:13)
+    at commitPassiveMountEffects_begin (http://127.0.0.1:3000/static/js/bundle.js:65211:11)
+    at commitPassiveMountEffects (http://127.0.0.1:3000/static/js/bundle.js:65201:7)
+    at flushPassiveEffectsImpl (http://127.0.0.1:3000/static/js/bundle.js:67084:7)
+    at flushPassiveEffects (http://127.0.0.1:3000/static/js/bundle.js:67037:18)
+    at performSyncWorkOnRoot (http://127.0.0.1:3000/static/js/bundle.js:66254:7)
+    at flushSyncCallbacks (http://127.0.0.1:3000/static/js/bundle.js:54262:26) @ http://127.0.0.1:3000/static/js/bundle.js:2641
+[   53110ms] [ERROR] Access to fetch at 'http://localhost:5000/api/drug-options' from origin 'http://127.0.0.1:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://127.0.0.1:3000/uploadfile:0
+[   53110ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:5000/api/drug-options:0
+[   53110ms] [ERROR] Error fetching drug options: TypeError: Failed to fetch
+    at http://127.0.0.1:3000/static/js/bundle.js:2642:5
+    at commitHookEffectListMount (http://127.0.0.1:3000/static/js/bundle.js:63756:30)
+    at invokePassiveEffectMountInDEV (http://127.0.0.1:3000/static/js/bundle.js:65445:17)
+    at invokeEffectsInDev (http://127.0.0.1:3000/static/js/bundle.js:67342:15)
+    at commitDoubleInvokeEffectsInDEV (http://127.0.0.1:3000/static/js/bundle.js:67325:11)
+    at flushPassiveEffectsImpl (http://127.0.0.1:3000/static/js/bundle.js:67098:9)
+    at flushPassiveEffects (http://127.0.0.1:3000/static/js/bundle.js:67037:18)
+    at performSyncWorkOnRoot (http://127.0.0.1:3000/static/js/bundle.js:66254:7)
+    at flushSyncCallbacks (http://127.0.0.1:3000/static/js/bundle.js:54262:26)
+    at commitRootImpl (http://127.0.0.1:3000/static/js/bundle.js:67016:7) @ http://127.0.0.1:3000/static/js/bundle.js:2641
+[   69152ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[  133237ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[  261313ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179
+[  517540ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78179

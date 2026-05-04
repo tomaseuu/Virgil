@@ -1,0 +1,18 @@
+[     420ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:3000/static/js/bundle.js:69311
+[     745ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:3000/:0
+[   19590ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[   21685ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[   25717ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[   33818ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[   49900ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[   81939ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  146168ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  385496ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  387583ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  391661ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  399675ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  415713ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  447823ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  512047ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  640143ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029
+[  896427ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/ws' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:3000/static/js/bundle.js:78029

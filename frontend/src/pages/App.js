@@ -1,11 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChakraProvider, Box, Heading, Text, Button, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import { getCurrentProfile } from '../lib/profile';
 import '../index.css';
 
 function App() {
   const navigate = useNavigate();
+  const { session, user, loading } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [status, setStatus] = useState('');
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadProfile = async () => {
+      if (!user?.id) {
+        setStatus('');
+        return;
+      }
+
+      setStatus('Loading profile...');
+
+      try {
+        const currentProfile = await getCurrentProfile(user.id);
+        if (ignore) return;
+
+        if (currentProfile) {
+          setStatus('Connected to shared Supabase and profile found.');
+        } else {
+          setStatus('Signed in, but no profile row exists for this auth user yet.');
+        }
+      } catch (error) {
+        if (ignore) return;
+        setStatus(`Profile lookup failed: ${error.message}`);
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      ignore = true;
+    };
+  }, [user?.id]);
+
+  const handleSignIn = async (event) => {
+    event.preventDefault();
+    setStatus('Signing in...');
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setStatus(`Sign in failed: ${error.message}`);
+      return;
+    }
+
+    setStatus('Signed in.');
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setStatus(`Sign out failed: ${error.message}`);
+      return;
+    }
+
+    setStatus('Signed out.');
+  };
 
   const goToFile = () => {
     navigate('/uploadfile');
@@ -28,11 +96,47 @@ function App() {
           alignItems="center"
           flexDirection="column"
           px={10}
-          pt="20vh"
+          pt="10vh"
           textAlign="center"
           maxW="lg"
           mx="auto"
         >
+          <div style={{ padding: 16, marginBottom: 24, border: '1px solid #ddd', borderRadius: 12, background: 'white', width: '100%', textAlign: 'left' }}>
+            <h2>Sign In</h2>
+            <p>
+              {loading
+                ? 'Loading session...'
+                : session
+                  ? `Signed in as ${user?.email}`
+                  : 'Signed out'}
+            </p>
+
+            {session ? (
+              <div style={{ display: 'grid', gap: 8, maxWidth: 320 }}>
+                <button type="button" onClick={goToFile}>Continue to Upload</button>
+                <button type="button" onClick={handleSignOut}>Sign Out</button>
+              </div>
+            ) : (
+              <form onSubmit={handleSignIn} style={{ display: 'grid', gap: 8, maxWidth: 320 }}>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <button type="submit">Sign In</button>
+              </form>
+            )}
+
+            <p>{status}</p>
+          </div>
+
           <VStack spacing={8}>
             <Heading
               size="2xl"

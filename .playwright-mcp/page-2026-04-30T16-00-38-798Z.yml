@@ -1,0 +1,112 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6] [cursor=pointer]: VIRGIL
+      - button "Upload" [ref=e8] [cursor=pointer]
+    - generic [ref=e10]:
+      - heading "Upload Your File" [level=2] [ref=e11]
+      - paragraph [ref=e12]: Upload your 23andMe results to get started.
+      - group [ref=e13]:
+        - generic [ref=e14]: Age
+        - spinbutton "Age" [ref=e15]
+      - group [ref=e16]:
+        - generic [ref=e17]: Type of IBD
+        - generic [ref=e18]:
+          - combobox "Type of IBD" [ref=e19]:
+            - option "Select option" [selected]
+            - option "Crohn's Disease"
+            - option "Ulcerative Colitis"
+            - option "Both"
+            - option "Unsure"
+          - generic:
+            - img
+      - group [ref=e20]:
+        - generic [ref=e21]: Severity of IBD
+        - generic [ref=e22]:
+          - combobox "Severity of IBD" [ref=e23]:
+            - option "Select option" [selected]
+            - option "Mild"
+            - option "Moderate"
+            - option "Severe"
+          - generic:
+            - img
+      - group [ref=e24]:
+        - generic [ref=e25]: Pregnant
+        - generic [ref=e26]:
+          - combobox "Pregnant" [ref=e27]:
+            - option "Select option" [selected]
+            - option "Yes"
+            - option "Breastfeeding"
+            - option "Planning"
+            - option "No"
+            - option "Not Applicable"
+          - generic:
+            - img
+      - group [ref=e28]:
+        - generic [ref=e29]: History of Kidney Issues
+        - generic [ref=e30]:
+          - combobox "History of Kidney Issues" [ref=e31]:
+            - option "Select option" [selected]
+            - option "Current"
+            - option "Past"
+            - option "None"
+          - generic:
+            - img
+      - group [ref=e32]:
+        - generic [ref=e33]: Is This Your First Treatment?
+        - generic [ref=e34]:
+          - combobox "Is This Your First Treatment?" [ref=e35]:
+            - option "Select option" [selected]
+            - option "Yes"
+            - option "No"
+          - generic:
+            - img
+      - group [ref=e36]:
+        - generic [ref=e37]: Drug Administration Route
+        - generic [ref=e38]:
+          - combobox "Drug Administration Route" [ref=e39]:
+            - option "Select option" [selected]
+            - option "Prefer Injection"
+            - option "Prefer Oral"
+            - option "Prefer IV"
+            - option "Prefer Rectal"
+            - option "Must Be Injection"
+            - option "Must Be Oral"
+            - option "Must Be IV"
+            - option "Must Be Rectal"
+            - option "No Preference"
+          - generic:
+            - img
+      - generic [ref=e40]: Medications & Reactions
+      - generic [ref=e42]:
+        - group [ref=e43]:
+          - generic [ref=e44]: Drug
+          - generic [ref=e45]:
+            - combobox "Drug" [ref=e46]:
+              - option "Select drug" [selected]
+            - generic:
+              - img
+        - group [ref=e47]:
+          - generic [ref=e48]: Reaction
+          - generic [ref=e49]:
+            - combobox "Reaction" [ref=e50]:
+              - option "Select reaction" [selected]
+              - option "Helped IBD Symptoms"
+              - option "Made IBD Symptoms Worse"
+              - option "No change"
+            - generic:
+              - img
+        - button [ref=e51] [cursor=pointer]:
+          - img [ref=e52]
+      - button "Add Drug" [ref=e54] [cursor=pointer]
+      - generic [ref=e56] [cursor=pointer]:
+        - img [ref=e58]
+        - text: Choose 23andMe File
+      - button "Submit Form" [ref=e60] [cursor=pointer]
+  - generic:
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
+    - region "Notifications"
